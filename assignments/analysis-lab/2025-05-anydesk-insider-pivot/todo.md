@@ -18,7 +18,7 @@
 - [x] VS Code + rust-analyzer eklentisi kurulumu -- VS Code 1.117.0
 - [x] Node.js (>= 18 LTS) ve npm/pnpm kurulumu (Tauri frontend icin) -- Node v24.13.0, npm 11.6.2, pnpm 10.33.2
 - [x] Tauri CLI kurulumu (`cargo install tauri-cli`) -- tauri-cli 2.10.1
-- [ ] WebView2 Runtime kurulumu (Windows icin, Tauri gereksinimi) -- **EKSIK: Manuel kurulum gerekli**
+- [x] WebView2 Runtime kurulumu (Windows icin, Tauri gereksinimi) -- Kurulu (v147.0.3912.86)
 - [x] `cargo install cargo-audit` (guvenlik denetimi) -- cargo-audit 0.22.1
 - [x] `cargo install cargo-tarpaulin` (kod kapsama / coverage) -- cargo-llvm-cov 0.8.5 (Windows uyumlu alternatif)
 - [x] `cargo install cargo-nextest` (gelismis test runner) -- cargo-nextest 0.9.132
