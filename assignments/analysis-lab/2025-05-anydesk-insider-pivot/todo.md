@@ -223,7 +223,7 @@ VITE_API_BASE_URL=http://localhost:3001
 
 ## 4. Cargo.toml Bagimliliklari (Dependencies)
 
-- [ ] `Cargo.toml` dosyasina asagidaki crate'leri ekle:
+- [x] `Cargo.toml` dosyasina asagidaki crate'leri ekle:
 
 ```toml
 [dependencies]
@@ -273,7 +273,7 @@ serial_test = "3"                                        # Seri test calistirma
 ```
 
 - [x] `cargo check` ile bagimliliklarin derlenmesini dogrula
-- [ ] Frontend dependencies kur (`cd frontend && pnpm install`):
+- [x] Frontend dependencies kur (`cd frontend && pnpm install`):
   ```json
   {
     "@tauri-apps/api": "^2",
