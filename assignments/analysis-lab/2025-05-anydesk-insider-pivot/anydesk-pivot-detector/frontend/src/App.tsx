@@ -4,6 +4,7 @@ import Dashboard from "./components/Dashboard";
 import AlertsTable from "./components/AlertsTable";
 import LogViewer from "./components/LogViewer";
 import Settings from "./components/Settings";
+import ThreatModel from "./components/ThreatModel";
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/alerts" element={<AlertsTable />} />
-            <Route path="/network" element={<div className="p-10"><h1>Network Map (Placeholder)</h1></div>} />
+            <Route path="/network" element={<ThreatModel />} />
             <Route path="/logs" element={<LogViewer />} />
             <Route path="/settings" element={<Settings />} />
           </Routes>
