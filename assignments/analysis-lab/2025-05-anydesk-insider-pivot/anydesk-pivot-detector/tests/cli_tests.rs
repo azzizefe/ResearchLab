@@ -7,7 +7,9 @@ fn test_cli_help() {
     cmd.arg("--help")
         .assert()
         .success()
-        .stdout(predicate::str::contains("AnyDesk logs for historical pivot activity"));
+        .stdout(predicate::str::contains(
+            "AnyDesk logs for historical pivot activity",
+        ));
 }
 
 #[test]
@@ -32,7 +34,5 @@ fn test_cli_scan_missing_file() {
 #[test]
 fn test_cli_config_check() {
     let mut cmd = Command::cargo_bin("anydesk-pivot-detector").unwrap();
-    cmd.arg("config-check")
-        .assert()
-        .success();
+    cmd.arg("config-check").assert().success();
 }

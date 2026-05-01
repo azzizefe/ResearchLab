@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum ConnectionDirection {
@@ -29,6 +29,7 @@ pub enum ConnectionStatus {
 }
 
 impl Connection {
+    #[must_use] 
     pub fn duration(&self) -> Option<chrono::Duration> {
         match (self.timestamp_start, self.timestamp_end) {
             (start, Some(end)) => Some(end - start),

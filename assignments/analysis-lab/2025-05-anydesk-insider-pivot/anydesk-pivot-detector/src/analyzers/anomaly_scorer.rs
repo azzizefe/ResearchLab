@@ -8,6 +8,7 @@ pub struct AnomalyScorer {
 }
 
 impl AnomalyScorer {
+    #[must_use] 
     pub fn new(threshold: f32) -> Self {
         let mut weights = HashMap::new();
         weights.insert(AlertSeverity::Low, 10.0);
@@ -15,8 +16,8 @@ impl AnomalyScorer {
         weights.insert(AlertSeverity::High, 60.0);
         weights.insert(AlertSeverity::Critical, 100.0);
 
-        Self { 
-            weights, 
+        Self {
+            weights,
             threshold,
             session_scores: HashMap::new(),
         }
@@ -24,19 +25,24 @@ impl AnomalyScorer {
 
     /// Weighted scoring system
     pub fn score_alert(&mut self, alert: &Alert, session_id: &str) -> f32 {
-        let weight = self.weights.get(&alert.severity).cloned().unwrap_or(0.0);
-        let current_score = self.session_scores.entry(session_id.to_string()).or_insert(0.0);
+        let weight = self.weights.get(&alert.severity).copied().unwrap_or(0.0);
+        let current_score = self
+            .session_scores
+            .entry(session_id.to_string())
+            .or_insert(0.0);
         *current_score += weight;
         *current_score
     }
 
     /// Baseline creation (simple implementation)
+    #[must_use] 
     pub fn get_baseline_score(&self, _session_id: &str) -> f32 {
         // In a real app, this would query a database for historical averages
         20.0 // Default baseline
     }
 
     /// Alert for high-risk pivot scores
+    #[must_use] 
     pub fn check_risk_level(&self, score: f32) -> String {
         if score >= self.threshold * 2.0 {
             "CRITICAL PIVOT RISK".to_string()

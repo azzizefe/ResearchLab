@@ -1,8 +1,8 @@
-use crate::models::alert::{Alert, AlertSeverity};
 use crate::errors::app_error::AppError;
-use std::net::{UdpSocket, TcpStream};
-use std::io::Write;
+use crate::models::alert::{Alert, AlertSeverity};
 use chrono::Utc;
+use std::io::Write;
+use std::net::{TcpStream, UdpSocket};
 
 pub enum SyslogProtocol {
     Udp,
@@ -15,6 +15,7 @@ pub struct SyslogReporter {
 }
 
 impl SyslogReporter {
+    #[must_use] 
     pub fn new(server: String, protocol: SyslogProtocol) -> Self {
         Self { server, protocol }
     }
@@ -28,17 +29,19 @@ impl SyslogReporter {
             AlertSeverity::High => 11,     // error
             AlertSeverity::Critical => 10, // alert
         };
-        
-        format!("<{}>1 {} {} anydesk-pivot-detector - - - {}", 
-            pri, 
-            Utc::now().to_rfc3339(), 
-            "localhost", 
+
+        format!(
+            "<{}>1 {} {} anydesk-pivot-detector - - - {}",
+            pri,
+            Utc::now().to_rfc3339(),
+            "localhost",
             alert.description
         )
     }
 
     /// 9.3.3: SIEM entegrasyonu icin CEF format destegi
     /// Format: CEF:Version|Device Vendor|Device Product|Device Version|Device Event Class ID|Name|Severity|[Extension]
+    #[must_use] 
     pub fn format_cef(&self, alert: &Alert) -> String {
         let severity_val = match alert.severity {
             AlertSeverity::Low => 3,
@@ -47,11 +50,9 @@ impl SyslogReporter {
             AlertSeverity::Critical => 10,
         };
 
-        format!("CEF:0|ResearchLab|AnyDeskPivotDetector|0.1.0|PIVOT_EVENT|{}|{}|msg={} src_module={}", 
-            alert.title, 
-            severity_val, 
-            alert.description,
-            alert.source_module
+        format!(
+            "CEF:0|ResearchLab|AnyDeskPivotDetector|0.1.0|PIVOT_EVENT|{}|{}|msg={} src_module={}",
+            alert.title, severity_val, alert.description, alert.source_module
         )
     }
 
@@ -63,16 +64,20 @@ impl SyslogReporter {
             self.format_rfc5424(alert)
         };
 
-        let message_with_newline = format!("{}\n", message);
+        let message_with_newline = format!("{message}\n");
 
         match self.protocol {
             SyslogProtocol::Udp => {
                 let socket = UdpSocket::bind("0.0.0.0:0").map_err(AppError::IoError)?;
-                socket.send_to(message_with_newline.as_bytes(), &self.server).map_err(AppError::IoError)?;
+                socket
+                    .send_to(message_with_newline.as_bytes(), &self.server)
+                    .map_err(AppError::IoError)?;
             }
             SyslogProtocol::Tcp => {
                 let mut stream = TcpStream::connect(&self.server).map_err(AppError::IoError)?;
-                stream.write_all(message_with_newline.as_bytes()).map_err(AppError::IoError)?;
+                stream
+                    .write_all(message_with_newline.as_bytes())
+                    .map_err(AppError::IoError)?;
             }
         }
         Ok(())

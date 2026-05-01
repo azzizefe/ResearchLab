@@ -1,22 +1,24 @@
-use anydesk_pivot_detector::analyzers::{RuleEngine, AnomalyScorer};
-use anydesk_pivot_detector::config::{AppConfig, AppSettings, AnyDeskSettings, MonitorSettings, NetworkSettings, ReportingSettings};
+use anydesk_pivot_detector::analyzers::{AnomalyScorer, RuleEngine};
+use anydesk_pivot_detector::config::{
+    AnyDeskSettings, AppConfig, AppSettings, MonitorSettings, NetworkSettings, ReportingSettings,
+};
 use anydesk_pivot_detector::models::alert::AlertSeverity;
-use chrono::{Utc, TimeZone};
+use chrono::{TimeZone, Utc};
 
 #[test]
 fn test_anomaly_scorer_calculation() {
     let mut scorer = AnomalyScorer::new(50.0);
     let session_id = "123456789";
-    
+
     // Add multiple alerts and check risk score
     let alert1 = create_mock_alert(AlertSeverity::Low);
     let alert2 = create_mock_alert(AlertSeverity::Medium);
     let alert3 = create_mock_alert(AlertSeverity::High);
-    
+
     scorer.score_alert(&alert1, session_id); // weight ~10
     scorer.score_alert(&alert2, session_id); // weight ~30
     let final_score = scorer.score_alert(&alert3, session_id); // weight ~60
-    
+
     assert!(final_score >= 100.0);
     assert_eq!(scorer.check_risk_level(final_score), "CRITICAL PIVOT RISK");
 }
@@ -25,11 +27,11 @@ fn test_anomaly_scorer_calculation() {
 fn test_rule_engine_off_hours() {
     let config = create_mock_config();
     let engine = RuleEngine::new(config);
-    
+
     // 2:00 AM Utc
     let timestamp = Utc.with_ymd_and_hms(2025, 5, 1, 2, 0, 0).unwrap();
     let alert = engine.check_working_hours(timestamp);
-    
+
     assert!(alert.is_some());
     assert_eq!(alert.unwrap().title, "Outside Working Hours Connection");
 }

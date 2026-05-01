@@ -1,8 +1,8 @@
-use crate::models::alert::{Alert, AlertSeverity};
-use crate::models::process_event::ProcessEvent;
-use crate::models::network_event::NetworkEvent;
 use crate::config::AppConfig;
-use chrono::{Utc, Timelike};
+use crate::models::alert::{Alert, AlertSeverity};
+use crate::models::network_event::NetworkEvent;
+use crate::models::process_event::ProcessEvent;
+use chrono::{Timelike, Utc};
 use serde_json::json;
 
 pub struct RuleEngine {
@@ -10,21 +10,27 @@ pub struct RuleEngine {
 }
 
 impl RuleEngine {
+    #[must_use] 
     pub fn new(config: AppConfig) -> Self {
         Self { config }
     }
 
     /// Rule: Connection detection outside working hours
+    #[must_use] 
     pub fn check_working_hours(&self, timestamp: chrono::DateTime<Utc>) -> Option<Alert> {
         let hour = timestamp.hour();
-        if hour < self.config.monitor.working_hour_start || hour >= self.config.monitor.working_hour_end {
+        if hour < self.config.monitor.working_hour_start
+            || hour >= self.config.monitor.working_hour_end
+        {
             return Some(Alert {
                 id: uuid::Uuid::new_v4().to_string(),
                 timestamp: Utc::now(),
                 severity: AlertSeverity::Medium,
                 title: "Outside Working Hours Connection".to_string(),
-                description: format!("AnyDesk activity detected outside working hours ({}:00 - {}:00)", 
-                    self.config.monitor.working_hour_start, self.config.monitor.working_hour_end),
+                description: format!(
+                    "AnyDesk activity detected outside working hours ({}:00 - {}:00)",
+                    self.config.monitor.working_hour_start, self.config.monitor.working_hour_end
+                ),
                 source_module: "RuleEngine".to_string(),
                 evidence: json!({ "event_timestamp": timestamp, "hour": hour }),
             });
@@ -33,18 +39,24 @@ impl RuleEngine {
     }
 
     /// Rule: Connection from IDs outside known ACL
+    #[must_use] 
     pub fn check_acl(&self, anydesk_id: &str) -> Option<Alert> {
         if self.config.network.allowed_anydesk_ids.is_empty() {
             return None; // No ACL defined, assume all allowed or not checked
         }
 
-        if !self.config.network.allowed_anydesk_ids.contains(&anydesk_id.to_string()) {
+        if !self
+            .config
+            .network
+            .allowed_anydesk_ids
+            .contains(&anydesk_id.to_string())
+        {
             return Some(Alert {
                 id: uuid::Uuid::new_v4().to_string(),
                 timestamp: Utc::now(),
                 severity: AlertSeverity::High,
                 title: "Unauthorized AnyDesk ID".to_string(),
-                description: format!("Connection from unauthorized AnyDesk ID: {}", anydesk_id),
+                description: format!("Connection from unauthorized AnyDesk ID: {anydesk_id}"),
                 source_module: "RuleEngine".to_string(),
                 evidence: json!({ "anydesk_id": anydesk_id }),
             });
@@ -52,10 +64,15 @@ impl RuleEngine {
         None
     }
 
-    /// Rule: Shell/CLI started via AnyDesk
+    /// Rule: Shell/CLI started via `AnyDesk`
+    #[must_use] 
     pub fn check_suspicious_process(&self, event: &ProcessEvent) -> Option<Alert> {
         let name_lower = event.name.to_lowercase();
-        let is_suspicious = self.config.monitor.suspicious_processes.iter()
+        let is_suspicious = self
+            .config
+            .monitor
+            .suspicious_processes
+            .iter()
             .any(|s| name_lower.contains(&s.to_lowercase()));
 
         if is_suspicious {
@@ -71,7 +88,10 @@ impl RuleEngine {
                 timestamp: Utc::now(),
                 severity,
                 title: "Suspicious Process Execution".to_string(),
-                description: format!("Suspicious process '{}' (PID: {}) detected.", event.name, event.pid),
+                description: format!(
+                    "Suspicious process '{}' (PID: {}) detected.",
+                    event.name, event.pid
+                ),
                 source_module: "RuleEngine".to_string(),
                 evidence: json!({ "process": event }),
             });
@@ -79,14 +99,15 @@ impl RuleEngine {
         None
     }
 
-    /// Rule: Network scanning tool execution (already covered by suspicious processes, 
+    /// Rule: Network scanning tool execution (already covered by suspicious processes,
     /// but we can add more specific logic if needed)
+    #[must_use] 
     pub fn check_network_scanning(&self, event: &NetworkEvent) -> Option<Alert> {
         // Example: High number of different remote addresses in a short time
         // For now, check for forbidden ports traffic
-        let forbidden_ports = vec![22, 23, 445, 3389];
+        let forbidden_ports = [22, 23, 445, 3389];
         if forbidden_ports.contains(&event.remote_port) {
-             return Some(Alert {
+            return Some(Alert {
                 id: uuid::Uuid::new_v4().to_string(),
                 timestamp: Utc::now(),
                 severity: AlertSeverity::High,
@@ -99,15 +120,20 @@ impl RuleEngine {
         None
     }
     /// Rule: Dosya transferi + hassas dosya yolu eslesme
+    #[must_use] 
     pub fn check_sensitive_file_access(&self, path: &str) -> Option<Alert> {
-        let sensitive_paths = vec!["C:\\Windows\\System32\\config", "C:\\Users\\Administrator", "wallet.dat", "config.php", ".env"];
+        let sensitive_paths = ["C:\\Windows\\System32\\config",
+            "C:\\Users\\Administrator",
+            "wallet.dat",
+            "config.php",
+            ".env"];
         if sensitive_paths.iter().any(|s| path.contains(s)) {
             return Some(Alert {
                 id: uuid::Uuid::new_v4().to_string(),
                 timestamp: Utc::now(),
                 severity: AlertSeverity::Critical,
                 title: "Sensitive File Access".to_string(),
-                description: format!("AnyDesk accessed sensitive path: {}", path),
+                description: format!("AnyDesk accessed sensitive path: {path}"),
                 source_module: "RuleEngine".to_string(),
                 evidence: json!({ "path": path }),
             });
@@ -116,6 +142,7 @@ impl RuleEngine {
     }
 
     /// Rule: Unattended access + statik sifre kullanimi
+    #[must_use] 
     pub fn check_unattended_access(&self, log_line: &str) -> Option<Alert> {
         if log_line.contains("Password accepted") || log_line.contains("Unattended access") {
             return Some(Alert {
@@ -123,7 +150,8 @@ impl RuleEngine {
                 timestamp: Utc::now(),
                 severity: AlertSeverity::Medium,
                 title: "Unattended Access Detected".to_string(),
-                description: "Unattended access or static password used for connection.".to_string(),
+                description: "Unattended access or static password used for connection."
+                    .to_string(),
                 source_module: "RuleEngine".to_string(),
                 evidence: json!({ "line": log_line }),
             });
@@ -131,18 +159,21 @@ impl RuleEngine {
         None
     }
 
-    /// Rule: Portable AnyDesk calistirilmasi
+    /// Rule: Portable `AnyDesk` calistirilmasi
+    #[must_use] 
     pub fn check_portable_anydesk(&self, process_path: &str) -> Option<Alert> {
         let path_lower = process_path.to_lowercase();
         let is_portable = !path_lower.contains("program files");
-        
+
         if is_portable && path_lower.contains("anydesk") {
             return Some(Alert {
                 id: uuid::Uuid::new_v4().to_string(),
                 timestamp: Utc::now(),
                 severity: AlertSeverity::Low,
                 title: "Portable AnyDesk Execution".to_string(),
-                description: format!("AnyDesk running from non-standard location: {}", process_path),
+                description: format!(
+                    "AnyDesk running from non-standard location: {process_path}"
+                ),
                 source_module: "RuleEngine".to_string(),
                 evidence: json!({ "path": process_path }),
             });

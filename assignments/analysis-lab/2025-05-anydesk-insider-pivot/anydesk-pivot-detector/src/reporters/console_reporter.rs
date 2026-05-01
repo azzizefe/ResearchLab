@@ -1,6 +1,6 @@
 use crate::models::alert::{Alert, AlertSeverity};
-use tabled::{Table, Tabled};
 use colored::Colorize;
+use tabled::{Table, Tabled};
 
 #[derive(Tabled)]
 struct AlertRow {
@@ -21,21 +21,27 @@ impl ConsoleReporter {
             return;
         }
 
-        let rows: Vec<AlertRow> = alerts.iter().map(|a| {
-            let severity_str = match a.severity {
-                AlertSeverity::Low => "LOW".blue().to_string(),
-                AlertSeverity::Medium => "MEDIUM".yellow().to_string(),
-                AlertSeverity::High => "HIGH".red().to_string(),
-                AlertSeverity::Critical => "CRITICAL".red().bold().blink().to_string(),
-            };
-            AlertRow {
-                severity: severity_str,
-                title: a.title.clone(),
-                source: a.source_module.clone(),
-            }
-        }).collect();
+        let rows: Vec<AlertRow> = alerts
+            .iter()
+            .map(|a| {
+                let severity_str = match a.severity {
+                    AlertSeverity::Low => "LOW".blue().to_string(),
+                    AlertSeverity::Medium => "MEDIUM".yellow().to_string(),
+                    AlertSeverity::High => "HIGH".red().to_string(),
+                    AlertSeverity::Critical => "CRITICAL".red().bold().blink().to_string(),
+                };
+                AlertRow {
+                    severity: severity_str,
+                    title: a.title.clone(),
+                    source: a.source_module.clone(),
+                }
+            })
+            .collect();
 
-        println!("\n{}", "--- ANYDESK PIVOT DETECTION REPORT ---".green().bold());
-        println!("{}", Table::new(rows).to_string());
+        println!(
+            "\n{}",
+            "--- ANYDESK PIVOT DETECTION REPORT ---".green().bold()
+        );
+        println!("{}", Table::new(rows));
     }
 }

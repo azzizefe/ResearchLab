@@ -1,7 +1,7 @@
-use sysinfo::{System, ProcessRefreshKind, RefreshKind, UpdateKind};
-use crate::models::process_event::{ProcessEvent, ProcessEventType};
 use crate::errors::app_error::AppError;
+use crate::models::process_event::{ProcessEvent, ProcessEventType};
 use std::time::Duration;
+use sysinfo::{ProcessRefreshKind, RefreshKind, System, UpdateKind};
 use tokio::time::sleep;
 
 pub struct ProcessMonitor {
@@ -10,12 +10,14 @@ pub struct ProcessMonitor {
 }
 
 impl ProcessMonitor {
+    #[must_use] 
     pub fn new(suspicious_list: Vec<String>) -> Self {
         let mut sys = System::new_with_specifics(
-            RefreshKind::nothing().with_processes(ProcessRefreshKind::nothing().with_user(UpdateKind::Always))
+            RefreshKind::nothing()
+                .with_processes(ProcessRefreshKind::nothing().with_user(UpdateKind::Always)),
         );
         sys.refresh_all();
-        
+
         Self {
             sys,
             suspicious_list,
@@ -28,9 +30,16 @@ impl ProcessMonitor {
             let mut events = Vec::new();
 
             // 1. Identify AnyDesk processes
-            let anydesk_pids: Vec<_> = self.sys.processes()
+            let anydesk_pids: Vec<_> = self
+                .sys
+                .processes()
                 .iter()
-                .filter(|(_, p)| p.name().to_string_lossy().to_lowercase().contains("anydesk"))
+                .filter(|(_, p)| {
+                    p.name()
+                        .to_string_lossy()
+                        .to_lowercase()
+                        .contains("anydesk")
+                })
                 .map(|(pid, _)| *pid)
                 .collect();
 
@@ -49,8 +58,18 @@ impl ProcessMonitor {
                                 timestamp: chrono::Utc::now(),
                                 pid: pid_u32,
                                 name: name.to_string(),
-                                path: process.exe().map(|p| p.to_string_lossy().into_owned()).unwrap_or_default(),
-                                command_line: Some(process.cmd().iter().map(|s| s.to_string_lossy()).collect::<Vec<_>>().join(" ")),
+                                path: process
+                                    .exe()
+                                    .map(|p| p.to_string_lossy().into_owned())
+                                    .unwrap_or_default(),
+                                command_line: Some(
+                                    process
+                                        .cmd()
+                                        .iter()
+                                        .map(|s| s.to_string_lossy())
+                                        .collect::<Vec<_>>()
+                                        .join(" "),
+                                ),
                                 event_type: ProcessEventType::SuspiciousActivity,
                                 parent_pid: Some(ppid.as_u32()),
                             });
@@ -60,7 +79,10 @@ impl ProcessMonitor {
             }
 
             for event in events {
-                println!("[ALERT] Suspicious process detected: {} (PID: {}) spawned by AnyDesk", event.name, event.pid);
+                println!(
+                    "[ALERT] Suspicious process detected: {} (PID: {}) spawned by AnyDesk",
+                    event.name, event.pid
+                );
                 // In a real app, we would send this to an analyzer or reporter
             }
 

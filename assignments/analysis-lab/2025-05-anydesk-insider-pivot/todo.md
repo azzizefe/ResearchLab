@@ -623,13 +623,13 @@ services:
 - [x] Graceful degradation (bir modul basarisiz olursa digerleri calismaya devam etsin)
 
 ### 13.3 Statik Analiz
-- [ ] `cargo clippy -- -W clippy::all -W clippy::pedantic` ile tam lint
-- [ ] `clippy::unwrap_used` lint uyarisini etkinlestir
-- [ ] `clippy::expect_used` lint uyarisini etkinlestir (production kodda)
-- [ ] `cargo fmt --check` ile format tutarliligi
-- [ ] `cargo doc --no-deps` ile dokumantasyon uyarilari kontrol
-- [ ] `cargo audit` ile bilinen guvenlik aciklari taramasi
-- [ ] `cargo deny check` ile lisans ve supply-chain kontrolu
+- [x] `cargo clippy -- -W clippy::all -W clippy::pedantic` ile tam lint
+- [x] `clippy::unwrap_used` lint uyarisini etkinlestir
+- [x] `clippy::expect_used` lint uyarisini etkinlestir (production kodda)
+- [x] `cargo fmt --check` ile format tutarliligi
+- [x] `cargo doc --no-deps` ile dokumantasyon uyarilari kontrol
+- [x] `cargo audit` ile bilinen guvenlik aciklari taramasi
+- [x] `cargo deny check` ile lisans ve supply-chain kontrolu
 
 ### 13.4 Loglama Stratejisi
 - [ ] Her module uygun log seviyeleri: `error`, `warn`, `info`, `debug`, `trace`

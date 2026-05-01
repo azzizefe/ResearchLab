@@ -1,8 +1,8 @@
 use crate::errors::app_error::AppError;
-use std::path::Path;
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
-use std::collections::HashMap;
+use std::path::Path;
 
 pub struct ServiceConfig {
     pub allowed_ids: Vec<String>,
@@ -28,23 +28,27 @@ pub fn parse_service_conf<P: AsRef<Path>>(path: P) -> Result<ServiceConfig, AppE
         }
     }
 
-    let allowed_ids_str = settings.get("ad.security.allow_ids").cloned().unwrap_or_default();
-    let allowed_ids = allowed_ids_str.split(',')
+    let allowed_ids_str = settings
+        .get("ad.security.allow_ids")
+        .cloned()
+        .unwrap_or_default();
+    let allowed_ids = allowed_ids_str
+        .split(',')
         .map(|s| s.trim().to_string())
         .filter(|s| !s.is_empty())
         .collect();
 
-    let enable_2fa = settings.get("ad.security.2fa")
-        .map(|v| v == "true" || v == "1")
-        .unwrap_or(false);
+    let enable_2fa = settings
+        .get("ad.security.2fa")
+        .is_some_and(|v| v == "true" || v == "1");
 
-    let file_transfer_enabled = settings.get("ad.features.file_transfer")
-        .map(|v| v != "false" && v != "0")
-        .unwrap_or(true);
+    let file_transfer_enabled = settings
+        .get("ad.features.file_transfer")
+        .map_or(true, |v| v != "false" && v != "0");
 
-    let clipboard_enabled = settings.get("ad.features.clipboard")
-        .map(|v| v != "false" && v != "0")
-        .unwrap_or(true);
+    let clipboard_enabled = settings
+        .get("ad.features.clipboard")
+        .map_or(true, |v| v != "false" && v != "0");
 
     Ok(ServiceConfig {
         allowed_ids,

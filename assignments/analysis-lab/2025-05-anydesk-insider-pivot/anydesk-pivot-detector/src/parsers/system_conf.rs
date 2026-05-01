@@ -1,8 +1,8 @@
 use crate::errors::app_error::AppError;
-use std::path::Path;
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
-use std::collections::HashMap;
+use std::path::Path;
 
 pub struct SystemConfig {
     pub anydesk_id: Option<String>,
@@ -29,11 +29,17 @@ pub fn parse_system_conf<P: AsRef<Path>>(path: P) -> Result<SystemConfig, AppErr
     }
 
     let anydesk_id = settings.get("ad.anynet.id").cloned();
-    let unattended_access = settings.get("ad.security.unattended_access")
-        .map(|v| v == "true" || v == "1")
-        .unwrap_or(false);
-    let interactive_access = settings.get("ad.security.interactive_access").cloned().unwrap_or_default();
-    let license_type = settings.get("ad.license").cloned().unwrap_or_else(|| "free".to_string());
+    let unattended_access = settings
+        .get("ad.security.unattended_access")
+        .is_some_and(|v| v == "true" || v == "1");
+    let interactive_access = settings
+        .get("ad.security.interactive_access")
+        .cloned()
+        .unwrap_or_default();
+    let license_type = settings
+        .get("ad.license")
+        .cloned()
+        .unwrap_or_else(|| "free".to_string());
 
     Ok(SystemConfig {
         anydesk_id,

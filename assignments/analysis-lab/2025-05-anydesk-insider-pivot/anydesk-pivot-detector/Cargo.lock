@@ -108,6 +108,7 @@ dependencies = [
  "colored",
  "criterion",
  "dotenv",
+ "dunce",
  "env_logger",
  "insta",
  "log",

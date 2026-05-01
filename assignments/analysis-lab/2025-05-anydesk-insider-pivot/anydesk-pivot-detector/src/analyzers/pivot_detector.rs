@@ -1,7 +1,7 @@
 use crate::models::alert::{Alert, AlertSeverity};
 // Removed unused connection imports
-use regex::Regex;
 use chrono::Utc;
+use regex::Regex;
 
 pub struct PivotDetector {
     re_incoming: Regex,
@@ -9,7 +9,14 @@ pub struct PivotDetector {
     re_startup: Regex,
 }
 
+impl Default for PivotDetector {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl PivotDetector {
+    #[must_use] 
     pub fn new() -> Self {
         Self {
             re_incoming: Regex::new(r"Incoming connection from (?P<id>\d{3} \d{3} \d{3})")
@@ -21,6 +28,7 @@ impl PivotDetector {
         }
     }
 
+    #[must_use] 
     pub fn analyze_line(&self, line: &str) -> Vec<Alert> {
         let mut alerts = Vec::new();
 

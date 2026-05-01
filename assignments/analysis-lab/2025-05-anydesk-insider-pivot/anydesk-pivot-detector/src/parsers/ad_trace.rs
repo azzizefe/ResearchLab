@@ -1,10 +1,10 @@
-use crate::models::connection::{Connection, ConnectionDirection, ConnectionStatus};
 use crate::errors::app_error::AppError;
+use crate::models::connection::{Connection, ConnectionDirection, ConnectionStatus};
+use chrono::{DateTime, NaiveDateTime, TimeZone, Utc};
 use regex::Regex;
-use chrono::{DateTime, Utc, NaiveDateTime, TimeZone};
-use std::path::Path;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+use std::path::Path;
 
 pub fn parse_trace_file<P: AsRef<Path>>(path: P) -> Result<Vec<Connection>, AppError> {
     let file = File::open(path)?;
@@ -18,7 +18,7 @@ pub fn parse_trace_file<P: AsRef<Path>>(path: P) -> Result<Vec<Connection>, AppE
 
     for line in reader.lines() {
         let line = line?;
-        
+
         if let Some(caps) = re_incoming.captures(&line) {
             let ts_str = &caps["ts"];
             let anydesk_id = &caps["id"];
@@ -55,8 +55,8 @@ pub fn parse_trace_file<P: AsRef<Path>>(path: P) -> Result<Vec<Connection>, AppE
 
 fn parse_anydesk_timestamp(ts_str: &str) -> Result<DateTime<Utc>, AppError> {
     let naive = NaiveDateTime::parse_from_str(ts_str, "%Y-%m-%d %H:%M:%S%.3f")
-        .map_err(|e| AppError::ParseError(format!("Failed to parse timestamp: {}", e)))?;
-    
+        .map_err(|e| AppError::ParseError(format!("Failed to parse timestamp: {e}")))?;
+
     // Assuming Utc for simplicity, AnyDesk logs are usually local time, but we convert to Utc
     Ok(Utc.from_utc_datetime(&naive))
 }

@@ -1,7 +1,7 @@
+use crate::errors::app_error::AppError;
+use clap::{Parser, Subcommand};
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
-use clap::{Parser, Subcommand};
-use crate::errors::app_error::AppError;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -15,7 +15,7 @@ pub struct Cli {
 
 #[derive(Subcommand, Debug)]
 pub enum Commands {
-    /// Scan AnyDesk logs for historical pivot activity
+    /// Scan `AnyDesk` logs for historical pivot activity
     Scan {
         #[arg(short, long)]
         path: Option<PathBuf>,
@@ -27,7 +27,7 @@ pub enum Commands {
         #[arg(short, long)]
         output: Option<PathBuf>,
     },
-    /// Check AnyDesk security configuration
+    /// Check `AnyDesk` security configuration
     ConfigCheck,
     /// Apply hardening recommendations
     Harden,
@@ -87,14 +87,18 @@ impl AppConfig {
 
         // Load default.toml
         let config_str = std::fs::read_to_string("config/default.toml")
-            .map_err(|e| AppError::ConfigError(format!("Failed to read config file: {}", e)))?;
-        
+            .map_err(|e| AppError::ConfigError(format!("Failed to read config file: {e}")))?;
+
         let mut config: AppConfig = toml::from_str(&config_str)
-            .map_err(|e| AppError::ConfigError(format!("Failed to parse config file: {}", e)))?;
+            .map_err(|e| AppError::ConfigError(format!("Failed to parse config file: {e}")))?;
 
         // Override with environment variables
-        if let Ok(val) = std::env::var("APP_LOG_LEVEL") { config.app.log_level = val; }
-        if let Ok(val) = std::env::var("ANYDESK_TRACE_PATH") { config.anydesk.trace_path = val; }
+        if let Ok(val) = std::env::var("APP_LOG_LEVEL") {
+            config.app.log_level = val;
+        }
+        if let Ok(val) = std::env::var("ANYDESK_TRACE_PATH") {
+            config.anydesk.trace_path = val;
+        }
         // ... (add other overrides as needed)
 
         Ok(config)
