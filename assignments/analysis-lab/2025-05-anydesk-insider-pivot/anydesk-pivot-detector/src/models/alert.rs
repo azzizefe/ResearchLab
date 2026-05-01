@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use chrono::{DateTime, Utc};
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, Eq, Hash, PartialEq)]
 pub enum AlertSeverity {
     Low,
     Medium,

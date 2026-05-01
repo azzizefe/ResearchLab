@@ -397,14 +397,14 @@ serial_test = "3"                                        # Seri test calistirma
 
 ## 10. Ana Uygulama Akisi (main.rs)
 
-- [ ] CLI alt komutlari implemente et:
-  - [ ] `scan` - Tek seferlik log tarama ve analiz
-  - [ ] `monitor` - Surekli canli izleme modu
-  - [ ] `report` - Gecmis tarama sonuclarini raporla
-  - [ ] `config-check` - AnyDesk konfigurasyonunun guvenlik durumunu kontrol et
-  - [ ] `harden` - AnyDesk ayarlari icin sertlestirme onerileri olustur
-- [ ] Graceful shutdown (Ctrl+C) destegi
-- [ ] Async task orchestration (tokio)
+- [x] CLI alt komutlari implemente et:
+  - [x] `scan` - Tek seferlik log tarama ve analiz
+  - [x] `monitor` - Surekli canli izleme modu
+  - [x] `report` - Gecmis tarama sonuclarini raporla
+  - [x] `config-check` - AnyDesk konfigurasyonunun guvenlik durumunu kontrol et
+  - [x] `harden` - AnyDesk ayarlari icin sertlestirme onerileri olustur
+- [x] Graceful shutdown (Ctrl+C) destegi
+- [x] Async task orchestration (tokio)
 
 ---
 
