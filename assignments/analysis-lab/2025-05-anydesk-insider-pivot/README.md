@@ -10,7 +10,7 @@
 ---
 
 ## 🚀 Genel Bakış
-sssss
+
 Modern kurumsal ortamlarda, AnyDesk gibi meşru uzaktan erişim araçları, çevre güvenliğini atlatmak için kötü niyetli içerideki kişiler (insiders) veya ele geçirilmiş hesaplar tarafından sıklıkla suistimal edilir. Bu sistem; AnyDesk davranışlarını izleyen, adli bilişim kalıntılarını analiz eden ve şüpheli etkinliklere risk puanları atayan Rust tabanlı güçlü bir tespit motoru sunar.
 
 ### Temel Yetenekler

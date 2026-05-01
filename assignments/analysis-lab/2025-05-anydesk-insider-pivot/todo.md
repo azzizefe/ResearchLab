@@ -68,7 +68,7 @@ VITE_API_BASE_URL=http://localhost:3001
 
 ## 2. Proje Yapisinin Olusturulmasi (Project Structure)
 
-- [ ] `cargo new anydesk-pivot-detector` ile proje olustur
+- [x] `cargo new anydesk-pivot-detector` ile proje olustur
 - [ ] Workspace / modul yapisi olustur:
   ```
   anydesk-pivot-detector/
