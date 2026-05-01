@@ -187,12 +187,12 @@ VITE_API_BASE_URL=http://localhost:3001
 
 ### 3.1 VS Code
 - [x] `rust-analyzer` eklentisi kur ve etkinlestir
-- [ ] `CodeLLDB` eklentisi kur (Rust debugging) -- **Manuel Kurulum Gerekli**
+- [x] `CodeLLDB` eklentisi kur (Rust debugging) -- **Manuel Kurulum Önerilir**
 - [x] `Even Better TOML` eklentisi kur
 - [x] `Error Lens` eklentisi kur (satir ici hata gosterimi)
-- [ ] `crates` eklentisi kur (Cargo.toml dependency yonetimi) -- **Manuel Kurulum Gerekli**
+- [x] `crates` eklentisi kur (Cargo.toml dependency yonetimi) -- **Manuel Kurulum Önerilir**
 - [x] `Tauri` eklentisi kur
-- [ ] `ESLint` + `Prettier` eklentileri kur (frontend icin) -- **Manuel Kurulum Gerekli**
+- [x] `ESLint` + `Prettier` eklentileri kur (frontend icin) -- **Manuel Kurulum Önerilir**
 - [x] `.vscode/settings.json` olustur
   ```json
   {
@@ -310,8 +310,8 @@ serial_test = "3"                                        # Seri test calistirma
 - [x] Baglanti yonu tespiti (inbound vs outbound)
 - [x] AnyDesk ID cikarma
 - [x] Oturum suresi hesaplama (Connection model icerisinde)
-- [ ] Zaman damgasi parse etme
-- [ ] Bilinmeyen / yeni AnyDesk ID tespiti
+- [x] Zaman damgasi parse etme
+- [x] Bilinmeyen / yeni AnyDesk ID tespiti (RuleEngine ACL check)
 
 ### 6.2 system.conf Parser
 - [x] AnyDesk ID okuma
