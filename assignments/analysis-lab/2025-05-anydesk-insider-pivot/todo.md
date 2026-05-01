@@ -294,11 +294,11 @@ serial_test = "3"                                        # Seri test calistirma
 
 ## 5. Konfigürasyon Modulu (config.rs)
 
-- [ ] `.env` dosyasindan degiskenleri oku (`dotenv`)
-- [ ] `config/default.toml` dosyasindan varsayilan ayarlari yukle
-- [ ] `AppConfig` struct olustur (tum ayarlari icerir)
-- [ ] CLI arguman parsing (`clap`) - scan, monitor, report alt komutlari
-- [ ] Config validation fonksiyonu (dosya yollarinin var olup olmadigini kontrol et)
+- [x] `.env` dosyasindan degiskenleri oku (`dotenv`)
+- [x] `config/default.toml` dosyasindan varsayilan ayarlari yukle
+- [x] `AppConfig` struct olustur (tum ayarlari icerir)
+- [x] CLI arguman parsing (`clap`) - scan, monitor, report alt komutlari
+- [x] Config validation fonksiyonu (dosya yollarinin var olup olmadigini kontrol et)
 
 ---
 
