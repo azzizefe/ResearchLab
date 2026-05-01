@@ -1,5 +1,5 @@
 # Rust
-/target/
+target/
 **/*.rs.bk
 Cargo.lock
 !Cargo.lock
@@ -35,9 +35,9 @@ desktop.ini
 docker-compose.override.yml
 
 # Node / Frontend
-frontend/node_modules/
-frontend/dist/
-frontend/.pnpm-store/
+node_modules/
+dist/
+.pnpm-store/
 
 # Tauri
 src-tauri/target/
