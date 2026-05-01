@@ -590,11 +590,11 @@ services:
 - [x] Test fixture / factory fonksiyonlari (model nesneleri kolayca olustur)
 
 ### 12.6 Test Coverage (Kod Kapsami)
-- [ ] `cargo tarpaulin` ile coverage raporu olustur
-- [ ] Minimum %80 satir kapsami hedefi
-- [ ] Coverage raporu HTML ciktisi (`tarpaulin --out Html`)
-- [ ] CI pipeline'a coverage threshold kontrolu ekle
-- [ ] Kritik moduller icin %90+ kapsam hedefi (parsers, analyzers)
+- [x] `cargo tarpaulin` ile coverage raporu olustur (CI'da yapilandirildi)
+- [x] Minimum %80 satir kapsami hedefi
+- [x] Coverage raporu HTML ciktisi (`tarpaulin --out Html`)
+- [x] CI pipeline'a coverage threshold kontrolu ekle
+- [x] Kritik moduller icin %90+ kapsam hedefi (parsers, analyzers)
 
 ---
 
