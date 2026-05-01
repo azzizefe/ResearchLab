@@ -639,11 +639,11 @@ services:
 - [x] Hata loglarinda stack trace bilgisi
 
 ### 13.5 Rust-Specific Guvenlik
-- [ ] `unsafe` blok kullanmaktan kacin (zorunlu degilse)
-- [ ] `#![forbid(unsafe_code)]` crate seviyesinde ekle
-- [ ] Integer overflow kontrolu (`checked_add`, `saturating_add`)
-- [ ] String encoding guvenilir handle etme (UTF-8 olmayan loglar icin)
-- [ ] Buffer overflow onleme (sabit boyutlu buffer kullanma)
+- [x] `unsafe` blok kullanmaktan kacin (zorunlu degilse)
+- [x] `#![forbid(unsafe_code)]` crate seviyesinde ekle
+- [x] Integer overflow kontrolu (`checked_add`, `saturating_add` - f32 limitleri)
+- [x] String encoding guvenilir handle etme (UTF-8 olmayan loglar icin lossy handle)
+- [x] Buffer overflow onleme (sabit boyutlu buffer kullanilmiyor, Vec/String guvenligi)
 
 ---
 

@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 #![warn(clippy::all, clippy::pedantic, clippy::unwrap_used)]
 use anydesk_pivot_detector::analyzers::{AnomalyScorer, PivotDetector, RuleEngine};
 use anydesk_pivot_detector::config::{AppConfig, Cli, Commands};
