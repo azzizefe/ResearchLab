@@ -13,6 +13,8 @@ svc_trace_path = "C:/ProgramData/AnyDesk/ad_svc.trace"
 interval_secs = 10
 suspicious_processes = ["cmd.exe", "powershell.exe", "net.exe", "nmap.exe", "mimikatz.exe", "psexec.exe"]
 alert_threshold = 3
+working_hour_start = 9
+working_hour_end = 18
 
 [network]
 blocked_domains = ["*.net.anydesk.com"]

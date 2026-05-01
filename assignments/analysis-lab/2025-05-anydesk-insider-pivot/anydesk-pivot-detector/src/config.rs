@@ -62,6 +62,8 @@ pub struct MonitorSettings {
     pub interval_secs: u64,
     pub suspicious_processes: Vec<String>,
     pub alert_threshold: u32,
+    pub working_hour_start: u32,
+    pub working_hour_end: u32,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

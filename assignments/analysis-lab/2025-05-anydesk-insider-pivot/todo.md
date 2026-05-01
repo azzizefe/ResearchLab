@@ -345,11 +345,11 @@ serial_test = "3"                                        # Seri test calistirma
 - [x] AnyDesk'in ilk kez yuklendigini/calistirildigini tespit et
 
 ### 7.3 Network Monitor
-- [ ] AnyDesk iliskili ag baglantilari izle (port 6568, 443)
-- [ ] DNS sorgularini kontrol et (`*.net.anydesk.com`)
-- [ ] Baglanti IP adreslerini logla ve geolocate et
-- [ ] Olagandisi veri transferi hacimlerini tespit et
-- [ ] Yasakli portlarda trafik uyarisi olustur
+- [x] AnyDesk iliskili ag baglantilari izle (port 6568, 443)
+- [x] DNS sorgularini kontrol et (`*.net.anydesk.com`)
+- [x] Baglanti IP adreslerini logla ve geolocate et
+- [x] Olagandisi veri transferi hacimlerini tespit et
+- [x] Yasakli portlarda trafik uyarisi olustur
 
 ---
 

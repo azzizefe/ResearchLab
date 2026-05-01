@@ -12,7 +12,7 @@ pub struct NetworkMonitor {
     sys: System,
     geoloc_cache: HashMap<String, GeoLocation>,
     forbidden_ports: Vec<u16>,
-    high_traffic_threshold: u64, // bytes
+    _high_traffic_threshold: u64, // bytes
 }
 
 impl NetworkMonitor {
@@ -26,7 +26,7 @@ impl NetworkMonitor {
             sys,
             geoloc_cache: HashMap::new(),
             forbidden_ports: vec![22, 23, 445, 3389], // SSH, Telnet, SMB, RDP
-            high_traffic_threshold: 10 * 1024 * 1024, // 10MB threshold for demo
+            _high_traffic_threshold: 10 * 1024 * 1024, // 10MB threshold for demo
         }
     }
 
@@ -69,7 +69,7 @@ impl NetworkMonitor {
             let remote_port = conn["RemotePort"].as_u64().unwrap_or(0) as u16;
             let remote_addr = conn["RemoteAddress"].as_str().unwrap_or("").to_string();
             let process_id = conn["OwningProcess"].as_u64().unwrap_or(0) as u32;
-            let local_addr = conn["LocalAddress"].as_str().unwrap_or("").to_string();
+            let _local_addr = conn["LocalAddress"].as_str().unwrap_or("").to_string();
 
             // Ignore local/loopback for some checks
             if remote_addr == "0.0.0.0" || remote_addr == "127.0.0.1" || remote_addr == "::" {
