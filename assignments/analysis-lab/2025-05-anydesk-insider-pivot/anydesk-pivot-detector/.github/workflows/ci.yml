@@ -2,41 +2,13 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, develop ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, develop ]
 
 jobs:
-  test:
-    name: Test and Coverage
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-      
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libssl-dev pkg-config
-
-      - name: Run Tests
-        run: cargo test --verbose
-
-      - name: Generate Coverage Report
-        run: |
-          cargo install cargo-tarpaulin
-          cargo tarpaulin --out Html --output-dir coverage-report --fail-under 80 --timeout 120
-      
-      - name: Upload Coverage Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: coverage-report/tarpaulin-report.html
-
   lint:
-    name: Linting (Clippy & Fmt)
+    name: Check & Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -48,3 +20,34 @@ jobs:
         run: cargo fmt --all -- --check
       - name: Run Clippy
         run: cargo clippy -- -D warnings
+      - name: Check Docs
+        run: cargo doc --no-deps
+
+  test:
+    name: Test and Coverage
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libssl-dev pkg-config
+          # Using pre-built binaries or caching would be better in real world
+          cargo install cargo-nextest cargo-tarpaulin || true
+
+      - name: Run Tests (Nextest)
+        run: cargo nextest run --verbose
+
+      - name: Generate Coverage Report (Xml)
+        run: cargo tarpaulin --out Xml --output-dir coverage-report --fail-under 80 --timeout 120
+      
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage-report/tarpaulin-report.xml

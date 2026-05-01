@@ -650,16 +650,16 @@ services:
 ## 15. CI/CD Pipeline (Surekli Entegrasyon / Dagitim)
 
 ### 14.1 GitHub Actions - CI Pipeline (`.github/workflows/ci.yml`)
-- [ ] Trigger: push (main, develop), pull_request
-- [ ] **Job 1: Check & Lint**
-  - [ ] `cargo fmt --check` (kod formatlama)
-  - [ ] `cargo clippy -- -D warnings` (sifir uyari hedefi)
-  - [ ] `cargo doc --no-deps` (dokumantasyon kontrolu)
-- [ ] **Job 2: Test**
-  - [ ] `cargo nextest run` (unit + integration testler)
-  - [ ] Test sonuclarini JUnit XML formatinda raporla
-  - [ ] Coverage raporu olustur (`cargo tarpaulin --out xml`)
-  - [ ] Coverage raporu PR comment olarak goster
+- [x] Trigger: push (main, develop), pull_request
+- [x] **Job 1: Check & Lint**
+  - [x] `cargo fmt --check` (kod formatlama)
+  - [x] `cargo clippy -- -D warnings` (sifir uyari hedefi)
+  - [x] `cargo doc --no-deps` (dokumantasyon kontrolu)
+- [x] **Job 2: Test**
+  - [x] `cargo nextest run` (unit + integration testler)
+  - [x] Test sonuclarini JUnit XML formatinda raporla (Nextest varsayilan destek)
+  - [x] Coverage raporu olustur (`cargo tarpaulin --out xml`)
+  - [x] Coverage raporu PR comment olarak goster (Configured in yaml)
 - [ ] **Job 3: Security**
   - [ ] `cargo audit` (dependency guvenlik taramasi)
   - [ ] `cargo deny check` (lisans + supply chain)
