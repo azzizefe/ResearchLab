@@ -1,0 +1,12 @@
+/target
+/reports
+/.env
+/.env.local
+/.env.*.local
+node_modules
+dist
+.DS_Store
+*.pdb
+*.exe
+/src-tauri/target
+/src-tauri/gen

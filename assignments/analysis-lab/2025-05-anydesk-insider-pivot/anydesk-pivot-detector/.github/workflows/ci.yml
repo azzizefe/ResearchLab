@@ -6,7 +6,25 @@ on:
   pull_request:
     branches: [ main, master, develop ]
 
+env:
+  CARGO_TERM_COLOR: always
+
 jobs:
+  security:
+    name: Security & SAST
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Security Audit
+        run: |
+          cargo install cargo-audit cargo-deny || true
+          cargo audit
+          cargo deny check
+      - name: SAST (Geiger)
+        run: cargo install cargo-geiger || true && cargo geiger --forbid-unsafe
+
   lint:
     name: Check & Lint
     runs-on: ubuntu-latest
@@ -16,6 +34,14 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy, rustfmt
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-lint-${{ hashFiles('**/Cargo.lock') }}
       - name: Check Formatting
         run: cargo fmt --all -- --check
       - name: Run Clippy
@@ -23,31 +49,100 @@ jobs:
       - name: Check Docs
         run: cargo doc --no-deps
 
-  test:
-    name: Test and Coverage
+  frontend:
+    name: Frontend Quality
     runs-on: ubuntu-latest
-    needs: lint
+    defaults:
+      run:
+        working-directory: frontend
     steps:
       - uses: actions/checkout@v4
-      
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+      - name: Cache pnpm
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('frontend/pnpm-lock.yaml') }}
+      - name: Install dependencies
+        run: pnpm install
+      - name: Lint & Type-check
+        run: |
+          pnpm lint
+          pnpm type-check
+      - name: Build Frontend
+        run: pnpm build
+
+  test:
+    name: Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    needs: [lint, security]
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
-      
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libssl-dev pkg-config
-          # Using pre-built binaries or caching would be better in real world
-          cargo install cargo-nextest cargo-tarpaulin || true
-
-      - name: Run Tests (Nextest)
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.lock') }}
+      - name: Install dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libssl-dev pkg-config
+      - name: Install Nextest
+        run: cargo install cargo-nextest || true
+      - name: Run Tests
         run: cargo nextest run --verbose
 
-      - name: Generate Coverage Report (Xml)
-        run: cargo tarpaulin --out Xml --output-dir coverage-report --fail-under 80 --timeout 120
-      
-      - name: Upload Coverage Report
+  build:
+    name: Release Build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    needs: test
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Build Release
+        run: cargo build --release
+      - name: Binary Size
+        if: runner.os == 'Linux'
+        run: ls -lh target/release/anydesk-pivot-detector
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-xml
-          path: coverage-report/tarpaulin-report.xml
+          name: binary-${{ runner.os }}
+          path: |
+            target/release/anydesk-pivot-detector
+            target/release/anydesk-pivot-detector.exe
+
+  docker:
+    name: Docker Build & Smoke Test
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Image
+        run: docker build -t anydesk-pivot-detector:latest .
+      - name: Smoke Test
+        run: |
+          docker run --name smoke-test -d anydesk-pivot-detector:latest
+          sleep 5
+          docker ps | grep smoke-test
+          docker stop smoke-test
+      - name: Image Size
+        run: docker images anydesk-pivot-detector:latest

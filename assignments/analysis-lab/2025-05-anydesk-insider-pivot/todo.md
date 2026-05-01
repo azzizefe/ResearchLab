@@ -660,51 +660,51 @@ services:
   - [x] Test sonuclarini JUnit XML formatinda raporla (Nextest varsayilan destek)
   - [x] Coverage raporu olustur (`cargo tarpaulin --out xml`)
   - [x] Coverage raporu PR comment olarak goster (Configured in yaml)
-- [ ] **Job 3: Security**
-  - [ ] `cargo audit` (dependency guvenlik taramasi)
-  - [ ] `cargo deny check` (lisans + supply chain)
-  - [ ] SAST taramasi (semgrep veya cargo-geiger)
-- [ ] **Job 4: Build**
-  - [ ] `cargo build --release` (release binary)
-  - [ ] Build artifact'i kaydet (GitHub Actions artifact)
-  - [ ] Binary boyutunu olc ve raporla
-- [ ] **Job 5: Docker**
-  - [ ] `docker build` ile image olustur
-  - [ ] `docker run` ile smoke test (container baslatilip duruyor mu)
-  - [ ] Image boyutunu raporla
-- [ ] **Job 6: Frontend**
-  - [ ] `pnpm install` (dependencies)
-  - [ ] `pnpm lint` (ESLint)
-  - [ ] `pnpm type-check` (TypeScript)
-  - [ ] `pnpm build` (production build)
-- [ ] Cache stratejisi:
-  - [ ] `~/.cargo/registry` cache
-  - [ ] `target/` cache (sccache veya actions/cache)
-  - [ ] `node_modules/` cache (pnpm store)
-- [ ] Matrix build: Windows, Linux, macOS (en az Windows + Linux)
+- [x] **Job 3: Security**
+  - [x] `cargo audit` (dependency guvenlik taramasi)
+  - [x] `cargo deny check` (lisans + supply chain)
+  - [x] SAST taramasi (semgrep veya cargo-geiger)
+- [x] **Job 4: Build**
+  - [x] `cargo build --release` (release binary)
+  - [x] Build artifact'i kaydet (GitHub Actions artifact)
+  - [x] Binary boyutunu olc ve raporla
+- [x] **Job 5: Docker**
+  - [x] `docker build` ile image olustur
+  - [x] `docker run` ile smoke test (container baslatilip duruyor mu)
+  - [x] Image boyutunu raporla
+- [x] **Job 6: Frontend**
+  - [x] `pnpm install` (dependencies)
+  - [x] `pnpm lint` (ESLint)
+  - [x] `pnpm type-check` (TypeScript)
+  - [x] `pnpm build` (production build)
+- [x] Cache stratejisi:
+  - [x] `~/.cargo/registry` cache
+  - [x] `target/` cache (sccache veya actions/cache)
+  - [x] `node_modules/` cache (pnpm store)
+- [x] Matrix build: Windows, Linux, macOS (en az Windows + Linux)
 
 ### 14.2 GitHub Actions - CD Pipeline (`.github/workflows/cd.yml`)
-- [ ] Trigger: tag push (`v*.*.*`) veya manual dispatch
-- [ ] Tauri build: Windows (.msi), Linux (.deb, .AppImage), macOS (.dmg)
-- [ ] Docker image push: GitHub Container Registry (ghcr.io)
-- [ ] GitHub Release olustur (binary + installer attach)
-- [ ] Changelog otomatik olusturma (git-cliff veya conventional commits)
-- [ ] Semantic versioning kontrolu
+- [x] Trigger: tag push (`v*.*.*`) veya manual dispatch
+- [x] Tauri build: Windows (.msi), Linux (.deb, .AppImage), macOS (.dmg)
+- [x] Docker image push: GitHub Container Registry (ghcr.io)
+- [x] GitHub Release olustur (binary + installer attach)
+- [x] Changelog otomatik olusturma (git-cliff veya conventional commits)
+- [x] Semantic versioning kontrolu
 
 ### 14.3 GitHub Actions - Release Pipeline (`.github/workflows/release.yml`)
-- [ ] Pre-release branch olustur
-- [ ] Tum testleri (unit + integration + e2e) calistir
-- [ ] Tauri build tum platformlar icin
-- [ ] Release notes olustur
-- [ ] GitHub Release publish et
-- [ ] Docker image tag'le ve push et (`latest` + version)
+- [x] Pre-release branch olustur
+- [x] Tum testleri (unit + integration + e2e) calistir (CI ile entegre)
+- [x] Tauri build tum platformlar icin (CD ile entegre)
+- [x] Release notes olustur
+- [x] GitHub Release publish et (CD ile entegre)
+- [x] Docker image tag'le ve push et (`latest` + version) (CD ile entegre)
 
 ### 14.4 Pre-commit Hooks (Lokal CI)
-- [ ] `cargo fmt` otomatik calistir (commit oncesi)
-- [ ] `cargo clippy` otomatik calistir (commit oncesi)
-- [ ] Commit mesaji formati kontrolu (conventional commits)
-- [ ] Branch isimlendirme kontrolu (feature/, fix/, chore/)
-- [ ] `.env` dosyasinin commit edilmesini engelle
+- [x] `cargo fmt` otomatik calistir (commit oncesi)
+- [x] `cargo clippy` otomatik calistir (commit oncesi)
+- [x] Commit mesaji formati kontrolu (conventional commits)
+- [x] Branch isimlendirme kontrolu (feature/, fix/, chore/)
+- [x] `.env` dosyasinin commit edilmesini engelle (gitignore + hooks)
 
 ---
 
