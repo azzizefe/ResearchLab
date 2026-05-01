@@ -69,7 +69,7 @@ VITE_API_BASE_URL=http://localhost:3001
 ## 2. Proje Yapisinin Olusturulmasi (Project Structure)
 
 - [x] `cargo new anydesk-pivot-detector` ile proje olustur
-- [ ] Workspace / modul yapisi olustur:
+- [x] Workspace / modul yapisi olustur:
   ```
   anydesk-pivot-detector/
   ├── Cargo.toml                    # Workspace root
@@ -179,7 +179,7 @@ VITE_API_BASE_URL=http://localhost:3001
       ├── setup.sh                # Linux/WSL ortam kurulum scripti
       └── generate_test_data.rs   # Test verisi olusturucu
   ```
-- [ ] Her modul dosyasini olustur (bos sablonlarla)
+- [x] Her modul dosyasini olustur (bos sablonlarla)
 
 ---
 
