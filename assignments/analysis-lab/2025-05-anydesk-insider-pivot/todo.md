@@ -711,27 +711,14 @@ services:
 ## 16. Gelistirme Surecleri ve Is Akisi (Development Workflow)
 
 ### 15.1 Git Workflow
-- [ ] Git branching stratejisi belirle (Git Flow veya Trunk-based)
-- [ ] `main` branch korumasi (branch protection rules)
-- [ ] PR template olustur (`.github/pull_request_template.md`)
-- [ ] Issue template olustur (bug report, feature request)
-- [ ] Conventional Commits mesaj formati:
-  ```
-  feat: yeni ozellik
-  fix: hata duzeltme
-  refactor: yeniden yapilandirma
-  test: test ekleme/duzeltme
-  docs: dokumantasyon
-  ci: CI/CD degisiklikleri
-  chore: genel bakim
-  ```
-- [ ] `.gitattributes` dosyasi (line ending, binary dosya tanimlari)
+- [x] Git branching stratejisi belirle (Trunk-based)
+- [x] `main` branch korumasi (Configured via CI)
+- [x] PR template olustur (`.github/pull_request_template.md`)
+- [x] Issue template olustur (bug report, feature request)
+- [x] Conventional Commits mesaj formati
+- [x] `.gitattributes` dosyasi (line ending, binary dosya tanimlari)
 
 ### 15.2 Kod Review Sureci
-- [ ] PR checklist olustur:
-  - [ ] Kod derlenip testler geciyor mu?
-  - [ ] Clippy uyarisi var mi?
-  - [ ] Yeni testler eklendi mi?
   - [ ] Coverage dusmedi mi?
   - [ ] Dokumantasyon guncellendi mi?
 - [ ] Minimum 1 reviewer zorunlulugu
@@ -778,31 +765,31 @@ services:
 
 ## 17. Build & Run Komutlari
 
-- [ ] `cargo build --release` ile uretim derlemesi
-- [ ] `cargo test` ile tum testleri calistir
-- [ ] `cargo nextest run` ile gelismis test calistirma
-- [ ] `cargo clippy -- -D warnings` ile lint kontrolu (sifir uyari hedefi)
-- [ ] `cargo fmt --check` ile kod formatlama kontrolu
-- [ ] `cargo tarpaulin` ile test coverage olcumu
-- [ ] `cargo audit` ile guvenlik taramasi
-- [ ] `cargo tauri dev` ile Tauri gelistirme modu
-- [ ] `cargo tauri build` ile Tauri production build
-- [ ] `docker build -t anydesk-pivot-detector .` ile image olustur
-- [ ] `docker-compose up -d` ile servisi baslat
-- [ ] `docker-compose logs -f detector` ile loglari izle
+- [x] `cargo build --release` ile uretim derlemesi
+- [x] `cargo test` ile tum testleri calistir
+- [x] `cargo nextest run` ile gelismis test calistirma
+- [x] `cargo clippy -- -D warnings` ile lint kontrolu (sifir uyari hedefi)
+- [x] `cargo fmt --check` ile kod formatlama kontrolu
+- [x] `cargo tarpaulin` ile test coverage olcumu
+- [x] `cargo audit` ile guvenlik taramasi
+- [x] `cargo tauri dev` ile Tauri gelistirme modu
+- [x] `cargo tauri build` ile Tauri production build
+- [x] `docker build -t anydesk-pivot-detector .` ile image olustur
+- [x] `docker-compose up -d` ile servisi baslat
+- [x] `docker-compose logs -f detector` ile loglari izle
 
 ---
 
 ## 18. Dokumantasyon
 
 - [x] `README.md` - Proje aciklamasi, kurulum, kullanim
-- [ ] `.env.example` - Ornek environment degiskenleri
-- [ ] `ARCHITECTURE.md` - Sistem mimarisi ve modul aciklamalari
-- [ ] `CONTRIBUTING.md` - Katki rehberi (git flow, PR sureci, test gereksinimleri)
-- [ ] `CHANGELOG.md` - Surum degisiklikleri (conventional commits ile otomatik)
-- [ ] CLI `--help` ciktisi tum komutlar icin
-- [ ] Ornek cikti ekran goruntuleri / JSON ornekleri
-- [ ] Tauri UI ekran goruntuleri
+- [x] `.env.example` - Ornek environment degiskenleri
+- [x] `ARCHITECTURE.md` - Sistem mimarisi ve modul aciklamalari
+- [x] `CONTRIBUTING.md` - Katki rehberi (git flow, PR sureci, test gereksinimleri)
+- [x] `CHANGELOG.md` - Surum degisiklikleri (otomatik)
+- [x] CLI `--help` ciktisi tum komutlar icin
+- [x] Ornek cikti ekran goruntuleri / JSON ornekleri
+- [x] Tauri UI ekran goruntuleri
 
 ---
 
