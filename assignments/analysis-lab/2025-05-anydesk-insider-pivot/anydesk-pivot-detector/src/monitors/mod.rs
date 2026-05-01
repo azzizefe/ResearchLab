@@ -4,3 +4,4 @@ pub mod network_monitor;
 
 pub use process_monitor::ProcessMonitor;
 pub use file_watcher::FileWatcher;
+pub use network_monitor::NetworkMonitor;
