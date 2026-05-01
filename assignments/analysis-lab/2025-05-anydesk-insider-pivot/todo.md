@@ -541,38 +541,38 @@ services:
 - [x] Dosya izin / erisim hatalari testi (dosya yok, izin yok vb.)
 
 ### 12.3 E2E (End-to-End) Testler
-- [ ] **Senaryo 1: Insider Pivot Tespiti**
-  - [ ] Sahte AnyDesk trace logu olustur (bilinen ID disinda baglanti)
-  - [ ] `scan` komutunu calistir
-  - [ ] Uyari uretildigini dogrula (JSON rapor icerigini kontrol et)
-  - [ ] Risk skorunun HIGH/CRITICAL oldugunu dogrula
-  - [ ] Tauri UI'da uyarinin goruntulendigini dogrula
-- [ ] **Senaryo 2: Shadow IT (Portable AnyDesk)**
-  - [ ] Portable AnyDesk calistirilmasini simule et
-  - [ ] Process monitor'un tespitini dogrula
-  - [ ] Uyari ve raporlama zincirini dogrula
-- [ ] **Senaryo 3: Data Exfiltration**
-  - [ ] Dosya transferi + buyuk veri hacmi simule et
-  - [ ] Network monitor + file watcher tetiklenmesini dogrula
-  - [ ] Korelasyon skorunun arttigini dogrula
-- [ ] **Senaryo 4: Temiz Ortam (False Positive Kontrolu)**
-  - [ ] Normal / temiz log verisi ile tarama calistir
-  - [ ] Sifir veya dusuk uyari uretildigini dogrula
+- [x] **Senaryo 1: Insider Pivot Tespiti**
+  - [x] Sahte AnyDesk trace logu olustur (bilinen ID disinda baglanti)
+  - [x] `scan` komutunu calistir
+  - [x] Uyari uretildigini dogrula (JSON rapor icerigini kontrol et)
+  - [x] Risk skorunun HIGH/CRITICAL oldugunu dogrula
+  - [x] Tauri UI'da uyarinin goruntulendigini dogrula
+- [x] **Senaryo 2: Shadow IT (Portable AnyDesk)**
+  - [x] Portable AnyDesk calistirilmasini simule et
+  - [x] Process monitor'un tespitini dogrula
+  - [x] Uyari ve raporlama zincirini dogrula
+- [x] **Senaryo 3: Data Exfiltration**
+  - [x] Dosya transferi + buyuk veri hacmi simule et
+  - [x] Network monitor + file watcher tetiklenmesini dogrula
+  - [x] Korelasyon skorunun arttigini dogrula
+- [x] **Senaryo 4: Temiz Ortam (False Positive Kontrolu)**
+  - [x] Normal / temiz log verisi ile tarama calistir
+  - [x] Sifir veya dusuk uyari uretildigini dogrula
   - [ ] False positive oranini olc ve raporla
-- [ ] **Senaryo 5: Monitor Baslat/Durdur Dongusu**
-  - [ ] `monitor` komutunu baslat
-  - [ ] Canli olay uret (log dosyasina yaz)
-  - [ ] Olaylarin gercek zamanli yakalandigini dogrula
-  - [ ] Graceful shutdown (Ctrl+C) testi
-  - [ ] Yeniden baslatma sonrasi durum tutarliligi kontrolu
-- [ ] **Senaryo 6: Tauri UI E2E**
-  - [ ] Uygulama penceresi aciliyor mu
-  - [ ] Dashboard veriler yuklenyor mu
-  - [ ] Scan butonu calisiyor mu
-  - [ ] Monitor baslat/durdur butonlari calisiyor mu
-  - [ ] Alerts tablosu dogru verileri gosteriyor mu
-  - [ ] Rapor export calisiyor mu
-  - [ ] Config checker dogru sonuclari gosteriyor mu
+- [x] **Senaryo 5: Monitor Baslat/Durdur Dongusu**
+  - [x] `monitor` komutunu baslat
+  - [x] Canli olay uret (log dosyasina yaz)
+  - [x] Olaylarin gercek zamanli yakalandigini dogrula
+  - [x] Graceful shutdown (Ctrl+C) testi
+  - [x] Yeniden baslatma sonrasi durum tutarliligi kontrolu
+- [x] **Senaryo 6: Tauri UI E2E**
+  - [x] Uygulama penceresi aciliyor mu
+  - [x] Dashboard veriler yuklenyor mu
+  - [x] Scan butonu calisiyor mu
+  - [x] Monitor baslat/durdur butonlari calisiyor mu
+  - [x] Alerts tablosu dogru verileri gosteriyor mu
+  - [x] Rapor export calisiyor mu
+  - [x] Config checker dogru sonuclari gosteriyor mu
 
 ### 12.4 Performance / Benchmark Testler
 - [ ] `criterion` ile parser benchmark (10K, 100K, 1M satir log)
@@ -581,13 +581,13 @@ services:
 - [ ] Buyuk log dosyasi isleme suresi benchmark
 
 ### 12.5 Test Verisi
-- [ ] `tests/test_data/sample_ad_trace.log` - Ornek AnyDesk trace logu
-- [ ] `tests/test_data/sample_system_conf.txt` - Ornek system.conf
-- [ ] `tests/test_data/sample_service_conf.txt` - Ornek service.conf
-- [ ] `tests/test_data/malicious_trace.log` - Bilinen zararli senaryo
-- [ ] `tests/test_data/clean_trace.log` - Temiz senaryo (false positive kontrolu)
-- [ ] `scripts/generate_test_data.rs` - Otomatik test verisi olusturucu
-- [ ] Test fixture / factory fonksiyonlari (model nesneleri kolayca olustur)
+- [x] `tests/test_data/sample_ad_trace.log` - Ornek AnyDesk trace logu
+- [x] `tests/test_data/sample_system_conf.txt` - Ornek system.conf
+- [x] `tests/test_data/sample_service_conf.txt` - Ornek service.conf
+- [x] `tests/test_data/malicious_trace.log` - Bilinen zararli senaryo
+- [x] `tests/test_data/clean_trace.log` - Temiz senaryo (false positive kontrolu)
+- [x] `scripts/generate_test_data.rs` - Otomatik test verisi olusturucu
+- [x] Test fixture / factory fonksiyonlari (model nesneleri kolayca olustur)
 
 ### 12.6 Test Coverage (Kod Kapsami)
 - [ ] `cargo tarpaulin` ile coverage raporu olustur
