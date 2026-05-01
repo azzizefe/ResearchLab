@@ -4,3 +4,46 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+tokio = { version = "1", features = ["full"] }          # Async runtime
+serde = { version = "1", features = ["derive"] }         # Serialization
+serde_json = "1"                                         # JSON
+toml = "0.8"                                             # Config parsing
+dotenv = "0.15"                                          # .env dosyasi
+env_logger = "0.11"                                      # Loglama
+log = "0.4"                                              # Log makrolari
+chrono = { version = "0.4", features = ["serde"] }       # Tarih/saat
+notify = "7"                                             # Dosya degisiklik izleme
+regex = "1"                                              # Regex
+clap = { version = "4", features = ["derive"] }          # CLI argumanlari
+thiserror = "2"                                          # Hata yonetimi
+anyhow = "1"                                             # Hata zincirleme
+uuid = { version = "1", features = ["v4"] }              # UUID olusturma
+tabled = "0.17"                                          # Tablo ciktisi (konsol)
+colored = "3"                                            # Renkli terminal ciktisi
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.58", features = [
+    "Win32_System_ProcessStatus",
+    "Win32_System_Threading",
+    "Win32_Foundation",
+    "Win32_Security",
+    "Win32_System_Diagnostics_ToolHelp",
+    "Win32_NetworkManagement_IpHelper",
+] }
+sysinfo = "0.33"                                         # Sistem/proses bilgisi
+
+[dependencies.tauri]
+version = "2"                                            # Tauri v2 framework
+features = ["devtools"]
+
+[dev-dependencies]
+tempfile = "3"                                           # Gecici dosyalar (test)
+assert_cmd = "2"                                         # CLI testleri
+predicates = "3"                                         # Test assertions
+mockall = "0.13"                                         # Mock/stub olusturma
+proptest = "1"                                           # Property-based testing
+criterion = { version = "0.5", features = ["html_reports"] }  # Benchmark
+wiremock = "0.6"                                         # HTTP mock server
+insta = "1"                                              # Snapshot testing
+test-log = "0.2"                                         # Test icerisinde loglama
+serial_test = "3"                                        # Seri test calistirma
