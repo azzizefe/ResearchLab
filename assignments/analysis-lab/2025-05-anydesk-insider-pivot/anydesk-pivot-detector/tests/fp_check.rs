@@ -28,3 +28,23 @@ fn test_scenario_4_false_positive_check() {
             .all(|a| a.severity != anydesk_pivot_detector::models::alert::AlertSeverity::Critical)
     );
 }
+#[test]
+fn test_measure_fp_rate() {
+    let detector = PivotDetector::new();
+    let mut total_lines = 0;
+    let mut total_alerts = 0;
+
+    // Generate 1000 lines of normal activity noise
+    for i in 0..1000 {
+        let line = format!("2025-05-01 12:00:{:02}.000 info noise - Background message #{}", i % 60, i);
+        let alerts = detector.analyze_line(&line);
+        total_lines += 1;
+        total_alerts += alerts.len();
+    }
+
+    let fp_rate = (total_alerts as f64 / total_lines as f64) * 100.0;
+    println!("Measured False Positive Rate: {:.4}%", fp_rate);
+    
+    // Threshold: FP rate on pure noise should be very close to 0%
+    assert!(fp_rate < 0.5, "False positive rate on noise is too high: {:.4}%", fp_rate);
+}

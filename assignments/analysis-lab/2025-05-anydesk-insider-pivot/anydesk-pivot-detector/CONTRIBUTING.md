@@ -13,11 +13,17 @@ We follow a **Trunk-based Development** model.
 ## Quality Standards
 - **Lints**: Must pass `cargo clippy -- -D warnings`.
 - **Formatting**: Must pass `cargo fmt --check`.
-- **Tests**: All tests must pass (`cargo test`). Minimum 80% coverage is required.
-- **Documentation**: All public APIs must be documented.
+- **Tests**:- [ ] All tests passed (`cargo test`).
+- [ ] New tests were added for the changes.
+- [ ] Code coverage has not decreased.
+- [ ] Documentation was updated (README, ARCHITECTURE, etc.).
+- [ ] PR follows Conventional Commits.
 
-## PR Process
+## PR Process & Protection Rules
 1. Ensure `pre-commit` hooks are active.
 2. Push branch and open a Pull Request.
-3. CI Pipeline must be green.
-4. At least one approval is required for merge.
+3. **Branch Protection**: The `main` branch requires:
+   - At least 1 approved review.
+   - All CI Pipeline checks (Lint, Security, Test) must pass.
+   - Code coverage must remain above 80% (enforced by Tarpaulin).
+4. Reviewers will check for documentation updates and test quality.
