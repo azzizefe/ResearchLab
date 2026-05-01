@@ -1,123 +1,123 @@
-# AnyDesk Insider Pivot Detection System 🛡️
+# AnyDesk İç Tehdit ve Pivot Tespit Sistemi 🛡️
 
 ![Rust](https://img.shields.io/badge/rust-1.78+-orange.svg)
 ![Tauri](https://img.shields.io/badge/tauri-v2-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![CI](https://img.shields.io/badge/CI-GitHub%20Actions-brightgreen.svg)
 
-A sophisticated detection and monitoring system designed to identify and mitigate **AnyDesk Insider Pivot** attacks. This tool provides real-time visibility into unauthorized remote access, lateral movement, and data exfiltration attempts leveraging AnyDesk's proprietary protocol.
+**AnyDesk Insider Pivot** saldırılarını tanımlamak ve etkisiz hale getirmek için tasarlanmış gelişmiş bir tespit ve izleme sistemi. Bu araç, AnyDesk'in tescilli protokolünü kullanarak gerçekleştirilen yetkisiz uzaktan erişim, yanal hareket (lateral movement) ve veri sızdırma girişimlerine karşı gerçek zamanlı görünürlük sağlar.
 
 ---
 
-## 🚀 Overview
+## 🚀 Genel Bakış
 
-In modern enterprise environments, legitimate remote access tools like AnyDesk are frequently exploited by malicious insiders or compromised accounts to bypass perimeter security. This system provides a robust, Rust-powered detection engine that monitors AnyDesk's behavior, parses its forensic artifacts, and assigns risk scores to suspicious activities.
+Modern kurumsal ortamlarda, AnyDesk gibi meşru uzaktan erişim araçları, çevre güvenliğini atlatmak için kötü niyetli içerideki kişiler (insiders) veya ele geçirilmiş hesaplar tarafından sıklıkla suistimal edilir. Bu sistem; AnyDesk davranışlarını izleyen, adli bilişim kalıntılarını analiz eden ve şüpheli etkinliklere risk puanları atayan Rust tabanlı güçlü bir tespit motoru sunar.
 
-### Key Capabilities
-*   **🔍 Advanced Log Parsing**: Deep analysis of `ad.trace`, `system.conf`, and `service.conf` to extract connection IDs, session durations, and security configurations.
-*   **⏱️ Real-Time Monitoring**: Live tracking of AnyDesk processes, file system changes, and network activity.
-*   **🧠 Threat Analysis Engine**: A rule-based engine paired with an anomaly scorer to detect mesai hours bypass, unauthorized ACL changes, and suspicious process spawning (e.g., `anydesk.exe` -> `cmd.exe`).
-*   **🖥️ Desktop GUI (Tauri)**: A premium dashboard built with React and Tailwind CSS for visual monitoring and configuration management.
-*   **📊 Multi-Format Reporting**: Exportable reports in JSON, Syslog (CEF/LEEF), and formatted console tables.
-*   **🐳 Docker Ready**: Containerized deployment support for scalable monitoring environments.
+### Temel Yetenekler
+*   **🔍 Gelişmiş Log Analizi**: Bağlantı ID'lerini, oturum sürelerini ve güvenlik yapılandırmalarını çıkarmak için `ad.trace`, `system.conf` ve `service.conf` dosyalarının derinlemesine analizi.
+*   **⏱️ Gerçek Zamanlı İzleme**: AnyDesk süreçlerinin (processes), dosya sistemi değişikliklerinin ve ağ etkinliklerinin canlı takibi.
+*   **🧠 Tehdit Analiz Motoru**: Mesai saatleri dışı bağlantılar, yetkisiz ACL değişiklikleri ve şüpheli süreç başlatma (örn: `anydesk.exe` -> `cmd.exe`) durumlarını tespit eden kural tabanlı motor ve anomali puanlayıcı.
+*   **🖥️ Masaüstü Arayüzü (Tauri)**: Görsel izleme ve yapılandırma yönetimi için React ve Tailwind CSS ile oluşturulmuş premium dashboard.
+*   **📊 Çoklu Raporlama**: JSON, Syslog (CEF/LEEF) ve formatlanmış konsol tabloları şeklinde dışa aktarılabilir raporlar.
+*   **🐳 Docker Desteği**: Ölçeklenebilir izleme ortamları için konteynerize dağıtım desteği.
 
 ---
 
-## 🛠️ Technology Stack
+## 🛠️ Teknoloji Yığını
 
-| Component | Technology |
+| Bileşen | Teknoloji |
 | :--- | :--- |
-| **Core Engine** | Rust (Tokio, Serde, Notify) |
-| **GUI Framework** | Tauri v2 |
+| **Çekirdek Motor** | Rust (Tokio, Serde, Notify) |
+| **GUI Çerçevesi** | Tauri v2 |
 | **Frontend** | Vite, React 19, TypeScript, Tailwind CSS 4 |
-| **State Management** | Zustand & TanStack Query |
-| **Testing** | Nextest, Tarpaulin, Criterion |
-| **Deployment** | Docker & Docker Compose |
+| **Durum Yönetimi** | Zustand & TanStack Query |
+| **Test Araçları** | Nextest, Tarpaulin, Criterion |
+| **Dağıtım** | Docker & Docker Compose |
 
 ---
 
-## 📂 Project Structure
+## 📂 Proje Yapısı
 
 ```text
 anydesk-pivot-detector/
 ├── src/                    # Rust Backend
-│   ├── api/                # Tauri IPC Commands
-│   ├── parsers/            # Log & Config Parsers
-│   ├── monitors/           # Process, File & Network Monitors
-│   ├── analyzers/          # Rule Engine & Anomaly Scoring
-│   └── reporters/          # JSON, Console & Syslog Output
-├── src-tauri/              # Tauri Configuration
+│   ├── api/                # Tauri IPC Komutları
+│   ├── parsers/            # Log ve Yapılandırma Ayrıştırıcılar
+│   ├── monitors/           # Süreç, Dosya ve Ağ İzleyiciler
+│   ├── analyzers/          # Kural Motoru ve Anomali Puanlama
+│   └── reporters/          # JSON, Konsol ve Syslog Çıktıları
+├── src-tauri/              # Tauri Yapılandırması
 ├── frontend/               # React Dashboard (Vite + TS)
-├── config/                 # Default configurations
-├── tests/                  # Unit, Integration & E2E Tests
-└── docker-compose.yml      # Container Orchestration
+├── config/                 # Varsayılan yapılandırmalar
+├── tests/                  # Birim, Entegrasyon ve E2E Testleri
+└── docker-compose.yml      # Konteyner Orkestrasyonu
 ```
 
 ---
 
-## 🚦 Getting Started
+## 🚦 Başlangıç
 
-### Prerequisites
-*   **Rust**: 1.78 or higher (`rustup update stable`)
-*   **Node.js**: 18 LTS or higher
+### Gereksinimler
+*   **Rust**: 1.78 veya üzeri (`rustup update stable`)
+*   **Node.js**: 18 LTS veya üzeri
 *   **Tauri CLI**: `cargo install tauri-cli`
-*   **AnyDesk**: Installed or portable version for log generation
+*   **AnyDesk**: Log üretimi için yüklü veya taşınabilir sürüm
 
-### Installation
-1.  Clone the repository:
+### Kurulum
+1.  Depoyu klonlayın:
     ```bash
     git clone https://github.com/keyvanarasteh/ResearchLab.git
     cd ResearchLab/assignments/analysis-lab/2025-05-anydesk-insider-pivot
     ```
-2.  Install frontend dependencies:
+2.  Frontend bağımlılıklarını yükleyin:
     ```bash
     cd frontend && pnpm install && cd ..
     ```
-3.  Configure the environment:
+3.  Ortamı yapılandırın:
     ```bash
     cp .env.example .env
-    # Edit .env with your specific paths
+    # .env dosyasını kendi yollarınıza göre düzenleyin
     ```
 
-### Running the Application
-*   **Development Mode (GUI)**:
+### Uygulamayı Çalıştırma
+*   **Geliştirme Modu (GUI)**:
     ```bash
     cargo tauri dev
     ```
-*   **CLI Monitor Mode**:
+*   **CLI İzleme Modu**:
     ```bash
     cargo run -- monitor
     ```
-*   **One-Time Scan**:
+*   **Tek Seferlik Tarama**:
     ```bash
-    cargo run -- scan --path "C:/Path/To/Logs"
+    cargo run -- scan --path "C:/Log/Yolu"
     ```
 
 ---
 
-## 🛡️ Detection Scenarios
-This system is pre-configured to detect the following high-risk scenarios:
-1.  **Insider Pivot**: Unauthorized connection from a non-whitelisted ID.
-2.  **Shadow IT**: Execution of portable AnyDesk versions in unauthorized directories.
-3.  **Persistence**: Unattended access enabled with weak or static passwords.
-4.  **Lateral Movement**: Suspicious child processes (e.g., `net.exe`, `nmap.exe`) spawned via AnyDesk.
-5.  **Exfiltration**: High-volume data transfers detected during remote sessions.
+## 🛡️ Tespit Senaryoları
+Sistem aşağıdaki yüksek riskli senaryoları tespit edecek şekilde önceden yapılandırılmıştır:
+1.  **İç Tehdit Pivotu**: Beyaz listede olmayan bir ID'den gelen yetkisiz bağlantı.
+2.  **Shadow IT**: Yetkisiz dizinlerde taşınabilir (portable) AnyDesk sürümlerinin çalıştırılması.
+3.  **Kalıcılık (Persistence)**: Zayıf veya statik parolalarla etkinleştirilmiş "Unattended Access".
+4.  **Yanal Hareket**: AnyDesk üzerinden başlatılan şüpheli alt süreçler (örn: `net.exe`, `nmap.exe`).
+5.  **Veri Sızdırma**: Uzak oturumlar sırasında tespit edilen yüksek hacimli veri transferleri.
 
 ---
 
-## 🧪 Testing & Quality
-We maintain high standards for code quality and reliability:
-*   **Unit Tests**: `cargo test`
-*   **Lints**: `cargo clippy -- -D warnings`
-*   **Coverage**: `cargo tarpaulin --out Html`
-*   **Audit**: `cargo audit`
+## 🧪 Test ve Kalite
+Kod kalitesi ve güvenilirlik için yüksek standartlar uygulanmaktadır:
+*   **Birim Testleri**: `cargo test`
+*   **Lint Kontrolü**: `cargo clippy -- -D warnings`
+*   **Kod Kapsamı**: `cargo tarpaulin --out Html`
+*   **Güvenlik Denetimi**: `cargo audit`
 
 ---
 
-## 📝 License & Author
-*   **Student ID**: `2420191044`
-*   **Project UUID**: `1253dbcd-b308-4443-a29e-036bbe0b27c7`
-*   **License**: MIT
+## 📝 Lisans ve Yazar
+*   **Öğrenci No**: `2420191044`
+*   **Proje UUID**: `1253dbcd-b308-4443-a29e-036bbe0b27c7`
+*   **Lisans**: MIT
 
 ---
-*Created as part of the ResearchLab Security Analysis Assignments.*
+*ResearchLab Güvenlik Analizi Ödevleri kapsamında oluşturulmuştur.*
