@@ -78,6 +78,13 @@ async fn get_score_history() -> Result<Vec<f32>, String> {
     Ok(Vec::new())
 }
 
+/// 10.2.11: Ayarlari guncelle
+#[tauri::command]
+async fn update_config(strict_mode: bool, monitor_files: bool) -> Result<(), String> {
+    println!("Backend Config Updated: Strict={}, MonitorFiles={}", strict_mode, monitor_files);
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -93,7 +100,8 @@ pub fn run() {
             get_process_tree,
             get_network_connections,
             export_report,
-            get_score_history
+            get_score_history,
+            update_config
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
