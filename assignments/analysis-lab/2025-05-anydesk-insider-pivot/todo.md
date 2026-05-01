@@ -314,16 +314,16 @@ serial_test = "3"                                        # Seri test calistirma
 - [ ] Bilinmeyen / yeni AnyDesk ID tespiti
 
 ### 6.2 system.conf Parser
-- [ ] AnyDesk ID okuma
-- [ ] Guvenlik ayarlarini parse etme
-- [ ] Lisans bilgisi cikarma
-- [ ] Unattended access durumunu kontrol etme
+- [x] AnyDesk ID okuma
+- [x] Guvenlik ayarlarini parse etme
+- [x] Lisans bilgisi cikarma
+- [x] Unattended access durumunu kontrol etme
 
 ### 6.3 service.conf Parser
-- [ ] ACL (Access Control List) kurallarini parse etme
-- [ ] Izin verilen ID listesi cikarma
-- [ ] 2FA durumunu kontrol etme
-- [ ] Devre disi birakilmis ozellikleri tespit etme (file transfer, clipboard vb.)
+- [x] ACL (Access Control List) kurallarini parse etme
+- [x] Izin verilen ID listesi cikarma
+- [x] 2FA durumunu kontrol etme
+- [x] Devre disi birakilmis ozellikleri tespit etme (file transfer, clipboard vb.)
 
 ---
 
