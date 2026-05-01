@@ -11,8 +11,10 @@ pub fn parse_trace_file<P: AsRef<Path>>(path: P) -> Result<Vec<Connection>, AppE
     let reader = BufReader::new(file);
     let mut connections = Vec::new();
 
-    let re_incoming = Regex::new(r"(?P<ts>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}).*Incoming connection from (?P<id>\d{3} \d{3} \d{3})").unwrap();
-    let re_outgoing = Regex::new(r"(?P<ts>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}).*Connecting to (?P<id>\d{3} \d{3} \d{3})").unwrap();
+    let re_incoming = Regex::new(r"(?P<ts>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}).*Incoming connection from (?P<id>\d{3} \d{3} \d{3})")
+        .expect("Static Regex for incoming connections is invalid");
+    let re_outgoing = Regex::new(r"(?P<ts>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}).*Connecting to (?P<id>\d{3} \d{3} \d{3})")
+        .expect("Static Regex for outgoing connections is invalid");
 
     for line in reader.lines() {
         let line = line?;

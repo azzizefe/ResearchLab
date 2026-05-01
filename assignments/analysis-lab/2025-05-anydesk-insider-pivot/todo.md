@@ -601,26 +601,26 @@ services:
 ## 14. Hata Azaltma ve Kod Kalitesi (Error Reduction)
 
 ### 13.1 Merkezi Hata Yonetimi
-- [ ] `errors/app_error.rs` ile `AppError` enum olustur (`thiserror`)
-- [ ] Her modul icin ozel hata turleri tanimla:
-  - [ ] `ParseError` (gecersiz log formati, eksik alan)
-  - [ ] `ConfigError` (gecersiz ayar, dosya bulunamadi)
-  - [ ] `MonitorError` (izleme basarisiz, erisim engellendi)
-  - [ ] `AnalyzerError` (kural motoru hatasi)
-  - [ ] `ReportError` (dosya yazma hatasi, syslog baglanti hatasi)
-  - [ ] `TauriError` (IPC hatasi, state hatasi)
-- [ ] `From` trait implementasyonlari (hata donusumleri)
-- [ ] Kullaniciya anlamli hata mesajlari (`Display` trait)
-- [ ] Hata zinciri koruma (`anyhow::Context`)
+- [x] `errors/app_error.rs` ile `AppError` enum olustur (`thiserror`)
+- [x] Her modul icin ozel hata turleri tanimla:
+  - [x] `ParseError` (gecersiz log formati, eksik alan)
+  - [x] `ConfigError` (gecersiz ayar, dosya bulunamadi)
+  - [x] `MonitorError` (izleme basarisiz, erisim engellendi)
+  - [x] `AnalyzerError` (kural motoru hatasi)
+  - [x] `ReportError` (dosya yazma hatasi, syslog baglanti hatasi)
+  - [x] `TauriError` (IPC hatasi, state hatasi)
+- [x] `From` trait implementasyonlari (hata donusumleri)
+- [x] Kullaniciya anlamli hata mesajlari (`Display` trait)
+- [x] Hata zinciri koruma (`anyhow::Context`)
 
 ### 13.2 Defensive Programming
-- [ ] Tum `unwrap()` cagrilarini kaldir -> `?` veya `expect("aciklama")` kullan
-- [ ] `panic!` cagrilarini kaldir (sadece gercekten ulasilamaz kodda kullan)
-- [ ] Input validation: her public fonksiyon girisini dogrula
-- [ ] Dosya yolu sanitization (path traversal onleme)
-- [ ] Log dosyasi boyut kontrolu (cok buyuk dosyalarda streaming okuma)
-- [ ] Timeout mekanizmasi (ag islemleri, dosya okumalari)
-- [ ] Graceful degradation (bir modul basarisiz olursa digerleri calismaya devam etsin)
+- [x] Tum `unwrap()` cagrilarini kaldir -> `?` veya `expect("aciklama")` kullan
+- [x] `panic!` cagrilarini kaldir (sadece gercekten ulasilamaz kodda kullan)
+- [x] Input validation: her public fonksiyon girisini dogrula
+- [x] Dosya yolu sanitization (path traversal onleme)
+- [x] Log dosyasi boyut kontrolu (cok buyuk dosyalarda streaming okuma)
+- [x] Timeout mekanizmasi (ag islemleri, dosya okumalari)
+- [x] Graceful degradation (bir modul basarisiz olursa digerleri calismaya devam etsin)
 
 ### 13.3 Statik Analiz
 - [ ] `cargo clippy -- -W clippy::all -W clippy::pedantic` ile tam lint

@@ -12,9 +12,12 @@ pub struct PivotDetector {
 impl PivotDetector {
     pub fn new() -> Self {
         Self {
-            re_incoming: Regex::new(r"Incoming connection from (?P<id>\d{3} \d{3} \d{3})").unwrap(),
-            re_file_transfer: Regex::new(r"File transfer").unwrap(),
-            re_startup: Regex::new(r"AnyDesk is starting|Starting service").unwrap(),
+            re_incoming: Regex::new(r"Incoming connection from (?P<id>\d{3} \d{3} \d{3})")
+                .expect("PivotDetector: Incoming regex invalid"),
+            re_file_transfer: Regex::new(r"File transfer")
+                .expect("PivotDetector: File transfer regex invalid"),
+            re_startup: Regex::new(r"AnyDesk is starting|Starting service")
+                .expect("PivotDetector: Startup regex invalid"),
         }
     }
 
