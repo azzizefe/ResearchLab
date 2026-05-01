@@ -521,24 +521,24 @@ services:
 ## 13. Test Stratejisi (Kapsamli)
 
 ### 12.1 Unit Testler
-- [ ] Parser unit testleri (her parser modulu icin en az 5 test case)
-- [ ] Analyzer kural testleri (her kural icin pozitif + negatif case)
-- [ ] Skor hesaplama testleri (sinir degerleri dahil: 0, 30, 60, 80, 100)
-- [ ] Config parsing testleri (gecerli, gecersiz, eksik alan senaryolari)
-- [ ] Model serialization/deserialization testleri
-- [ ] Error type testleri (her hata turunu tetikle ve dogrula)
-- [ ] `mockall` ile mock testler (external dependency izolasyonu)
-- [ ] `proptest` ile property-based testler (rastgele giris verisi)
-- [ ] `insta` ile snapshot testler (JSON/console cikti regresyonu)
+- [x] Parser unit testleri (her parser modulu icin en az 5 test case)
+- [x] Analyzer kural testleri (her kural icin pozitif + negatif case)
+- [x] Skor hesaplama testleri (sinir degerleri dahil: 0, 30, 60, 80, 100)
+- [x] Config parsing testleri (gecerli, gecersiz, eksik alan senaryolari)
+- [x] Model serialization/deserialization testleri
+- [x] Error type testleri (her hata turunu tetikle ve dogrula)
+- [x] `mockall` ile mock testler (external dependency izolasyonu)
+- [x] `proptest` ile property-based testler (rastgele giris verisi)
+- [x] `insta` ile snapshot testler (JSON/console cikti regresyonu)
 
 ### 12.2 Integration Testler
-- [ ] Ornek log dosyalari ile uctan uca pipeline testi
-- [ ] CLI komut testleri (`assert_cmd` ile her alt komut)
-- [ ] Docker container baslatma ve calistirma testi
-- [ ] Config dosyasi + .env + CLI args birlikte calisma testi
-- [ ] Monitor -> Analyzer -> Reporter zincir testi
-- [ ] Tauri IPC komut entegrasyon testleri
-- [ ] Dosya izin / erisim hatalari testi (dosya yok, izin yok vb.)
+- [x] Ornek log dosyalari ile uctan uca pipeline testi
+- [x] CLI komut testleri (`assert_cmd` ile her alt komut)
+- [x] Docker container baslatma ve calistirma testi (Yapılandırıldı)
+- [x] Config dosyasi + .env + CLI args birlikte calisma testi
+- [x] Monitor -> Analyzer -> Reporter zincir testi
+- [x] Tauri IPC komut entegrasyon testleri
+- [x] Dosya izin / erisim hatalari testi (dosya yok, izin yok vb.)
 
 ### 12.3 E2E (End-to-End) Testler
 - [ ] **Senaryo 1: Insider Pivot Tespiti**
