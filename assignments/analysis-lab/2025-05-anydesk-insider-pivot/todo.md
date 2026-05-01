@@ -5,7 +5,7 @@
 **UUID**: `1253dbcd-b308-4443-a29e-036bbe0b27c7`  
 **Ogrenci**: `2420191044`
 
----
+---ssss
 
 ## 1. Ortam Hazirlik (Environment Setup)
 
