@@ -377,16 +377,16 @@ serial_test = "3"                                        # Seri test calistirma
 ## 9. Reporter Modulleri (Raporlama)
 
 ### 9.1 JSON Reporter
-- [ ] Uyari olaylarini JSON formatinda dosyaya yaz
-- [ ] Her rapor icin UUID olustur
-- [ ] Zaman damgasi, kaynak, skor, detay alanlari
-- [ ] Rapor dosyasini `APP_REPORT_OUTPUT_DIR` altina kaydet
+- [x] Uyari olaylarini JSON formatinda dosyaya yaz
+- [x] Her rapor icin UUID olustur
+- [x] Zaman damgasi, kaynak, skor, detay alanlari
+- [x] Rapor dosyasini `APP_REPORT_OUTPUT_DIR` altina kaydet
 
 ### 9.2 Console Reporter
-- [ ] Terminal icin renkli ve formatlanmis cikti
-- [ ] `tabled` ile olay tablosu goster
-- [ ] Severity'ye gore renk kodlama (yesil/sari/kirmizi)
-- [ ] Ozet istatistik ciktisi
+- [x] Terminal icin renkli ve formatlanmis cikti
+- [x] `tabled` ile olay tablosu goster
+- [x] Severity'ye gore renk kodlama (yesil/sari/kirmizi)
+- [x] Ozet istatistik ciktisi
 
 ### 9.3 Syslog Reporter (Opsiyonel)
 - [ ] Syslog formatinda (RFC 5424) uyari gonderme
