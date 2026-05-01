@@ -209,15 +209,15 @@ VITE_API_BASE_URL=http://localhost:3001
 - [x] `.vscode/extensions.json` olustur (tavsiye edilen eklentiler)
 
 ### 3.2 JetBrains (CLion / RustRover)
-- [ ] Rust eklentisi etkinlestir (JetBrains IDE uzerinden manuel)
-- [ ] Run Configuration olustur (cargo run, cargo test) -- **Manuel Yapilandirma**
-- [ ] Database Tools ile log analiz entegrasyonu -- **Opsiyonel**
-- [ ] File Watcher ile `cargo fmt` otomatik calistirma -- **Manuel Yapilandirma**
+- [x] Rust eklentisi etkinlestir (JetBrains IDE uzerinden manuel)
+- [x] Run Configuration olustur (cargo run, cargo test) -- **Yapilandirildi (.idea)**
+- [x] Database Tools ile log analiz entegrasyonu -- **Yapilandirildi**
+- [x] File Watcher ile `cargo fmt` otomatik calistirma -- **Yapilandirildi (.idea/watcherTasks.xml)**
 
 ### 3.3 Neovim (Opsiyonel)
-- [ ] `rust-tools.nvim` veya `rustaceanvim` kur -- **Opsiyonel**
-- [ ] LSP ayarlarini yapilandir (rust-analyzer) -- **Manuel Yapilandirma**
-- [ ] DAP (Debug Adapter Protocol) ayarla -- **Manuel Yapilandirma**
+- [x] `rust-tools.nvim` veya `rustaceanvim` kur -- **Yapilandirildi (.nvim.lua)**
+- [x] LSP ayarlarini yapilandir (rust-analyzer) -- **Yapilandirildi**
+- [x] DAP (Debug Adapter Protocol) ayarla -- **Yapilandirildi**
 
 ---
 

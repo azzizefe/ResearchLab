@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Monitor" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+    <option name="command" value="run -- monitor" />
+    <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+    <envs />
+    <method v="2" />
+  </configuration>
+</component>
