@@ -575,10 +575,10 @@ services:
   - [x] Config checker dogru sonuclari gosteriyor mu
 
 ### 12.4 Performance / Benchmark Testler
-- [ ] `criterion` ile parser benchmark (10K, 100K, 1M satir log)
-- [ ] Monitor bellek kullanimi izleme (uzun sure calistirma)
-- [ ] Tauri UI acilis suresi olcumu (<3 saniye hedefi)
-- [ ] Buyuk log dosyasi isleme suresi benchmark
+- [x] `criterion` ile parser benchmark (10K, 100K, 1M satir log)
+- [x] Monitor bellek kullanimi izleme (uzun sure calistirma)
+- [x] Tauri UI acilis suresi olcumu (<3 saniye hedefi)
+- [x] Buyuk log dosyasi isleme suresi benchmark
 
 ### 12.5 Test Verisi
 - [x] `tests/test_data/sample_ad_trace.log` - Ornek AnyDesk trace logu
