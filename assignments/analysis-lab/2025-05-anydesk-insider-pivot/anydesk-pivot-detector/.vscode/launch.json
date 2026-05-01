@@ -1,0 +1,41 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug Backend (CLI)",
+      "cargo": {
+        "args": ["run", "--bin", "anydesk-pivot-detector"],
+        "filter": {
+          "name": "anydesk-pivot-detector",
+          "kind": "bin"
+        }
+      },
+      "args": ["monitor"],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug Tests",
+      "cargo": {
+        "args": ["test", "--no-run", "--bin", "anydesk-pivot-detector"],
+        "filter": {
+          "name": "anydesk-pivot-detector",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Tauri Dev",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "tauri", "dev"],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
