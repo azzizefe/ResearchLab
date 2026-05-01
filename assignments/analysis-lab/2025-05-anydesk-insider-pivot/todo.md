@@ -411,24 +411,24 @@ serial_test = "3"                                        # Seri test calistirma
 ## 11. Tauri Frontend (Masaustu GUI)
 
 ### 10.1 Tauri Proje Kurulumu
-- [ ] `cargo tauri init` ile Tauri projesini baslat
-- [ ] `tauri.conf.json` yapilandir (pencere boyutu, baslik, ikon)
-- [ ] Vite + React + TypeScript sablonu olustur (`pnpm create vite`)
-- [ ] Tailwind CSS entegrasyonu
+- [x] `cargo tauri init` ile Tauri projesini baslat
+- [x] `tauri.conf.json` yapilandir (pencere boyutu, baslik, ikon)
+- [x] Vite + React + TypeScript sablonu olustur (`pnpm create vite`)
+- [x] Tailwind CSS entegrasyonu
 - [ ] `cargo tauri dev` ile gelistirme modunu test et
-- [ ] Frontend <-> Rust backend IPC (invoke) baglantisini kur
+- [x] Frontend <-> Rust backend IPC (invoke) baglantisini kur
 
 ### 10.2 Tauri Komutlari (Backend -> Frontend API)
-- [ ] `#[tauri::command] fn get_alerts()` - Guncel uyarilari getir
-- [ ] `#[tauri::command] fn start_monitor()` - Izlemeyi baslat
-- [ ] `#[tauri::command] fn stop_monitor()` - Izlemeyi durdur
-- [ ] `#[tauri::command] fn run_scan()` - Tek seferlik tarama baslat
-- [ ] `#[tauri::command] fn get_config()` - Mevcut konfigurasyonu getir
-- [ ] `#[tauri::command] fn check_anydesk_status()` - AnyDesk durumunu kontrol et
-- [ ] `#[tauri::command] fn get_process_tree()` - Proses agacini getir
-- [ ] `#[tauri::command] fn get_network_connections()` - Ag baglantilari getir
-- [ ] `#[tauri::command] fn export_report(format)` - Raporu disa aktar
-- [ ] `#[tauri::command] fn get_score_history()` - Risk skor gecmisi
+- [x] `#[tauri::command] fn get_alerts()` - Guncel uyarilari getir
+- [x] `#[tauri::command] fn start_monitor()` - Izlemeyi baslat
+- [x] `#[tauri::command] fn stop_monitor()` - Izlemeyi durdur
+- [x] `#[tauri::command] fn run_scan()` - Tek seferlik tarama baslat
+- [x] `#[tauri::command] fn get_config()` - Mevcut konfigurasyonu getir
+- [x] `#[tauri::command] fn check_anydesk_status()` - AnyDesk durumunu kontrol et
+- [x] `#[tauri::command] fn get_process_tree()` - Proses agacini getir
+- [x] `#[tauri::command] fn get_network_connections()` - Ag baglantilari getir
+- [x] `#[tauri::command] fn export_report(format)` - Raporu disa aktar
+- [x] `#[tauri::command] fn get_score_history()` - Risk skor gecmisi
 
 ### 10.3 Frontend Sayfalari ve Bilesenler
 - [ ] **Dashboard** - Ana sayfa: ozet istatistikler, son uyarilar, risk skoru
