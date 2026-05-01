@@ -98,4 +98,55 @@ impl RuleEngine {
         }
         None
     }
+    /// Rule: Dosya transferi + hassas dosya yolu eslesme
+    pub fn check_sensitive_file_access(&self, path: &str) -> Option<Alert> {
+        let sensitive_paths = vec!["C:\\Windows\\System32\\config", "C:\\Users\\Administrator", "wallet.dat", "config.php", ".env"];
+        if sensitive_paths.iter().any(|s| path.contains(s)) {
+            return Some(Alert {
+                id: uuid::Uuid::new_v4().to_string(),
+                timestamp: Utc::now(),
+                severity: AlertSeverity::Critical,
+                title: "Sensitive File Access".to_string(),
+                description: format!("AnyDesk accessed sensitive path: {}", path),
+                source_module: "RuleEngine".to_string(),
+                evidence: json!({ "path": path }),
+            });
+        }
+        None
+    }
+
+    /// Rule: Unattended access + statik sifre kullanimi
+    pub fn check_unattended_access(&self, log_line: &str) -> Option<Alert> {
+        if log_line.contains("Password accepted") || log_line.contains("Unattended access") {
+            return Some(Alert {
+                id: uuid::Uuid::new_v4().to_string(),
+                timestamp: Utc::now(),
+                severity: AlertSeverity::Medium,
+                title: "Unattended Access Detected".to_string(),
+                description: "Unattended access or static password used for connection.".to_string(),
+                source_module: "RuleEngine".to_string(),
+                evidence: json!({ "line": log_line }),
+            });
+        }
+        None
+    }
+
+    /// Rule: Portable AnyDesk calistirilmasi
+    pub fn check_portable_anydesk(&self, process_path: &str) -> Option<Alert> {
+        let path_lower = process_path.to_lowercase();
+        let is_portable = !path_lower.contains("program files");
+        
+        if is_portable && path_lower.contains("anydesk") {
+            return Some(Alert {
+                id: uuid::Uuid::new_v4().to_string(),
+                timestamp: Utc::now(),
+                severity: AlertSeverity::Low,
+                title: "Portable AnyDesk Execution".to_string(),
+                description: format!("AnyDesk running from non-standard location: {}", process_path),
+                source_module: "RuleEngine".to_string(),
+                evidence: json!({ "path": process_path }),
+            });
+        }
+        None
+    }
 }

@@ -356,21 +356,21 @@ serial_test = "3"                                        # Seri test calistirma
 ## 8. Analyzer Modulleri (Tehdit Analizi)
 
 ### 8.1 Pivot Detector
-- [ ] Insider pivot senaryosu icin kural motoru olustur
-- [ ] Kural: Mesai saatleri disinda baglanti tespiti
-- [ ] Kural: Bilinen ACL listesi disindaki ID'lerden baglanti
-- [ ] Kural: AnyDesk uzerinden shell/komut satiri baslatilmasi
-- [ ] Kural: Agda tarama araci calistirilmasi (nmap, net view vb.)
-- [ ] Kural: Dosya transferi + hassas dosya yolu eslesme
-- [ ] Kural: Unattended access + statik sifre kullanimi
-- [ ] Kural: Portable AnyDesk calistirilmasi (Shadow IT)
+- [x] Insider pivot senaryosu icin kural motoru olustur
+- [x] Kural: Mesai saatleri disinda baglanti tespiti
+- [x] Kural: Bilinen ACL listesi disindaki ID'lerden baglanti
+- [x] Kural: AnyDesk uzerinden shell/komut satiri baslatilmasi
+- [x] Kural: Agda tarama araci calistirilmasi (nmap, net view vb.)
+- [x] Kural: Dosya transferi + hassas dosya yolu eslesme
+- [x] Kural: Unattended access + statik sifre kullanimi
+- [x] Kural: Portable AnyDesk calistirilmasi (Shadow IT)
 
 ### 8.2 Anomaly Scorer
-- [ ] Her olay icin risk skoru hesaplama (0-100)
-- [ ] Skor esikleri: LOW (0-30), MEDIUM (31-60), HIGH (61-80), CRITICAL (81-100)
-- [ ] Birden fazla dusuk riskli olaydan yuksek skor uretme (korelasyon)
-- [ ] Zaman bazli anomali tespiti (normal calisma saatleri disinda)
-- [ ] Skor gecmisi ve trend analizi
+- [x] Her olay icin risk skoru hesaplama (0-100)
+- [x] Skor esikleri: LOW (0-30), MEDIUM (31-60), HIGH (61-80), CRITICAL (81-100)
+- [x] Birden fazla dusuk riskli olaydan yuksek skor uretme (korelasyon)
+- [x] Zaman bazli anomali tespiti (normal calisma saatleri disinda)
+- [x] Skor gecmisi ve trend analizi
 
 ---
 

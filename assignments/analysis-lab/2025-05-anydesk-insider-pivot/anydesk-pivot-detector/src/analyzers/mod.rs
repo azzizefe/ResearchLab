@@ -4,3 +4,4 @@ pub mod rule_engine;
 
 pub use pivot_detector::PivotDetector;
 pub use rule_engine::RuleEngine;
+pub use anomaly_scorer::AnomalyScorer;
