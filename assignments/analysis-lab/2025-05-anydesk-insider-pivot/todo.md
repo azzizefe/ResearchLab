@@ -305,11 +305,11 @@ serial_test = "3"                                        # Seri test calistirma
 ## 6. Parser Modulleri (Log Analizi)
 
 ### 6.1 ad.trace Parser
-- [ ] `ad.trace` dosya formatini analiz et ve dokumante et
-- [ ] Baglanti kayitlarini parse eden fonksiyon (`parse_trace_file`)
-- [ ] Baglanti yonu tespiti (inbound vs outbound)
-- [ ] AnyDesk ID cikarma
-- [ ] Oturum suresi hesaplama
+- [x] `ad.trace` dosya formatini analiz et ve dokumante et
+- [x] Baglanti kayitlarini parse eden fonksiyon (`parse_trace_file`)
+- [x] Baglanti yonu tespiti (inbound vs outbound)
+- [x] AnyDesk ID cikarma
+- [x] Oturum suresi hesaplama (Connection model icerisinde)
 - [ ] Zaman damgasi parse etme
 - [ ] Bilinmeyen / yeni AnyDesk ID tespiti
 
