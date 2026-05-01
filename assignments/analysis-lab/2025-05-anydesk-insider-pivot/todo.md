@@ -431,29 +431,29 @@ serial_test = "3"                                        # Seri test calistirma
 - [x] `#[tauri::command] fn get_score_history()` - Risk skor gecmisi
 
 ### 10.3 Frontend Sayfalari ve Bilesenler
-- [ ] **Dashboard** - Ana sayfa: ozet istatistikler, son uyarilar, risk skoru
-- [ ] **AlertsTable** - Tum uyarilar tablosu (filtreleme, siralama, arama)
-- [ ] **ProcessTree** - AnyDesk proses agaci gorusel gosterim
-- [ ] **NetworkMap** - Ag baglantilari haritasi / grafik
-- [ ] **ScoreGauge** - Canli risk skor gostergesi (gauge chart)
-- [ ] **LogViewer** - Gercek zamanli log izleme (tail -f benzeri)
-- [ ] **ConfigChecker** - AnyDesk guvenlik konfigurasyonu kontrol paneli
-- [ ] **Settings** - Uygulama ayarlari sayfasi
-- [ ] **Timeline** - Olay zaman cizelgesi (kronolojik gorunum)
+- [x] **Dashboard** - Ana sayfa: ozet istatistikler, son uyarilar, risk skoru
+- [x] **AlertsTable** - Tum uyarilar tablosu (filtreleme, siralama, arama)
+- [x] **ProcessTree** - AnyDesk proses agaci gorusel gosterim
+- [x] **NetworkMap** - Ag baglantilari haritasi / grafik
+- [x] **ScoreGauge** - Canli risk skor gostergesi (gauge chart)
+- [x] **LogViewer** - Gercek zamanli log izleme (tail -f benzeri)
+- [x] **ConfigChecker** - AnyDesk guvenlik konfigurasyonu kontrol paneli
+- [x] **Settings** - Uygulama ayarlari sayfasi
+- [x] **Timeline** - Olay zaman cizelgesi (kronolojik gorunum)
 
 ### 10.4 Frontend State & Veri Akisi
-- [ ] Zustand store olustur (global state yonetimi)
-- [ ] React Query ile Tauri IPC cache/refetch yonetimi
-- [ ] Event listener: Tauri backend'den gercek zamanli olay dinleme
-- [ ] Dark/Light tema destegi
-- [ ] Responsive tasarim (minimum 1024x768)
+- [x] Zustand store olustur (global state yonetimi)
+- [x] React Query ile Tauri IPC cache/refetch yonetimi
+- [x] Event listener: Tauri backend'den gercek zamanli olay dinleme
+- [x] Dark/Light tema destegi
+- [x] Responsive tasarim (minimum 1024x768)
 
 ### 10.5 Tauri Build & Dagitim
-- [ ] `cargo tauri build` ile production build
-- [ ] Windows installer (.msi) olusturma
-- [ ] Uygulama imzalama (code signing) ayarlari
-- [ ] Auto-update mekanizmasi (tauri-plugin-updater)
-- [ ] Splash screen ve uygulama ikonu tasarimi
+- [x] `cargo tauri build` ile production build (Yapılandırıldı)
+- [x] Windows installer (.msi) olusturma (Yapılandırıldı)
+- [x] Uygulama imzalama (code signing) ayarlari
+- [x] Auto-update mekanizmasi (tauri-plugin-updater)
+- [x] Splash screen ve uygulama ikonu tasarimi
 
 ---
 
