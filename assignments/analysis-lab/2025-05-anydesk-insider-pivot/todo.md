@@ -389,9 +389,9 @@ serial_test = "3"                                        # Seri test calistirma
 - [x] Ozet istatistik ciktisi
 
 ### 9.3 Syslog Reporter (Opsiyonel)
-- [ ] Syslog formatinda (RFC 5424) uyari gonderme
-- [ ] UDP/TCP syslog destegi
-- [ ] SIEM entegrasyonu icin CEF/LEEF format destegi
+- [x] Syslog formatinda (RFC 5424) uyari gonderme
+- [x] UDP/TCP syslog destegi
+- [x] SIEM entegrasyonu icin CEF/LEEF format destegi
 
 ---
 
