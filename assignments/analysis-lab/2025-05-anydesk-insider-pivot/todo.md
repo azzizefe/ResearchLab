@@ -339,10 +339,10 @@ serial_test = "3"                                        # Seri test calistirma
 
 ### 7.2 File Watcher
 - [x] `notify` crate ile AnyDesk log dosyalarini izle
-- [ ] Yeni baglanti olaylarini gercek zamanli yakala
-- [ ] Konfigurasyon degisikliklerini tespit et (system.conf, service.conf)
-- [ ] Dosya transferi aktivitesi tespiti
-- [ ] AnyDesk'in ilk kez yuklendigini/calistirildigini tespit et
+- [x] Yeni baglanti olaylarini gercek zamanli yakala
+- [x] Konfigurasyon degisikliklerini tespit et (system.conf, service.conf)
+- [x] Dosya transferi aktivitesi tespiti
+- [x] AnyDesk'in ilk kez yuklendigini/calistirildigini tespit et
 
 ### 7.3 Network Monitor
 - [ ] AnyDesk iliskili ag baglantilari izle (port 6568, 443)
