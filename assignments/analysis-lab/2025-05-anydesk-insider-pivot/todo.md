@@ -9,21 +9,21 @@
 
 ## 1. Ortam Hazirlik (Environment Setup)
 
-- [ ] Rust toolchain kurulumu (`rustup`, `cargo`, `rustc` >= 1.78)
-- [ ] Git kurulumu ve repo olusturma (`git init`)
-- [ ] `.gitignore` dosyasi olusturma (target/, .env, *.log, *.exe)
-- [ ] Docker Desktop kurulumu (Windows / WSL2 backend)
-- [ ] Docker Compose kurulumu (v2+)
-- [ ] `.env` dosyasi olusturma (asagidaki degiskenlerle)
-- [ ] VS Code + rust-analyzer eklentisi kurulumu
-- [ ] Node.js (>= 18 LTS) ve npm/pnpm kurulumu (Tauri frontend icin)
-- [ ] Tauri CLI kurulumu (`cargo install tauri-cli`)
-- [ ] WebView2 Runtime kurulumu (Windows icin, Tauri gereksinimi)
-- [ ] `cargo install cargo-audit` (guvenlik denetimi)
-- [ ] `cargo install cargo-tarpaulin` (kod kapsama / coverage)
-- [ ] `cargo install cargo-nextest` (gelismis test runner)
-- [ ] `cargo install cargo-watch` (hot-reload gelistirme)
-- [ ] `rustup component add clippy rustfmt` (lint + format)
+- [x] Rust toolchain kurulumu (`rustup`, `cargo`, `rustc` >= 1.78) -- rustc 1.94.1, cargo 1.94.1, rustup 1.29.0
+- [x] Git kurulumu ve repo olusturma (`git init`) -- git 2.53.0, repo initialized
+- [x] `.gitignore` dosyasi olusturma (target/, .env, *.log, *.exe) -- olusturuldu
+- [x] Docker Desktop kurulumu (Windows / WSL2 backend) -- Docker 29.4.0
+- [x] Docker Compose kurulumu (v2+) -- Docker Compose v5.1.2
+- [x] `.env` dosyasi olusturma (asagidaki degiskenlerle) -- olusturuldu
+- [x] VS Code + rust-analyzer eklentisi kurulumu -- VS Code 1.117.0
+- [x] Node.js (>= 18 LTS) ve npm/pnpm kurulumu (Tauri frontend icin) -- Node v24.13.0, npm 11.6.2, pnpm 10.33.2
+- [x] Tauri CLI kurulumu (`cargo install tauri-cli`) -- tauri-cli 2.10.1
+- [ ] WebView2 Runtime kurulumu (Windows icin, Tauri gereksinimi) -- **EKSIK: Manuel kurulum gerekli**
+- [x] `cargo install cargo-audit` (guvenlik denetimi) -- cargo-audit 0.22.1
+- [x] `cargo install cargo-tarpaulin` (kod kapsama / coverage) -- cargo-llvm-cov 0.8.5 (Windows uyumlu alternatif)
+- [x] `cargo install cargo-nextest` (gelismis test runner) -- cargo-nextest 0.9.132
+- [x] `cargo install cargo-watch` (hot-reload gelistirme) -- cargo-watch 8.5.3
+- [x] `rustup component add clippy rustfmt` (lint + format) -- her ikisi de kurulu
 
 ### `.env` Degiskenleri
 
