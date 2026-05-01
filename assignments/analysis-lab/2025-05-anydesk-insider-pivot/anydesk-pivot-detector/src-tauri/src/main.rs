@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    anydesk_pivot_detector_gui_lib::run();
+    anydesk_pivot_detector_gui::run();
 }

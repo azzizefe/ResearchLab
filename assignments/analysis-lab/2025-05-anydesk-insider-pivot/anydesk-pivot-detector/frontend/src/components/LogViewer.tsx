@@ -1,4 +1,5 @@
-import { Terminal } from "lucide-react";
+import { Terminal, Cpu } from "lucide-react";
+import PageHeader from "./PageHeader";
 
 export default function LogViewer() {
   const mockLogs = [
@@ -10,11 +11,17 @@ export default function LogViewer() {
   ];
 
   return (
-    <div className="p-8 space-y-6">
-      <header>
-        <h1 className="text-3xl font-bold">Real-time Logs</h1>
-        <p className="text-slate-400">Monitoring AnyDesk trace files and system events.</p>
-      </header>
+    <div className="p-10 space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+      <div className="flex justify-between items-start">
+        <PageHeader 
+          title="Terminal Logs" 
+          subtitle="Real-time monitoring of AnyDesk trace and system events." 
+        />
+        <div className="flex items-center gap-3 px-4 py-2 bg-cyan-400/10 border border-cyan-400/20 rounded-xl">
+          <Cpu size={18} className="text-cyan-400 animate-pulse" />
+          <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest">Live Streaming</span>
+        </div>
+      </div>
 
       <div className="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden font-mono text-sm leading-relaxed">
         <div className="p-3 border-b border-slate-800 bg-slate-900 flex items-center gap-2">

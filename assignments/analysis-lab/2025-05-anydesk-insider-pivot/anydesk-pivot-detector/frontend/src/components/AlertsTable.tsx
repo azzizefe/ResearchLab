@@ -1,22 +1,22 @@
 import { useStore } from "../store/useStore";
-import { Search, Filter, Download } from "lucide-react";
+import { Search, Filter, Download, ShieldAlert } from "lucide-react";
+import PageHeader from "./PageHeader";
 
 export default function AlertsTable() {
   const { alerts } = useStore();
 
   return (
-    <div className="p-8 space-y-6">
-      <header className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold">Threat Intelligence</h1>
-          <p className="text-slate-400">Detailed list of all detected security events.</p>
-        </div>
-        <div className="flex gap-4">
-          <button className="flex items-center gap-2 px-4 py-2 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors">
-            <Download size={18} /> Export
-          </button>
-        </div>
-      </header>
+    <div className="p-10 space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+      <div className="flex justify-between items-start">
+        <PageHeader 
+          title="Threat Intelligence" 
+          subtitle="Detailed list of all detected security events." 
+        />
+        <button className="flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all font-bold text-sm">
+          <Download size={20} className="text-cyan-400" /> 
+          <span>EXPORT LOGS</span>
+        </button>
+      </div>
 
       <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl overflow-hidden">
         <div className="p-4 border-b border-slate-700/50 flex gap-4">
