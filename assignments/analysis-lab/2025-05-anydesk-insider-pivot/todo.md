@@ -632,11 +632,11 @@ services:
 - [x] `cargo deny check` ile lisans ve supply-chain kontrolu
 
 ### 13.4 Loglama Stratejisi
-- [ ] Her module uygun log seviyeleri: `error`, `warn`, `info`, `debug`, `trace`
-- [ ] Structured logging (key=value formati)
-- [ ] Hassas veri maskeleme (AnyDesk ID'lerin son 4 hanesi haric)
-- [ ] Log rotation destegi (dosya boyutu bazli)
-- [ ] Hata loglarinda stack trace bilgisi
+- [x] Her module uygun log seviyeleri: `error`, `warn`, `info`, `debug`, `trace`
+- [x] Structured logging (key=value formati)
+- [x] Hassas veri maskeleme (AnyDesk ID'lerin son 4 hanesi haric)
+- [x] Log rotation destegi (dosya boyutu bazli)
+- [x] Hata loglarinda stack trace bilgisi
 
 ### 13.5 Rust-Specific Guvenlik
 - [ ] `unsafe` blok kullanmaktan kacin (zorunlu degilse)

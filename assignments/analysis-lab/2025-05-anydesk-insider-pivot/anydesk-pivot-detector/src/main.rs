@@ -13,6 +13,14 @@ use tokio::sync::mpsc;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 1. Parse CLI arguments
+    // 1. Initialize Tracing (Structured Logging)
+    tracing_subscriber::fmt()
+        .with_max_level(tracing::Level::INFO)
+        .with_target(false)
+        .init();
+
+    tracing::info!("Starting AnyDesk Pivot Detector");
+
     let cli = Cli::parse();
 
     // 2. Load Configuration
@@ -60,10 +68,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         // 10.1.2: `monitor` - Surekli canli izleme modu
         Some(Commands::Monitor) => {
-            println!(
-                "{}",
-                "Starting real-time monitoring system...".green().bold()
-            );
+            tracing::info!(target: "monitor", "Starting real-time monitoring system...");
 
             let (tx, mut rx) = mpsc::channel(100);
 
