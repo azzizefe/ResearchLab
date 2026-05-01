@@ -1,0 +1,25 @@
+[app]
+name = "anydesk-pivot-detector"
+log_level = "info"
+report_output_dir = "./reports"
+
+[anydesk]
+trace_path = "%AppData%/AnyDesk/ad.trace"
+system_conf_path = "%AppData%/AnyDesk/system.conf"
+service_conf_path = "%AppData%/AnyDesk/service.conf"
+svc_trace_path = "C:/ProgramData/AnyDesk/ad_svc.trace"
+
+[monitor]
+interval_secs = 10
+suspicious_processes = ["cmd.exe", "powershell.exe", "net.exe", "nmap.exe", "mimikatz.exe", "psexec.exe"]
+alert_threshold = 3
+
+[network]
+blocked_domains = ["*.net.anydesk.com"]
+blocked_ports = [6568, 50001, 50002, 50003]
+allowed_anydesk_ids = []
+
+[reporting]
+format = "json"
+enable_syslog = false
+syslog_server = "127.0.0.1:514"
