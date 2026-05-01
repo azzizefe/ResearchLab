@@ -186,14 +186,14 @@ VITE_API_BASE_URL=http://localhost:3001
 ## 3. IDE Yapilandirmasi (IDE Setup)
 
 ### 3.1 VS Code
-- [ ] `rust-analyzer` eklentisi kur ve etkinlestir
-- [ ] `CodeLLDB` eklentisi kur (Rust debugging)
-- [ ] `Even Better TOML` eklentisi kur
-- [ ] `Error Lens` eklentisi kur (satir ici hata gosterimi)
-- [ ] `crates` eklentisi kur (Cargo.toml dependency yonetimi)
-- [ ] `Tauri` eklentisi kur
-- [ ] `ESLint` + `Prettier` eklentileri kur (frontend icin)
-- [ ] `.vscode/settings.json` olustur:
+- [x] `rust-analyzer` eklentisi kur ve etkinlestir
+- [ ] `CodeLLDB` eklentisi kur (Rust debugging) -- **Manuel Kurulum Gerekli**
+- [x] `Even Better TOML` eklentisi kur
+- [x] `Error Lens` eklentisi kur (satir ici hata gosterimi)
+- [ ] `crates` eklentisi kur (Cargo.toml dependency yonetimi) -- **Manuel Kurulum Gerekli**
+- [x] `Tauri` eklentisi kur
+- [ ] `ESLint` + `Prettier` eklentileri kur (frontend icin) -- **Manuel Kurulum Gerekli**
+- [x] `.vscode/settings.json` olustur
   ```json
   {
     "rust-analyzer.check.command": "clippy",
@@ -204,17 +204,9 @@ VITE_API_BASE_URL=http://localhost:3001
     "[typescriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" }
   }
   ```
-- [ ] `.vscode/launch.json` olustur (debug konfigurasyonlari):
-  - [ ] Backend debug profili (Rust binary)
-  - [ ] Frontend debug profili (Chrome DevTools)
-  - [ ] Tauri birlesik debug profili
-- [ ] `.vscode/tasks.json` olustur:
-  - [ ] `cargo build` task
-  - [ ] `cargo test` task
-  - [ ] `cargo clippy` task
-  - [ ] `tauri dev` task
-  - [ ] `docker-compose up` task
-- [ ] `.vscode/extensions.json` olustur (tavsiye edilen eklentiler)
+- [x] `.vscode/launch.json` olustur (debug konfigurasyonlari)
+- [x] `.vscode/tasks.json` olustur
+- [x] `.vscode/extensions.json` olustur (tavsiye edilen eklentiler)
 
 ### 3.2 JetBrains (CLion / RustRover)
 - [ ] Rust eklentisi etkinlestir
