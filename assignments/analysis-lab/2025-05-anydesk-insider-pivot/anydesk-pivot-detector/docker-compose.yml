@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # 10.2.1: Ana servis tanimla (detector)
+  detector:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: anydesk-pivot-detector
+    # 10.2.5: Restart policy (unless-stopped)
+    restart: unless-stopped
+    # 10.2.4: .env dosyasindan environment degiskenleri
+    env_file:
+      - .env
+    volumes:
+      # 10.2.2: Volume mount: Host log dosyalari -> container
+      - /var/log/anydesk:/var/log/anydesk:ro
+      # 10.2.3: Volume mount: Rapor cikti dizini
+      - ./reports:/app/reports
+    environment:
+      - APP_REPORT_OUTPUT_DIR=${APP_REPORT_OUTPUT_DIR:-/app/reports}
+      - ANYDESK_TRACE_PATH=${ANYDESK_TRACE_PATH:-/var/log/anydesk/ad.trace}
+    # 10.2.6: Log driver yapilandirmasi
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
+  # 10.2.7: Opsiyonel: Elasticsearch + Kibana servisleri
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200 >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.13.0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      elasticsearch:
+        condition: service_healthy

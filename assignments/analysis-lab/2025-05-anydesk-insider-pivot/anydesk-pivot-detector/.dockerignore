@@ -1,0 +1,14 @@
+target/
+.git/
+.env
+*.log
+node_modules/
+frontend/dist/
+frontend/node_modules/
+src-tauri/target/
+.vscode/
+.idea/
+.nvim.lua
+Dockerfile
+docker-compose.yml
+reports/

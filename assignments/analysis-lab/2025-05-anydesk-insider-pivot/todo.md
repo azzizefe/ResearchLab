@@ -460,11 +460,11 @@ serial_test = "3"                                        # Seri test calistirma
 ## 12. Docker Yapilandirmasi
 
 ### 10.1 Dockerfile
-- [ ] Multi-stage build olustur (builder + runtime)
-- [ ] Rust builder image (`rust:1.78-slim`)
-- [ ] Runtime image (`debian:bookworm-slim`)
-- [ ] Non-root kullanici ile calistir
-- [ ] Health check endpoint/komut ekle
+- [x] Multi-stage build olustur (builder + runtime)
+- [x] Rust builder image (`rust:1.78-slim`)
+- [x] Runtime image (`debian:bookworm-slim`)
+- [x] Non-root kullanici ile calistir
+- [x] Health check endpoint/komut ekle
 
 ```dockerfile
 # Ornek Dockerfile taslagi
@@ -485,13 +485,13 @@ CMD ["monitor"]
 ```
 
 ### 10.2 docker-compose.yml
-- [ ] Ana servis tanimla (`detector`)
-- [ ] Volume mount: Host log dosyalari -> container
-- [ ] Volume mount: Rapor cikti dizini
-- [ ] `.env` dosyasindan environment degiskenleri
-- [ ] Restart policy (`unless-stopped`)
-- [ ] Log driver yapilandirmasi
-- [ ] Opsiyonel: Elasticsearch + Kibana servisleri (gorunturleme icin)
+- [x] Ana servis tanimla (`detector`)
+- [x] Volume mount: Host log dosyalari -> container
+- [x] Volume mount: Rapor cikti dizini
+- [x] `.env` dosyasindan environment degiskenleri
+- [x] Restart policy (`unless-stopped`)
+- [x] Log driver yapilandirmasi
+- [x] Opsiyonel: Elasticsearch + Kibana servisleri (gorunturleme icin)
 
 ```yaml
 # Ornek docker-compose.yml taslagi
@@ -514,7 +514,7 @@ services:
 ```
 
 ### 10.3 .dockerignore
-- [ ] `target/`, `.git/`, `.env`, `*.log` ekle
+- [x] `target/`, `.git/`, `.env`, `*.log` ekle
 
 ---
 
