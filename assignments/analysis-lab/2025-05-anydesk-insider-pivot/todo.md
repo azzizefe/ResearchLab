@@ -330,15 +330,15 @@ serial_test = "3"                                        # Seri test calistirma
 ## 7. Monitor Modulleri (Canli Izleme)
 
 ### 7.1 Process Monitor
-- [ ] `sysinfo` crate ile calistirilan surecleri listele
-- [ ] `anydesk.exe` surecini tespit et
-- [ ] AnyDesk'ten spawn edilen alt surecleri izle (cmd, powershell, net.exe vb.)
-- [ ] Supheli proses zinciri tespiti (anydesk -> cmd -> net.exe gibi)
-- [ ] Portable AnyDesk kullanimi tespiti (kurulum disi calistirma)
-- [ ] Proses baslatma olaylarini logla
+- [x] `sysinfo` crate ile calistirilan surecleri listele
+- [x] `anydesk.exe` surecini tespit et
+- [x] AnyDesk'ten spawn edilen alt surecleri izle (cmd, powershell, net.exe vb.)
+- [x] Supheli proses zinciri tespiti (anydesk -> cmd -> net.exe gibi)
+- [x] Portable AnyDesk kullanimi tespiti (kurulum disi calistirma)
+- [x] Proses baslatma olaylarini logla
 
 ### 7.2 File Watcher
-- [ ] `notify` crate ile AnyDesk log dosyalarini izle
+- [x] `notify` crate ile AnyDesk log dosyalarini izle
 - [ ] Yeni baglanti olaylarini gercek zamanli yakala
 - [ ] Konfigurasyon degisikliklerini tespit et (system.conf, service.conf)
 - [ ] Dosya transferi aktivitesi tespiti

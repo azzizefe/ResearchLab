@@ -1,4 +1,4 @@
-use sysinfo::{System, ProcessRefreshKind, RefreshKind};
+use sysinfo::{System, ProcessRefreshKind, RefreshKind, UpdateKind};
 use crate::models::process_event::{ProcessEvent, ProcessEventType};
 use crate::errors::app_error::AppError;
 use std::time::Duration;
@@ -12,7 +12,7 @@ pub struct ProcessMonitor {
 impl ProcessMonitor {
     pub fn new(suspicious_list: Vec<String>) -> Self {
         let mut sys = System::new_with_specifics(
-            RefreshKind::new().with_processes(ProcessRefreshKind::new().with_user())
+            RefreshKind::nothing().with_processes(ProcessRefreshKind::nothing().with_user(UpdateKind::Always))
         );
         sys.refresh_all();
         
