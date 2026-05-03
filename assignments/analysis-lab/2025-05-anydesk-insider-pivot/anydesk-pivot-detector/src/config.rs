@@ -40,6 +40,7 @@ pub struct AppConfig {
     pub monitor: MonitorSettings,
     pub network: NetworkSettings,
     pub reporting: ReportingSettings,
+    pub elasticsearch: ElasticsearchSettings,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -78,6 +79,13 @@ pub struct ReportingSettings {
     pub format: String,
     pub enable_syslog: bool,
     pub syslog_server: String,
+    pub enable_elasticsearch: bool,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct ElasticsearchSettings {
+    pub url: String,
+    pub index: String,
 }
 
 impl AppConfig {
@@ -98,6 +106,15 @@ impl AppConfig {
         }
         if let Ok(val) = std::env::var("ANYDESK_TRACE_PATH") {
             config.anydesk.trace_path = val;
+        }
+        if let Ok(val) = std::env::var("ELASTICSEARCH_URL") {
+            config.elasticsearch.url = val;
+        }
+        if let Ok(val) = std::env::var("ELASTICSEARCH_INDEX") {
+            config.elasticsearch.index = val;
+        }
+        if let Ok(val) = std::env::var("ENABLE_ELASTICSEARCH") {
+            config.reporting.enable_elasticsearch = val.to_lowercase() == "true";
         }
         // ... (add other overrides as needed)
 

@@ -4,7 +4,7 @@ use anydesk_pivot_detector::analyzers::{AnomalyScorer, PivotDetector, RuleEngine
 use anydesk_pivot_detector::config::{AppConfig, Cli, Commands};
 use anydesk_pivot_detector::monitors::{FileWatcher, NetworkMonitor, ProcessMonitor};
 use anydesk_pivot_detector::parsers::{parse_system_conf, parse_trace_file};
-use anydesk_pivot_detector::reporters::{ConsoleReporter, JsonReporter};
+use anydesk_pivot_detector::reporters::{ConsoleReporter, ElasticsearchReporter, JsonReporter};
 use clap::Parser;
 use colored::Colorize;
 use std::path::PathBuf;
@@ -35,6 +35,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let console = ConsoleReporter;
     let json_reporter = JsonReporter::new(config.app.report_output_dir.clone());
+    let es_reporter = std::sync::Arc::new(ElasticsearchReporter::new(
+        config.elasticsearch.url.clone(),
+        config.elasticsearch.index.clone(),
+    ));
     let _rule_engine = RuleEngine::new(config.clone());
     let _scorer = AnomalyScorer::new(config.monitor.alert_threshold as f32 * 10.0);
     let detector = PivotDetector::new();
@@ -65,6 +69,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             console.report(&all_alerts);
             let report_path = json_reporter.report(&all_alerts)?;
             println!("{} {}", "Report saved to:".green(), report_path);
+
+            if config.reporting.enable_elasticsearch {
+                let es = es_reporter.clone();
+                let alerts = all_alerts.clone();
+                tokio::spawn(async move {
+                    if let Err(e) = es.report(&alerts).await {
+                        tracing::error!("Failed to report to Elasticsearch: {}", e);
+                    }
+                });
+            }
         }
 
         // 10.1.2: `monitor` - Surekli canli izleme modu
@@ -97,6 +111,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         if !alerts.is_empty() {
                             console.report(&alerts);
                             let _ = json_reporter.report(&alerts);
+                            if config.reporting.enable_elasticsearch {
+                                let es = es_reporter.clone();
+                                let alerts_to_send = alerts.clone();
+                                tokio::spawn(async move {
+                                    if let Err(e) = es.report(&alerts_to_send).await {
+                                        tracing::error!("Failed to report to Elasticsearch: {}", e);
+                                    }
+                                });
+                            }
                         }
                     }
                 }

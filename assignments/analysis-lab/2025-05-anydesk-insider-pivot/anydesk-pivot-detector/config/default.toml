@@ -25,3 +25,8 @@ allowed_anydesk_ids = []
 format = "json"
 enable_syslog = false
 syslog_server = "127.0.0.1:514"
+enable_elasticsearch = true
+
+[elasticsearch]
+url = "http://elasticsearch:9200"
+index = "anydesk-alerts"
