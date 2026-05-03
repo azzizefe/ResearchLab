@@ -16,19 +16,19 @@ Bu belge, AnyDesk Pivot Detector sisteminin Docker üzerinde sorunsuz bir şekil
 
 
 ## 3. Sistemi Ayağa Kaldırma (Docker Compose)
-- [ ] Terminalinizde `docker-compose.yml` dosyasının bulunduğu ana dizine gidin:
+- [x] Terminalinizde `docker-compose.yml` dosyasının bulunduğu ana dizine gidin:
   `cd c:\Users\efe\Desktop\ResearchLab\ResearchLab\assignments\analysis-lab\2025-05-anydesk-insider-pivot\anydesk-pivot-detector`
-- [ ] İmajları derlemek ve arka planda tüm servisleri başlatmak için aşağıdaki komutu çalıştırın:
+- [x] İmajları derlemek ve arka planda tüm servisleri başlatmak için aşağıdaki komutu çalıştırın:
   `docker-compose up -d --build`
-- [ ] Konsoldan tüm imajların (detector, elasticsearch, kibana) başarıyla indirildiğini/derlendiğini doğrulayın.
+- [x] Konsoldan tüm imajların (detector, elasticsearch, kibana) başarıyla indirildiğini/derlendiğini doğrulayın.
 
 ## 4. Servislerin Durumunu ve Logları Kontrol Etme
-- [ ] Çalışan container'ların listesini görmek için:
+- [x] Çalışan container'ların listesini görmek için:
   `docker-compose ps` 
   *(Tüm servislerin durumu 'Up' olmalıdır)*
-- [ ] `detector` servisinin loglarını anlık olarak izleyerek uygulamanın başarılı bir şekilde çalışıp AnyDesk loglarını okumaya başladığını test edin:
+- [x] `detector` servisinin loglarını anlık olarak izleyerek uygulamanın başarılı bir şekilde çalışıp AnyDesk loglarını okumaya başladığını test edin:
   `docker-compose logs -f detector`
-- [ ] `elasticsearch`'in sorunsuz başlatıldığını loglardan kontrol edin:
+- [x] `elasticsearch`'in sorunsuz başlatıldığını loglardan kontrol edin:
   `docker-compose logs elasticsearch`
 
 ## 5. Elastic Stack (Kibana) Arayüzüne Erişim
@@ -73,7 +73,7 @@ Bu belge, AnyDesk Pivot Detector sisteminin Docker üzerinde sorunsuz bir şekil
   - `map_or` kullanımlarının basitleştirilmesi (`is_none_or` kullanımı),
   - Public fonksiyonlarda eksik hata dökümantasyonları (`# Errors`),
   - `u32` değerinden `f32`'ye dönüşümlerde yaşanabilecek hassasiyet kayıpları.
-- [ ] **Docker Elasticsearch RAM Limiti:** `docker-compose.yml` içinde ES için `-Xms512m -Xmx512m` verilmiş. Yüksek AnyDesk log trafiğinde bu Elasticsearch'in çökmesine (`OOM Killed`) sebep olacaktır, üretim ortamı için en az `1GB-2GB` ayarlanmalıdır.
+- [x] **Docker Elasticsearch RAM Limiti:** `docker-compose.yml` içinde ES için `-Xms1g -Xmx1g` olarak güncellendi. (Öncesi 512MB idi).
 
 ## 12. Neovim (.nvim.lua) Geliştirme Ortamı İyileştirmeleri
 - [ ] **Güvenli Eklenti Yükleme (pcall):** Mevcut `.nvim.lua` dosyasında `require('lspconfig')` ve `require('dap')` doğrudan çağrılıyor. Eklentiler yüklü değilse Neovim hata verecektir. Bunları `pcall` (protected call) ile sarmalayarak güvenli hale getirin.

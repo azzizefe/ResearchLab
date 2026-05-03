@@ -19,7 +19,7 @@ services:
       - ./reports:/app/reports
     environment:
       - APP_REPORT_OUTPUT_DIR=${APP_REPORT_OUTPUT_DIR:-/app/reports}
-      - ANYDESK_TRACE_PATH=${ANYDESK_TRACE_PATH:-/var/log/anydesk/ad.trace}
+      - ANYDESK_TRACE_PATH=/var/log/anydesk/ad.trace
     # 10.2.6: Log driver yapilandirmasi
     logging:
       driver: "json-file"

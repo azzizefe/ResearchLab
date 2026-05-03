@@ -32,8 +32,9 @@ RUN groupadd -r anydesk && useradd -r -g anydesk anydesk-user
 RUN mkdir -p /app/reports && chown -R anydesk-user:anydesk /app/reports
 USER anydesk-user
 
-# Copy binary from builder
+# Copy binary and config from builder
 COPY --from=builder /usr/src/app/target/release/anydesk-pivot-detector /app/
+COPY --from=builder /usr/src/app/config /app/config
 
 # Environment defaults
 ENV APP_REPORT_OUTPUT_DIR=/app/reports
