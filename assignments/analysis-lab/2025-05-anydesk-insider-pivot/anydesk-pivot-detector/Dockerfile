@@ -1,6 +1,6 @@
 # 12.1.1: Multi-stage build olustur (builder + runtime)
 # Stage 1: Builder (Rust builder image)
-FROM rust:1.78-slim AS builder
+FROM rust:1.94-slim AS builder
 
 WORKDIR /usr/src/app
 
@@ -11,8 +11,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy manifest and source
-COPY Cargo.toml Cargo.lock ./
-COPY src ./src
+COPY . .
 
 # 12.1.2: Rust builder image
 RUN cargo build --release

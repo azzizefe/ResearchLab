@@ -1,7 +1,7 @@
 [package]
 name = "anydesk-pivot-detector"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 
 [[bench]]
 name = "parser_bench"
@@ -19,7 +19,7 @@ chrono = { version = "0.4", features = ["serde"] }       # Tarih/saat
 notify = "7"                                             # Dosya degisiklik izleme
 regex = "1"                                              # Regex
 clap = { version = "4", features = ["derive"] }          # CLI argumanlari
-thiserror = "2"                                          # Hata yonetimi
+thiserror = "1"                                          # Hata yonetimi
 anyhow = "1"                                             # Hata zincirleme
 uuid = { version = "1", features = ["v4"] }              # UUID olusturma
 tabled = "0.17"                                          # Tablo ciktisi (konsol)
@@ -40,9 +40,7 @@ windows = { version = "0.58", features = [
 ] }
 sysinfo = "0.33"                                         # Sistem/proses bilgisi
 
-[dependencies.tauri]
-version = "2"                                            # Tauri v2 framework
-features = ["devtools"]
+
 
 [dev-dependencies]
 tempfile = "3"                                           # Gecici dosyalar (test)

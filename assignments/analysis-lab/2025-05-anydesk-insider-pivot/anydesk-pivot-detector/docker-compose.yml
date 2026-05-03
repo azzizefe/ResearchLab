@@ -14,7 +14,7 @@ services:
       - .env
     volumes:
       # 10.2.2: Volume mount: Host log dosyalari -> container
-      - /var/log/anydesk:/var/log/anydesk:ro
+      - ${ANYDESK_LOG_DIR}:/var/log/anydesk:ro
       # 10.2.3: Volume mount: Rapor cikti dizini
       - ./reports:/app/reports
     environment:
@@ -37,7 +37,7 @@ services:
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
     ports:
       - "9200:9200"
     healthcheck:
