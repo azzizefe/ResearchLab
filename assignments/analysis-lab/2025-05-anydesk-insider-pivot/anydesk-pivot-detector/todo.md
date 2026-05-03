@@ -32,9 +32,9 @@ Bu belge, AnyDesk Pivot Detector sisteminin Docker üzerinde sorunsuz bir şekil
   `docker-compose logs elasticsearch`
 
 ## 5. Elastic Stack (Kibana) Arayüzüne Erişim
-- [ ] Servisler hazırlandıktan sonra (Elasticsearch'in başlaması biraz vakit alabilir), tarayıcınızı açın.
-- [ ] `http://localhost:5601` adresine giderek Kibana arayüzünün çalıştığını kontrol edin.
-- [ ] Kibana üzerinden gerekli indeks yapılandırmalarını yaparak AnyDesk datalarını görselleştirmeye başlayın.
+- [x] Servisler hazırlandıktan sonra (Elasticsearch'in başlaması biraz vakit alabilir), tarayıcınızı açın.
+- [x] `http://localhost:5601` adresine giderek Kibana arayüzünün çalıştığını kontrol edin.
+- [x] Kibana üzerinden gerekli indeks yapılandırmalarını yaparak AnyDesk datalarını görselleştirmeye başlayın.
 
 ## 6. Frontend ve Masaüstü (Tauri) Arayüzünü Başlatma
 - [ ] Docker bağımsız olarak yerel masaüstü arayüzünü (GUI) başlatmak için terminalden `frontend` klasörüne gidin:

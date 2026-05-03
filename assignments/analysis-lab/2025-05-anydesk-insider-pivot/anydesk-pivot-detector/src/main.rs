@@ -73,11 +73,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             if config.reporting.enable_elasticsearch {
                 let es = es_reporter.clone();
                 let alerts = all_alerts.clone();
-                tokio::spawn(async move {
-                    if let Err(e) = es.report(&alerts).await {
-                        tracing::error!("Failed to report to Elasticsearch: {}", e);
-                    }
-                });
+                if let Err(e) = es.report(&alerts).await {
+                    tracing::error!("Failed to report to Elasticsearch: {}", e);
+                }
             }
         }
 
