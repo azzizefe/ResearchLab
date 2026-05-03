@@ -76,7 +76,7 @@ impl NetworkMonitor {
 
             let connections: Value = serde_json::from_str(&json_str).unwrap_or(Value::Null);
 
-            let mut process_conns = |conn: &Value| {
+            let process_conns = |conn: &Value| {
                 let remote_port = conn["RemotePort"].as_u64().unwrap_or(0) as u16;
                 let remote_addr = conn["RemoteAddress"].as_str().unwrap_or("").to_string();
                 let process_id = conn["OwningProcess"].as_u64().unwrap_or(0) as u32;
@@ -89,7 +89,7 @@ impl NetworkMonitor {
                 if remote_port == 6568 || remote_port == 443 {
                     let is_anydesk = self
                         .sys
-                        .process(sysinfo::Pid::from_u32(process_id))
+                        .process(sysinfo::Pid::from(process_id as usize))
                         .is_some_and(|p| {
                             p.name()
                                 .to_string_lossy()
@@ -190,9 +190,9 @@ impl NetworkMonitor {
         let url = format!(
             "http://ip-api.com/json/{ip}?fields=status,country,city,isp"
         );
-        if let Ok(resp) = reqwest::get(&url).await
-            && let Ok(json) = resp.json::<Value>().await
-                && json["status"] == "success" {
+        if let Ok(resp) = reqwest::get(&url).await {
+            if let Ok(json) = resp.json::<Value>().await {
+                if json["status"] == "success" {
                     let loc = GeoLocation {
                         country: json["country"].as_str().unwrap_or("Unknown").to_string(),
                         city: json["city"].as_str().unwrap_or("Unknown").to_string(),
@@ -201,6 +201,8 @@ impl NetworkMonitor {
                     self.geoloc_cache.insert(ip.to_string(), loc.clone());
                     return Some(loc);
                 }
+            }
+        }
         None
     }
 }

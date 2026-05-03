@@ -45,7 +45,7 @@ impl ProcessMonitor {
 
             // 2. Check for children of AnyDesk or suspicious processes
             for (pid, process) in self.sys.processes() {
-                let pid_u32 = pid.as_u32();
+                let pid_u32 = usize::from(*pid) as u32;
                 let name = process.name().to_string_lossy();
                 let parent_pid = process.parent();
 
@@ -71,7 +71,7 @@ impl ProcessMonitor {
                                         .join(" "),
                                 ),
                                 event_type: ProcessEventType::SuspiciousActivity,
-                                parent_pid: Some(ppid.as_u32()),
+                                parent_pid: Some(usize::from(ppid) as u32),
                             });
                         }
                     }

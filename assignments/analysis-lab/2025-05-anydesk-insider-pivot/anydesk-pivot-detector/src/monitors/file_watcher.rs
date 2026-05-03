@@ -44,9 +44,9 @@ impl FileWatcher {
         let mut new_lines = Vec::new();
         if let EventKind::Modify(_) = event.kind {
             for path in event.paths {
-                if let Some(&last_pos) = self.last_positions.get(&path)
-                    && let Ok(mut file) = File::open(&path)
-                        && let Ok(metadata) = file.metadata() {
+                if let Some(&last_pos) = self.last_positions.get(&path) {
+                    if let Ok(mut file) = File::open(&path) {
+                        if let Ok(metadata) = file.metadata() {
                             let new_len = metadata.len();
                             if new_len > last_pos {
                                 let _ = file.seek(SeekFrom::Start(last_pos));
@@ -62,6 +62,8 @@ impl FileWatcher {
                                 self.last_positions.insert(path, new_len);
                             }
                         }
+                    }
+                }
             }
         }
         new_lines

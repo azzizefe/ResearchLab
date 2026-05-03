@@ -3,7 +3,7 @@ pub fn mask_anydesk_id(id: &str) -> String {
     if id.len() < 4 {
         return "****".to_string();
     }
-    let mask_len = id.len() - 4;
+    let _mask_len = id.len() - 4;
     format!("{}****{}", &id[..0], &id[id.len()-4..]) // Shows only last 4
     // Actually the requirement says "son 4 hanesi haric" which means mask everything EXCEPT last 4.
     // Or "mask last 4"? "Hassas veri maskeleme (AnyDesk ID'lerin son 4 hanesi haric)" usually means 
