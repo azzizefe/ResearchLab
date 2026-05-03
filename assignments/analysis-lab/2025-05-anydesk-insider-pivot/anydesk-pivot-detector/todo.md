@@ -37,13 +37,12 @@ Bu belge, AnyDesk Pivot Detector sisteminin Docker üzerinde sorunsuz bir şekil
 - [x] Kibana üzerinden gerekli indeks yapılandırmalarını yaparak AnyDesk datalarını görselleştirmeye başlayın.
 
 ## 6. Frontend ve Masaüstü (Tauri) Arayüzünü Başlatma
-- [ ] Docker bağımsız olarak yerel masaüstü arayüzünü (GUI) başlatmak için terminalden `frontend` klasörüne gidin:
+- [x] Docker bağımsız olarak yerel masaüstü arayüzünü (GUI) başlatmak için terminalden `frontend` klasörüne gidin:
   `cd c:\Users\efe\Desktop\ResearchLab\ResearchLab\assignments\analysis-lab\2025-05-anydesk-insider-pivot\anydesk-pivot-detector\frontend`
-- [ ] Gerekli paketleri kurun (npm veya bun ile):
-  `npm install`
-- [ ] Tauri ile masaüstü uygulamasını geliştirici modunda başlatın:
-  `npm run tauri dev`
-  *(Bunun için sisteminizde Rust ve Tauri kurulumlarının tam olduğundan emin olun)*
+- [x] Gerekli paketleri kurun (npm veya bun ile):
+  `pnpm install`
+- [x] Tauri ile masaüstü uygulamasını geliştirici modunda başlatın:
+  `npx @tauri-apps/cli dev`
 
 ## 7. Eksik Olan Modüller (SOC Dashboard & UI)
 - [ ] 6 tespit modülünün (Process, Network, Config vb.) tamamını tek bir sekme tabanlı etkileşimli Dashboard'da birleştirin.
