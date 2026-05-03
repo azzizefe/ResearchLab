@@ -57,117 +57,125 @@ impl NetworkMonitor {
     }
 
     async fn check_connections(&mut self) -> Result<(), AppError> {
-        let output = tokio::process::Command::new("powershell")
-            .args(["-Command", "Get-NetTCPConnection | Select-Object LocalAddress, LocalPort, RemoteAddress, RemotePort, State, OwningProcess | ConvertTo-Json"])
-            .output()
-            .await
-            .map_err(|e| AppError::MonitorError(format!("Failed to run powershell: {e}")))?;
+        #[cfg(windows)]
+        {
+            let output = tokio::process::Command::new("powershell")
+                .args(["-Command", "Get-NetTCPConnection | Select-Object LocalAddress, LocalPort, RemoteAddress, RemotePort, State, OwningProcess | ConvertTo-Json"])
+                .output()
+                .await
+                .map_err(|e| AppError::MonitorError(format!("Failed to run powershell: {e}")))?;
 
-        if !output.status.success() {
-            return Ok(());
-        }
-
-        let json_str = String::from_utf8_lossy(&output.stdout);
-        if json_str.trim().is_empty() {
-            return Ok(());
-        }
-
-        let connections: Value = serde_json::from_str(&json_str).unwrap_or(Value::Null);
-
-        let process_conns = |conn: &Value| {
-            let remote_port = conn["RemotePort"].as_u64().unwrap_or(0) as u16;
-            let remote_addr = conn["RemoteAddress"].as_str().unwrap_or("").to_string();
-            let process_id = conn["OwningProcess"].as_u64().unwrap_or(0) as u32;
-            let _local_addr = conn["LocalAddress"].as_str().unwrap_or("").to_string();
-
-            // Ignore local/loopback for some checks
-            if remote_addr == "0.0.0.0" || remote_addr == "127.0.0.1" || remote_addr == "::" {
-                return;
+            if !output.status.success() {
+                return Ok(());
             }
 
-            // A. Detect AnyDesk connections (Ports 6568, 443)
-            if remote_port == 6568 || remote_port == 443 {
-                let is_anydesk = self
-                    .sys
-                    .process(sysinfo::Pid::from_u32(process_id))
-                    .is_some_and(|p| {
-                        p.name()
-                            .to_string_lossy()
-                            .to_lowercase()
-                            .contains("anydesk")
-                    });
+            let json_str = String::from_utf8_lossy(&output.stdout);
+            if json_str.trim().is_empty() {
+                return Ok(());
+            }
 
-                if is_anydesk {
+            let connections: Value = serde_json::from_str(&json_str).unwrap_or(Value::Null);
+
+            let mut process_conns = |conn: &Value| {
+                let remote_port = conn["RemotePort"].as_u64().unwrap_or(0) as u16;
+                let remote_addr = conn["RemoteAddress"].as_str().unwrap_or("").to_string();
+                let process_id = conn["OwningProcess"].as_u64().unwrap_or(0) as u32;
+                let _local_addr = conn["LocalAddress"].as_str().unwrap_or("").to_string();
+
+                if remote_addr == "0.0.0.0" || remote_addr == "127.0.0.1" || remote_addr == "::" {
+                    return;
+                }
+
+                if remote_port == 6568 || remote_port == 443 {
+                    let is_anydesk = self
+                        .sys
+                        .process(sysinfo::Pid::from_u32(process_id))
+                        .is_some_and(|p| {
+                            p.name()
+                                .to_string_lossy()
+                                .to_lowercase()
+                                .contains("anydesk")
+                        });
+
+                    if is_anydesk {
+                        println!(
+                            "{} AnyDesk connection: {}:{} (PID: {})",
+                            "[NETWORK]".cyan(),
+                            remote_addr,
+                            remote_port,
+                            process_id
+                        );
+                    }
+                }
+
+                if self.forbidden_ports.contains(&remote_port) {
                     println!(
-                        "{} AnyDesk connection: {}:{} (PID: {})",
-                        "[NETWORK]".cyan(),
-                        remote_addr,
+                        "{} Traffic on forbidden port {} to {} (PID: {})",
+                        "[ALERT]".red().bold(),
                         remote_port,
+                        remote_addr,
                         process_id
                     );
-
-                    // Trigger geolocation (async background task would be better but we'll do it simple here)
-                    // We can't easily await inside this closure if it's not async, so we'll just log IP for now
-                    // and maybe do a batch geoloc later.
                 }
-            }
+            };
 
-            // B. Forbidden Ports
-            if self.forbidden_ports.contains(&remote_port) {
-                println!(
-                    "{} Traffic on forbidden port {} to {} (PID: {})",
-                    "[ALERT]".red().bold(),
-                    remote_port,
-                    remote_addr,
-                    process_id
-                );
-            }
-        };
-
-        match connections {
-            Value::Array(list) => {
-                for conn in list {
-                    process_conns(&conn);
+            match connections {
+                Value::Array(list) => {
+                    for conn in list {
+                        process_conns(&conn);
+                    }
                 }
+                Value::Object(conn) => {
+                    process_conns(&Value::Object(conn));
+                }
+                _ => {}
             }
-            Value::Object(conn) => {
-                process_conns(&Value::Object(conn));
-            }
-            _ => {}
+        }
+        #[cfg(not(windows))]
+        {
+            // TODO: Implement Linux network monitoring (e.g. using /proc/net/tcp or similar)
+            // tracing::debug!("Network monitoring not implemented for this platform");
         }
 
         Ok(())
     }
 
     async fn check_dns_cache(&mut self) -> Result<(), AppError> {
-        let output = tokio::process::Command::new("powershell")
-            .args(["-Command", "Get-DnsClientCache | Where-Object Name -like '*.net.anydesk.com' | Select-Object Name, Data, Type | ConvertTo-Json"])
-            .output()
-            .await
-            .map_err(|e| AppError::MonitorError(format!("Failed to run powershell: {e}")))?;
+        #[cfg(windows)]
+        {
+            let output = tokio::process::Command::new("powershell")
+                .args(["-Command", "Get-DnsClientCache | Where-Object Name -like '*.net.anydesk.com' | Select-Object Name, Data, Type | ConvertTo-Json"])
+                .output()
+                .await
+                .map_err(|e| AppError::MonitorError(format!("Failed to run powershell: {e}")))?;
 
-        let json_str = String::from_utf8_lossy(&output.stdout);
-        if json_str.trim().is_empty() || json_str.trim() == "null" {
-            return Ok(());
-        }
+            let json_str = String::from_utf8_lossy(&output.stdout);
+            if json_str.trim().is_empty() || json_str.trim() == "null" {
+                return Ok(());
+            }
 
-        let dns_entries: Value = serde_json::from_str(&json_str).unwrap_or(Value::Null);
+            let dns_entries: Value = serde_json::from_str(&json_str).unwrap_or(Value::Null);
 
-        let process_dns = |entry: &Value| {
-            let name = entry["Name"].as_str().unwrap_or("unknown");
-            println!("{} AnyDesk DNS query detected: {}", "[DNS]".yellow(), name);
-        };
+            let process_dns = |entry: &Value| {
+                let name = entry["Name"].as_str().unwrap_or("unknown");
+                println!("{} AnyDesk DNS query detected: {}", "[DNS]".yellow(), name);
+            };
 
-        match dns_entries {
-            Value::Array(entries) => {
-                for entry in entries {
-                    process_dns(&entry);
+            match dns_entries {
+                Value::Array(entries) => {
+                    for entry in entries {
+                        process_dns(&entry);
+                    }
                 }
+                Value::Object(entry) => {
+                    process_dns(&Value::Object(entry));
+                }
+                _ => {}
             }
-            Value::Object(entry) => {
-                process_dns(&Value::Object(entry));
-            }
-            _ => {}
+        }
+        #[cfg(not(windows))]
+        {
+            // TODO: Implement DNS cache check for Linux (systemd-resolve or similar)
         }
 
         Ok(())
