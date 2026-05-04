@@ -1,6 +1,6 @@
 use anydesk_pivot_detector::analyzers::{AnomalyScorer, PivotDetector, RuleEngine};
 use anydesk_pivot_detector::config::{
-    AnyDeskSettings, AppConfig, AppSettings, MonitorSettings, NetworkSettings, ReportingSettings,
+    AnyDeskSettings, AppConfig, AppSettings, ElasticsearchSettings, MonitorSettings, NetworkSettings, ReportingSettings,
 };
 use anydesk_pivot_detector::models::alert::AlertSeverity;
 use std::io::Write;
@@ -94,6 +94,11 @@ fn create_mock_config() -> AppConfig {
             format: "json".into(),
             enable_syslog: false,
             syslog_server: "".into(),
+            enable_elasticsearch: false,
+        },
+        elasticsearch: ElasticsearchSettings {
+            url: "http://localhost:9200".into(),
+            index: "anydesk-alerts".into(),
         },
     }
 }
