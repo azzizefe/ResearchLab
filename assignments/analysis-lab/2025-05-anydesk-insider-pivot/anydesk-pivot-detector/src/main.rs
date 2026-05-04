@@ -12,6 +12,7 @@ use anydesk_pivot_detector::config::{AppConfig, Cli, Commands};
 use anydesk_pivot_detector::actions::ResponseManager;
 use anydesk_pivot_detector::utils::metrics::MetricsManager;
 use anydesk_pivot_detector::utils::geoip_updater;
+use anydesk_pivot_detector::utils::wal::WriteAheadLog;
 use anydesk_pivot_detector::monitors::{FileWatcher, NetworkMonitor, ProcessMonitor};
 use anydesk_pivot_detector::parsers::parse_system_conf;
 use anydesk_pivot_detector::reporters::{
@@ -159,19 +160,42 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let response_manager = std::sync::Arc::new(tokio::sync::Mutex::new(ResponseManager::new(config.active_response.clone())));
             let response_manager_loop = response_manager.clone();
 
+            let wal = std::sync::Arc::new(WriteAheadLog::new("reports/pending_logs.wal")?);
+            let wal_startup = wal.clone();
+            
             let event_loop = tokio::spawn(async move {
+                // Initial check for pending logs in WAL (e.g. after a crash)
+                if wal_startup.has_content() {
+                    if let Ok(pending_lines) = wal_startup.read_and_clear() {
+                        println!("{} Processing {} pending log lines from WAL...", "[RECOVERY]".yellow(), pending_lines.len());
+                        for line in pending_lines {
+                            let alerts = detector.analyze_line(&line);
+                            for alert in alerts {
+                                let score = scorer.score_alert(&alert, "RECOVERY_SESSION");
+                                handle_alert(&alert, score, &config, &console, &reporter_es, &reporter_syslog, &notifications, &response_manager_loop, &metrics_loop).await;
+                            }
+                        }
+                    }
+                }
+
                 loop {
                     tokio::select! {
                         Some(event) = file_rx.recv() => {
                             let new_lines = file_watcher.handle_event(event);
-                            for line in new_lines {
-                                let alerts = detector.analyze_line(&line);
-                                for alert in alerts {
-                                    let score = scorer.score_alert(&alert, "CLI_SESSION");
-                                    
-                                    // Consolidated alert processing
-                                    handle_alert(&alert, score, &config, &console, &reporter_es, &reporter_syslog, &notifications, &response_manager_loop, &metrics_loop).await;
+                            if !new_lines.is_empty() {
+                                // 17.2: Buffering/WAL
+                                let _ = wal.append(&new_lines);
+                                
+                                for line in new_lines {
+                                    let alerts = detector.analyze_line(&line);
+                                    for alert in alerts {
+                                        let score = scorer.score_alert(&alert, "CLI_SESSION");
+                                        handle_alert(&alert, score, &config, &console, &reporter_es, &reporter_syslog, &notifications, &response_manager_loop, &metrics_loop).await;
+                                    }
                                 }
+                                
+                                // Clear WAL after successful batch processing
+                                let _ = wal.read_and_clear();
                             }
                         }
                         Some(event) = proc_rx.recv() => {

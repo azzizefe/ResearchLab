@@ -102,11 +102,11 @@ Bu belge, AnyDesk Pivot Detector sisteminin Docker üzerinde sorunsuz bir şekil
 
 ## 17. 📜 Log Rotasyonu ve Dayanıklılık (Log Rotation & Resilience)
 - [x] **Log Rotasyonu Algılama:** `FileWatcher`'a AnyDesk'in `ad.trace` dosyasını arşivleyip yeni dosya oluşturduğu anı yakalayan bir mekanizma ekleyin (dosya adı değişikliği veya inode takibi).
-- [ ] **Tampon Bellek (Buffer):** Dosya rotasyonu sırasında oluşabilecek veri kaybını önlemek için bir ring buffer veya write-ahead log (WAL) mekanizması implement edin.
+- [x] **Tampon Bellek (Buffer):** Dosya rotasyonu sırasında oluşabilecek veri kaybını önlemek için bir ring buffer veya write-ahead log (WAL) mekanizması implement edin.
 - [x] **Checkpoint Sistemi:** Son okunan satır pozisyonunu diske yazarak, servis yeniden başladığında kaldığı yerden devam etmesini sağlayın.
 
 ## 18. 📈 Ölçeklenebilirlik ve Performans (Scalability)
-- [ ] **Elasticsearch Cluster:** Tek node yerine en az 3 node'lu bir ES cluster yapılandırması için `docker-compose.prod.yml` dosyası oluşturun.
-- [ ] **Index Lifecycle Management (ILM):** Eski alarmları otomatik arşivleyen veya silen bir Elasticsearch ILM politikası tanımlayın.
+- [x] **Elasticsearch Cluster:** Tek node yerine en az 3 node'lu bir ES cluster yapılandırması için `docker-compose.prod.yml` dosyası oluşturun.
+- [x] **Index Lifecycle Management (ILM):** Eski alarmları otomatik arşivleyen veya silen bir Elasticsearch ILM politikası tanımlayın.
 - [x] **Metrik Toplama:** Dedektörün CPU, bellek ve işlenen olay/saniye gibi performans metriklerini Prometheus formatında dışarı verin.
-- [ ] **Benchmark Testleri:** Saniyede 1000+ olay yükü altında sistemin performansını ölçen benchmark testleri yazın (`criterion` crate).
+- [x] **Benchmark Testleri:** Saniyede 1000+ olay yükü altında sistemin performansını ölçen benchmark testleri yazın (`criterion` crate).

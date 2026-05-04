@@ -7,6 +7,10 @@ edition = "2021"
 name = "parser_bench"
 harness = false
 
+[[bench]]
+name = "performance_bench"
+harness = false
+
 [dependencies]
 tokio = { version = "1", features = ["full"] }          # Async runtime
 serde = { version = "1", features = ["derive"] }         # Serialization
