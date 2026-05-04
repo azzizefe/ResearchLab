@@ -3,7 +3,6 @@ use crate::models::alert::Alert;
 use crate::errors::app_error::AppError;
 use reqwest::Client;
 use serde_json::json;
-use lettre::transport::smtp::authentication::Credentials;
 use lettre::{Message, SmtpTransport, Transport};
 
 pub struct NotificationManager {
