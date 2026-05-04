@@ -1,5 +1,5 @@
 use crate::config::ActiveResponseSettings;
-use crate::models::alert::{Alert, Severity};
+use crate::models::alert::{Alert, AlertSeverity};
 use crate::errors::app_error::AppError;
 use sysinfo::{System, Pid};
 use colored::Colorize;
@@ -18,7 +18,7 @@ impl ResponseManager {
     }
 
     pub async fn handle_alert(&mut self, alert: &Alert) -> Result<(), AppError> {
-        if alert.severity == Severity::Critical {
+        if alert.severity == AlertSeverity::Critical {
             if self.settings.enable_process_kill {
                 self.execute_process_kill(alert).await?;
             }
