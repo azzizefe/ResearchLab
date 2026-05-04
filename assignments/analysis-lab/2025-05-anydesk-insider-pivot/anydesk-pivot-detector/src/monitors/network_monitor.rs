@@ -1,28 +1,24 @@
 use crate::errors::app_error::AppError;
-use crate::models::network_event::GeoLocation;
+use crate::models::network_event::{GeoLocation, NetworkEvent, NetworkEventType};
 use colored::Colorize;
 use serde_json::Value;
 use std::collections::HashMap;
 use std::time::Duration;
 use sysinfo::{ProcessRefreshKind, RefreshKind, System, UpdateKind};
 use tokio::time::sleep;
+use tokio::sync::mpsc;
 
 pub struct NetworkMonitor {
     sys: System,
     geoloc_cache: HashMap<String, GeoLocation>,
     forbidden_ports: Vec<u16>,
     _high_traffic_threshold: u64, // bytes
-}
-
-impl Default for NetworkMonitor {
-    fn default() -> Self {
-        Self::new()
-    }
+    tx: mpsc::Sender<NetworkEvent>,
 }
 
 impl NetworkMonitor {
     #[must_use] 
-    pub fn new() -> Self {
+    pub fn new(tx: mpsc::Sender<NetworkEvent>) -> Self {
         let mut sys = System::new_with_specifics(
             RefreshKind::nothing()
                 .with_processes(ProcessRefreshKind::nothing().with_user(UpdateKind::Always)),
@@ -34,6 +30,7 @@ impl NetworkMonitor {
             geoloc_cache: HashMap::new(),
             forbidden_ports: vec![22, 23, 445, 3389], // SSH, Telnet, SMB, RDP
             _high_traffic_threshold: 10 * 1024 * 1024, // 10MB threshold for demo
+            tx,
         }
     }
 
@@ -105,6 +102,20 @@ impl NetworkMonitor {
                             remote_port,
                             process_id
                         );
+                        let _ = self.tx.send(NetworkEvent {
+                            timestamp: chrono::Utc::now(),
+                            local_address: _local_addr.clone(),
+                            remote_address: remote_addr.clone(),
+                            remote_port,
+                            protocol: "TCP".to_string(),
+                            process_id,
+                            process_name: Some("AnyDesk".to_string()),
+                            geolocation: None,
+                            domain_name: None,
+                            data_sent_bytes: None,
+                            data_received_bytes: None,
+                            event_type: NetworkEventType::AnyDeskConnection,
+                        }).await;
                     }
                 }
 
@@ -116,6 +127,20 @@ impl NetworkMonitor {
                         remote_addr,
                         process_id
                     );
+                    let _ = self.tx.send(NetworkEvent {
+                        timestamp: chrono::Utc::now(),
+                        local_address: _local_addr.clone(),
+                        remote_address: remote_addr.clone(),
+                        remote_port,
+                        protocol: "TCP".to_string(),
+                        process_id,
+                        process_name: None,
+                        geolocation: None,
+                        domain_name: None,
+                        data_sent_bytes: None,
+                        data_received_bytes: None,
+                        event_type: NetworkEventType::ForbiddenPortTraffic,
+                    }).await;
                 }
             };
 
