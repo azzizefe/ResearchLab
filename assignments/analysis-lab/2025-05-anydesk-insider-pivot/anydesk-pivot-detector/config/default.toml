@@ -23,6 +23,8 @@ allowed_anydesk_ids = []
 malicious_ips = ["1.1.1.1", "8.8.8.8"] # Placeholder for actual IOCs
 high_data_threshold_bytes = 104857600 # 100MB
 geoip_db_path = "config/GeoLite2-City.mmdb"
+geoip_update_url = "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&suffix=tar.gz"
+maxmind_license_key = "YOUR_LICENSE_KEY_HERE"
 
 [reporting]
 format = "json"

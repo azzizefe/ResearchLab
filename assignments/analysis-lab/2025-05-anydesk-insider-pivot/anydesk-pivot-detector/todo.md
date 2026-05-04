@@ -91,14 +91,14 @@ Bu belge, AnyDesk Pivot Detector sisteminin Docker üzerinde sorunsuz bir şekil
 
 ## 15. ⚡ Aktif Müdahale (Active Response / Incident Response)
 - [x] **Process Kill:** Kritik seviyedeki alarmlar için AnyDesk sürecini otomatik sonlandırma (`taskkill` / `kill`) mekanizması ekleyin (konfigürasyondan açılıp kapatılabilir olmalı).
-- [ ] **IP Engelleme:** Bilinen zararlı IP'lere bağlantı yapıldığında Windows Firewall veya `iptables` kuralı ekleyerek otomatik engelleme yapın.
-- [ ] **Oturum Kapatma:** AnyDesk'in aktif oturumunu uzaktan sonlandırmak için AnyDesk CLI (`anydesk --remove-password`) entegrasyonu ekleyin.
-- [ ] **Onay Mekanizması:** Aktif müdahale aksiyonlarının yanlışlıkla tetiklenmemesi için GUI/CLI üzerinden kullanıcı onayı (confirmation prompt) isteyin.
+- [x] **IP Engelleme:** Bilinen zararlı IP'lere bağlantı yapıldığında Windows Firewall veya `iptables` kuralı ekleyerek otomatik engelleme yapın.
+- [x] **Oturum Kapatma:** AnyDesk'in aktif oturumunu uzaktan sonlandırmak için AnyDesk CLI (`anydesk --remove-password`) entegrasyonu ekleyin.
+- [x] **Onay Mekanizması:** Aktif müdahale aksiyonlarının yanlışlıkla tetiklenmemesi için GUI/CLI üzerinden kullanıcı onayı (confirmation prompt) isteyin.
 
 ## 16. 🌍 GeoIP Lokalizasyon İyileştirmeleri
 - [x] **MaxMind GeoLite2 Entegrasyonu:** Ücretsiz `ip-api.com` yerine lokal `MaxMind GeoLite2` veritabanını (`.mmdb`) kullanarak rate-limit sorunlarını ortadan kaldırın.
 - [x] **Offline Mod:** İnternet bağlantısı olmayan ortamlarda bile çalışabilmesi için GeoIP veritabanını lokal olarak saklayın.
-- [ ] **Otomatik Güncelleme:** GeoIP veritabanını belirli aralıklarla (haftalık) otomatik güncelleyen bir mekanizma ekleyin.
+- [x] **Otomatik Güncelleme:** GeoIP veritabanını belirli aralıklarla (haftalık) otomatik güncelleyen bir mekanizma ekleyin.
 
 ## 17. 📜 Log Rotasyonu ve Dayanıklılık (Log Rotation & Resilience)
 - [x] **Log Rotasyonu Algılama:** `FileWatcher`'a AnyDesk'in `ad.trace` dosyasını arşivleyip yeni dosya oluşturduğu anı yakalayan bir mekanizma ekleyin (dosya adı değişikliği veya inode takibi).

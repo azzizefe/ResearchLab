@@ -31,6 +31,8 @@ tracing-subscriber = "0.3.23"
 sysinfo = "0.33"                                         # Sistem/proses bilgisi
 lettre = "0.11"                                          # Email
 maxminddb = "0.24"                                       # GeoIP
+flate2 = "1"                                             # Gzip decompression
+tar = "0.4"                                              # Tar extraction
 
 [target.'cfg(windows)'.dependencies]
 windows = { version = "0.58", features = [

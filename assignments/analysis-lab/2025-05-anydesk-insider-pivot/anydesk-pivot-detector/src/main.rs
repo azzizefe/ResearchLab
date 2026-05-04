@@ -11,6 +11,7 @@ use anydesk_pivot_detector::analyzers::{AnomalyScorer, PivotDetector, RuleEngine
 use anydesk_pivot_detector::config::{AppConfig, Cli, Commands};
 use anydesk_pivot_detector::actions::ResponseManager;
 use anydesk_pivot_detector::utils::metrics::MetricsManager;
+use anydesk_pivot_detector::utils::geoip_updater;
 use anydesk_pivot_detector::monitors::{FileWatcher, NetworkMonitor, ProcessMonitor};
 use anydesk_pivot_detector::parsers::parse_system_conf;
 use anydesk_pivot_detector::reporters::{
@@ -130,6 +131,25 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let _ = network_monitor.run().await;
             });
 
+            // 16.3: GeoIP Background Updater (Every 7 days)
+            let geoip_config = config.clone();
+            tokio::spawn(async move {
+                loop {
+                    if let (Some(url), Some(key), Some(path)) = (
+                        &geoip_config.network.geoip_update_url,
+                        &geoip_config.network.maxmind_license_key,
+                        &geoip_config.network.geoip_db_path,
+                    ) {
+                        if key != "YOUR_LICENSE_KEY_HERE" {
+                            if let Err(e) = geoip_updater::update_geoip_db(url, key, path).await {
+                                tracing::error!("Failed to update GeoIP database: {}", e);
+                            }
+                        }
+                    }
+                    tokio::time::sleep(tokio::time::Duration::from_secs(7 * 24 * 60 * 60)).await;
+                }
+            });
+
             let reporter_es = es_reporter.clone();
             let reporter_syslog = syslog_reporter.clone();
             let notifications = notification_manager.clone();
@@ -201,6 +221,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     });
 
                     // 9.2: SIEM (Syslog)
+                    if config.reporting.enable_syslog {
                         if let Err(e) = reporter_syslog.send(alert, true) {
                             tracing::error!("Failed to send syslog: {}", e);
                         }

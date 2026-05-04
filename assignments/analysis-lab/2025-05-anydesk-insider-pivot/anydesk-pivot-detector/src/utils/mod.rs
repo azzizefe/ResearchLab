@@ -1,5 +1,6 @@
 pub mod logging;
 pub mod metrics;
+pub mod geoip_updater;
 use crate::errors::app_error::AppError;
 use std::path::{Path, PathBuf};
 

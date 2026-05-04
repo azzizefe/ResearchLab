@@ -84,6 +84,8 @@ pub struct NetworkSettings {
     pub malicious_ips: Vec<String>,
     pub high_data_threshold_bytes: u64,
     pub geoip_db_path: Option<String>,
+    pub geoip_update_url: Option<String>,
+    pub maxmind_license_key: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

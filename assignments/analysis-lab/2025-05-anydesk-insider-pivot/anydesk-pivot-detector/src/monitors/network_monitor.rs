@@ -400,9 +400,23 @@ impl NetworkMonitor {
             if let Ok(reader) = maxminddb::Reader::open_readfile(path) {
                 let ip_addr: std::net::IpAddr = ip.parse().ok()?;
                 if let Ok(city) = reader.lookup::<maxminddb::geoip2::City>(ip_addr) {
+                    let country = city.country
+                        .as_ref()
+                        .and_then(|c| c.names.as_ref())
+                        .and_then(|n| n.get("en"))
+                        .map(|&s| s.to_string())
+                        .unwrap_or_else(|| "Unknown".to_string());
+                    
+                    let city_name = city.city
+                        .as_ref()
+                        .and_then(|c| c.names.as_ref())
+                        .and_then(|n| n.get("en"))
+                        .map(|&s| s.to_string())
+                        .unwrap_or_else(|| "Unknown".to_string());
+
                     let loc = GeoLocation {
-                        country: city.country.and_then(|c| c.names).and_then(|n| n.get("en")).unwrap_or(&"Unknown").to_string(),
-                        city: city.city.and_then(|c| c.names).and_then(|n| n.get("en")).unwrap_or(&"Unknown").to_string(),
+                        country,
+                        city: city_name,
                         isp: "MaxMind DB".to_string(),
                     };
                     self.geoloc_cache.insert(ip.to_string(), loc.clone());
