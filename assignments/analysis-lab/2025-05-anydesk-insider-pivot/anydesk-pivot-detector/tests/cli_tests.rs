@@ -8,7 +8,7 @@ fn test_cli_help() {
         .assert()
         .success()
         .stdout(predicate::str::contains(
-            "AnyDesk logs for historical pivot activity",
+            "Scan `AnyDesk` logs for historical pivot activity",
         ));
 }
 
