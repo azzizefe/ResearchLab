@@ -27,6 +27,11 @@ impl ProcessMonitor {
         }
     }
 
+    /// Runs the process monitor loop.
+    ///
+    /// # Errors
+    ///
+    /// This function currently never returns an error but returns `Result` for future compatibility.
     pub async fn run(&mut self) -> Result<(), AppError> {
         loop {
             self.sys.refresh_all();
@@ -50,7 +55,7 @@ impl ProcessMonitor {
 
             // 2. Check for children of AnyDesk or suspicious processes
             for (pid, process) in self.sys.processes() {
-                let pid_u32 = usize::from(*pid) as u32;
+                let pid_u32 = u32::try_from(usize::from(*pid)).unwrap_or(0);
                 let name = process.name().to_string_lossy();
                 let parent_pid = process.parent();
 
@@ -76,7 +81,7 @@ impl ProcessMonitor {
                                         .join(" "),
                                 ),
                                 event_type: ProcessEventType::SuspiciousActivity,
-                                parent_pid: Some(usize::from(ppid) as u32),
+                                parent_pid: Some(u32::try_from(usize::from(ppid)).unwrap_or(0)),
                             });
                         }
                     }

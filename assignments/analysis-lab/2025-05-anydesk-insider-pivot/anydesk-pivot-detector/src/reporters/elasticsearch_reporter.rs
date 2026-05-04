@@ -19,6 +19,11 @@ impl ElasticsearchReporter {
         }
     }
 
+    /// Reports alerts to Elasticsearch.
+    ///
+    /// # Errors
+    ///
+    /// Returns `AppError::MonitorError` if the request to Elasticsearch fails.
     pub async fn report(&self, alerts: &[Alert]) -> Result<(), AppError> {
         for alert in alerts {
             let body = json!({

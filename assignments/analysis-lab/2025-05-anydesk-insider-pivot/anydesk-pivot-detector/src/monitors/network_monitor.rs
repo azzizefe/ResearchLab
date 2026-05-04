@@ -77,7 +77,7 @@ impl NetworkMonitor {
                 let remote_port = conn["RemotePort"].as_u64().unwrap_or(0) as u16;
                 let remote_addr = conn["RemoteAddress"].as_str().unwrap_or("").to_string();
                 let process_id = conn["OwningProcess"].as_u64().unwrap_or(0) as u32;
-                let _local_addr = conn["LocalAddress"].as_str().unwrap_or("").to_string();
+                let local_addr = conn["LocalAddress"].as_str().unwrap_or("").to_string();
 
                 if remote_addr == "0.0.0.0" || remote_addr == "127.0.0.1" || remote_addr == "::" {
                     return;
@@ -104,7 +104,7 @@ impl NetworkMonitor {
                         );
                         let _ = self.tx.blocking_send(NetworkEvent {
                             timestamp: chrono::Utc::now(),
-                            local_address: _local_addr.clone(),
+                            local_address: local_addr.clone(),
                             remote_address: remote_addr.clone(),
                             remote_port,
                             protocol: "TCP".to_string(),
@@ -129,7 +129,7 @@ impl NetworkMonitor {
                     );
                     let _ = self.tx.blocking_send(NetworkEvent {
                         timestamp: chrono::Utc::now(),
-                        local_address: _local_addr.clone(),
+                        local_address: local_addr.clone(),
                         remote_address: remote_addr.clone(),
                         remote_port,
                         protocol: "TCP".to_string(),

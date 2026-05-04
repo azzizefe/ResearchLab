@@ -6,6 +6,16 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
 
+/// Parses an AnyDesk trace file for connection events.
+///
+/// # Errors
+///
+/// Returns `AppError::IoError` if the file cannot be opened.
+/// Returns `AppError::ParseError` if a line cannot be read or timestamp parsing fails.
+///
+/// # Panics
+///
+/// Panics if the internal regex patterns are invalid.
 pub fn parse_trace_file<P: AsRef<Path>>(path: P) -> Result<Vec<Connection>, AppError> {
     let file = File::open(path)?;
     let reader = BufReader::new(file);

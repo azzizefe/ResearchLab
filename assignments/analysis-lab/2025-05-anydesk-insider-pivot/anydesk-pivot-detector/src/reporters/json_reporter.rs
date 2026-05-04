@@ -22,6 +22,12 @@ impl JsonReporter {
     /// 9.1.1 & 9.1.4: Uyari olaylarini JSON formatinda dosyaya yaz ve kaydet
     /// 9.1.2: Her rapor icin UUID olustur
     /// 9.1.3: Zaman damgasi, kaynak, skor, detay alanlari
+    /// Generates a JSON report for the given alerts.
+    ///
+    /// # Errors
+    ///
+    /// Returns `AppError::ParseError` if serialization fails.
+    /// Returns `AppError::IoError` if writing to the file fails.
     pub fn report(&self, alerts: &[Alert]) -> Result<String, AppError> {
         let report_id = Uuid::new_v4().to_string();
         let timestamp = chrono::Utc::now();

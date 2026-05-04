@@ -22,7 +22,7 @@ impl SyslogReporter {
 
     /// 9.3.1: Syslog formatinda (RFC 5424) uyari gonderme
     /// Format: <PRI>VERSION TIMESTAMP HOSTNAME APP-NAME PROCID MSGID STRUCTURED-DATA MSG
-    fn format_rfc5424(&self, alert: &Alert) -> String {
+    fn format_rfc5424(alert: &Alert) -> String {
         let pri = match alert.severity {
             AlertSeverity::Low => 14,      // info
             AlertSeverity::Medium => 12,   // warning
@@ -31,11 +31,11 @@ impl SyslogReporter {
         };
 
         format!(
-            "<{}>1 {} {} anydesk-pivot-detector - - - {}",
-            pri,
-            Utc::now().to_rfc3339(),
-            "localhost",
-            alert.description
+            "<{pri}>1 {timestamp} {hostname} anydesk-pivot-detector - - - {msg}",
+            pri = pri,
+            timestamp = Utc::now().to_rfc3339(),
+            hostname = "localhost",
+            msg = alert.description
         )
     }
 
@@ -51,17 +51,24 @@ impl SyslogReporter {
         };
 
         format!(
-            "CEF:0|ResearchLab|AnyDeskPivotDetector|0.1.0|PIVOT_EVENT|{}|{}|msg={} src_module={}",
-            alert.title, severity_val, alert.description, alert.source_module
+            "CEF:0|ResearchLab|AnyDeskPivotDetector|0.1.0|PIVOT_EVENT|{name}|{severity}|msg={msg} src_module={src}",
+            name = alert.title,
+            severity = severity_val,
+            msg = alert.description,
+            src = alert.source_module
         )
     }
 
     /// 9.3.2: UDP/TCP syslog destegi
+    ///
+    /// # Errors
+    ///
+    /// Returns `AppError::IoError` if the socket/stream cannot be created or sending fails.
     pub fn send(&self, alert: &Alert, use_cef: bool) -> Result<(), AppError> {
         let message = if use_cef {
             self.format_cef(alert)
         } else {
-            self.format_rfc5424(alert)
+            Self::format_rfc5424(alert)
         };
 
         let message_with_newline = format!("{message}\n");
