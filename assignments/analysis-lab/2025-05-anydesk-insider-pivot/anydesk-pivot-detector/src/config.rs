@@ -41,6 +41,7 @@ pub struct AppConfig {
     pub network: NetworkSettings,
     pub reporting: ReportingSettings,
     pub elasticsearch: ElasticsearchSettings,
+    pub notifications: NotificationSettings,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -72,6 +73,8 @@ pub struct NetworkSettings {
     pub blocked_domains: Vec<String>,
     pub blocked_ports: Vec<u16>,
     pub allowed_anydesk_ids: Vec<String>,
+    pub malicious_ips: Vec<String>,
+    pub high_data_threshold_bytes: u64,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -79,7 +82,20 @@ pub struct ReportingSettings {
     pub format: String,
     pub enable_syslog: bool,
     pub syslog_server: String,
+    pub syslog_port: u16,
     pub enable_elasticsearch: bool,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct NotificationSettings {
+    pub enable_slack: bool,
+    pub slack_webhook_url: String,
+    pub enable_email: bool,
+    pub smtp_server: String,
+    pub smtp_port: u16,
+    pub email_to: String,
+    pub enable_webhook: bool,
+    pub webhook_url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -115,6 +131,12 @@ impl AppConfig {
         }
         if let Ok(val) = std::env::var("ENABLE_ELASTICSEARCH") {
             config.reporting.enable_elasticsearch = val.to_lowercase() == "true";
+        }
+        if let Ok(val) = std::env::var("ENABLE_SLACK") {
+            config.notifications.enable_slack = val.to_lowercase() == "true";
+        }
+        if let Ok(val) = std::env::var("SLACK_WEBHOOK_URL") {
+            config.notifications.slack_webhook_url = val;
         }
         // ... (add other overrides as needed)
 

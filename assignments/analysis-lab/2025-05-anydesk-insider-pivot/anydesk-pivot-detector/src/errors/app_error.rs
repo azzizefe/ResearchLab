@@ -30,6 +30,12 @@ pub enum AppError {
     #[error("Tauri error: {0}")]
     TauriError(String),
 
+    #[error("Network error: {0}")]
+    NetworkError(String),
+
+    #[error("Internal error: {0}")]
+    InternalError(String),
+
     /// Environment and dependency errors
     #[error("Environment error: {0}")]
     EnvError(#[from] dotenv::Error),

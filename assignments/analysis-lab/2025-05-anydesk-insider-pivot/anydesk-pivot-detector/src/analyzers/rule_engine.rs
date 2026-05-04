@@ -103,10 +103,8 @@ impl RuleEngine {
     /// but we can add more specific logic if needed)
     #[must_use] 
     pub fn check_network_scanning(&self, event: &NetworkEvent) -> Option<Alert> {
-        // Example: High number of different remote addresses in a short time
-        // For now, check for forbidden ports traffic
-        let forbidden_ports = [22, 23, 445, 3389];
-        if forbidden_ports.contains(&event.remote_port) {
+        // 9.3.1: Forbidden ports traffic
+        if self.config.network.blocked_ports.contains(&event.remote_port) {
             return Some(Alert {
                 id: uuid::Uuid::new_v4().to_string(),
                 timestamp: Utc::now(),
@@ -117,6 +115,34 @@ impl RuleEngine {
                 evidence: json!({ "network_event": event }),
             });
         }
+
+        // 9.3.2: Malicious IP detection (IOC)
+        if self.config.network.malicious_ips.contains(&event.remote_address) {
+            return Some(Alert {
+                id: uuid::Uuid::new_v4().to_string(),
+                timestamp: Utc::now(),
+                severity: AlertSeverity::Critical,
+                title: "Malicious IP Connection".to_string(),
+                description: format!("Connection to known malicious IP detected: {}", event.remote_address),
+                source_module: "RuleEngine".to_string(),
+                evidence: json!({ "network_event": event }),
+            });
+        }
+
+        // 9.3.3: Data Exfiltration Detection (High data volume)
+        let total_bytes = event.data_sent_bytes.unwrap_or(0) + event.data_received_bytes.unwrap_or(0);
+        if total_bytes > self.config.network.high_data_threshold_bytes {
+            return Some(Alert {
+                id: uuid::Uuid::new_v4().to_string(),
+                timestamp: Utc::now(),
+                severity: AlertSeverity::High,
+                title: "High Data Volume Detected".to_string(),
+                description: format!("Suspicious data volume detected: {} bytes", total_bytes),
+                source_module: "RuleEngine".to_string(),
+                evidence: json!({ "network_event": event, "total_bytes": total_bytes }),
+            });
+        }
+
         None
     }
     /// Rule: Dosya transferi + hassas dosya yolu eslesme

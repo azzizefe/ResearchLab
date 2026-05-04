@@ -20,13 +20,26 @@ working_hour_end = 18
 blocked_domains = ["*.net.anydesk.com"]
 blocked_ports = [6568, 50001, 50002, 50003]
 allowed_anydesk_ids = []
+malicious_ips = ["1.1.1.1", "8.8.8.8"] # Placeholder for actual IOCs
+high_data_threshold_bytes = 104857600 # 100MB
 
 [reporting]
 format = "json"
 enable_syslog = false
-syslog_server = "127.0.0.1:514"
+syslog_server = "127.0.0.1"
+syslog_port = 514
 enable_elasticsearch = true
 
 [elasticsearch]
 url = "http://elasticsearch:9200"
 index = "anydesk-alerts"
+
+[notifications]
+enable_slack = false
+slack_webhook_url = "https://hooks.slack.com/services/..."
+enable_email = false
+smtp_server = "smtp.gmail.com"
+smtp_port = 587
+email_to = "admin@company.com"
+enable_webhook = false
+webhook_url = "http://api.company.com/alerts"

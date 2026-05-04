@@ -4,7 +4,10 @@ use anydesk_pivot_detector::analyzers::{AnomalyScorer, PivotDetector, RuleEngine
 use anydesk_pivot_detector::config::{AppConfig, Cli, Commands};
 use anydesk_pivot_detector::monitors::{FileWatcher, NetworkMonitor, ProcessMonitor};
 use anydesk_pivot_detector::parsers::parse_system_conf;
-use anydesk_pivot_detector::reporters::{ConsoleReporter, ElasticsearchReporter, JsonReporter};
+use anydesk_pivot_detector::reporters::{
+    ConsoleReporter, ElasticsearchReporter, JsonReporter, NotificationManager, SyslogProtocol,
+    SyslogReporter,
+};
 use clap::Parser;
 use colored::Colorize;
 use std::path::PathBuf;
@@ -39,6 +42,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         config.elasticsearch.url.clone(),
         config.elasticsearch.index.clone(),
     ));
+    let syslog_reporter = std::sync::Arc::new(SyslogReporter::new(
+        format!("{}:{}", config.reporting.syslog_server, config.reporting.syslog_port),
+        SyslogProtocol::Udp,
+    ));
+    let notification_manager = std::sync::Arc::new(NotificationManager::new(config.notifications.clone()));
     let detector = PivotDetector::new();
 
     println!(
@@ -114,6 +122,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             });
 
             let reporter_es = es_reporter.clone();
+            let reporter_syslog = syslog_reporter.clone();
+            let notifications = notification_manager.clone();
             let rule_engine_loop = rule_engine.clone();
 
             let event_loop = tokio::spawn(async move {
@@ -125,29 +135,63 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                                 let alerts = detector.analyze_line(&line);
                                 for alert in alerts {
                                     let score = scorer.score_alert(&alert, "CLI_SESSION");
-                                    console.report(&[alert.clone()]);
-                                    if config.reporting.enable_elasticsearch {
-                                        let _ = reporter_es.report(&[alert]).await;
-                                    }
-                                    if score >= config.monitor.alert_threshold as f32 {
-                                        println!("{} Score: {}", "CRITICAL RISK DETECTED!".red().bold(), score);
-                                    }
+                                    
+                                    // Consolidated alert processing
+                                    handle_alert(&alert, score, &config, &console, &reporter_es, &reporter_syslog, &notifications).await;
                                 }
                             }
                         }
                         Some(event) = proc_rx.recv() => {
                             if let Some(alert) = rule_engine_loop.check_suspicious_process(&event) {
-                                console.report(&[alert]);
+                                let score = scorer.score_alert(&alert, "PROC_SESSION");
+                                handle_alert(&alert, score, &config, &console, &reporter_es, &reporter_syslog, &notifications).await;
                             }
                         }
                         Some(event) = net_rx.recv() => {
                             if let Some(alert) = rule_engine_loop.check_network_scanning(&event) {
-                                console.report(&[alert]);
+                                let score = scorer.score_alert(&alert, "NET_SESSION");
+                                handle_alert(&alert, score, &config, &console, &reporter_es, &reporter_syslog, &notifications).await;
                             }
                         }
                     }
                 }
             });
+
+            async fn handle_alert(
+                alert: &anydesk_pivot_detector::models::alert::Alert,
+                score: f32,
+                config: &AppConfig,
+                console: &ConsoleReporter,
+                reporter_es: &std::sync::Arc<ElasticsearchReporter>,
+                reporter_syslog: &std::sync::Arc<SyslogReporter>,
+                notifications: &std::sync::Arc<NotificationManager>,
+            ) {
+                console.report(&[alert.clone()]);
+                
+                if config.reporting.enable_elasticsearch {
+                    let _ = reporter_es.report(&[alert.clone()]).await;
+                }
+
+                if score >= config.monitor.alert_threshold as f32 {
+                    println!("{} Score: {}", "CRITICAL RISK DETECTED!".red().bold(), score);
+                    
+                    // 9.1: Notifications
+                    let alert_clone = alert.clone();
+                    let notifications_clone = notifications.clone();
+                    tokio::spawn(async move {
+                        if let Err(e) = notifications_clone.notify(&alert_clone).await {
+                            tracing::error!("Failed to send notification: {}", e);
+                        }
+                    });
+
+                    // 9.2: SIEM (Syslog)
+                    if config.reporting.enable_syslog {
+                        if let Err(e) = reporter_syslog.send(alert, true) {
+                            tracing::error!("Failed to send syslog: {}", e);
+                        }
+                    }
+                }
+            }
 
             println!("{}", "Monitoring active. Press Ctrl+C to stop.".dimmed());
 

@@ -55,9 +55,9 @@ Bu belge, AnyDesk Pivot Detector sisteminin Docker üzerinde sorunsuz bir şekil
 - [x] Frontend tarafındaki test altyapısını (Vitest vb.) çalıştırın ve eksik testleri tamamlayın (`npm run test`).
 
 ## 9. SIEM Entegrasyonu ve Bildirim Mekanizmaları
-- [ ] AnomalyScorer'dan dönen yüksek riskli alarmlar için e-posta, Slack veya Webhook bildirim (Alerting) altyapısını entegre edin.
-- [ ] Kurumsal yapılar için Syslog (RFC 5424) veya Splunk / QRadar entegrasyonlarını JSON Reporter üzerinden tamamlayın.
-- [ ] Ağ trafiğini (Network Monitor) takip eden modüller için kural motorunu (Rule Engine) güncelleyin.
+- [x] AnomalyScorer'dan dönen yüksek riskli alarmlar için e-posta, Slack veya Webhook bildirim (Alerting) altyapısını entegre edin.
+- [x] Kurumsal yapılar için Syslog (RFC 5424) veya Splunk / QRadar entegrasyonlarını JSON Reporter üzerinden tamamlayın.
+- [x] Ağ trafiğini (Network Monitor) takip eden modüller için kural motorunu (Rule Engine) güncelleyin.
 
 ## 10. Production (Canlı Ortam) Derlemesi
 - [ ] Tüm testler tamamlandıktan sonra, son kullanıcı için optimize edilmiş bağımsız masaüstü (Tauri) çalıştırılabilir dosyasını derleyin:
