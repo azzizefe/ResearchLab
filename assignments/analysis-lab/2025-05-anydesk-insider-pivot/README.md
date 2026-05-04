@@ -60,6 +60,11 @@ Bu sistem, AnyDesk uygulaması üzerinden gerçekleştirilen **"İç Tehdit" (In
 *   **TR/EN Dil Desteği** ile global standartlarda kullanım.
 *   **Dinamik Dashboard**: Canlı risk grafikleri ve anlık olay akışı.
 
+### 📢 5. SIEM Entegrasyonu ve Bildirimler (Enterprise Ready)
+*   **Syslog (RFC 5424) & CEF**: Splunk, QRadar ve Logrhythm gibi SIEM sistemlerine anlık veri aktarımı.
+*   **Slack & Webhook**: Kritik alarmlar için anlık kanal bildirimleri ve otomasyon tetikleyicileri.
+*   **Email (SMTP)**: Yüksek riskli pivot girişimleri için e-posta bilgilendirme mekanizması.
+
 ---
 
 ## 🏗️ Teknik Mimari
@@ -69,6 +74,8 @@ Sistem üç ana katmandan oluşur:
 ### 1. Rust Core Engine (Backend)
 *   **Parser Modülleri**: AnyDesk'in karmaşık log yapısını çözer.
 *   **Rule Engine**: Konfigürasyon dosyasındaki kuralları (`ACL`, `Working Hours`, `Suspicious Processes`) her olaya uygular.
+*   **Reporter System**: Verileri Console, JSON, Elasticsearch ve Syslog formatlarında eşzamanlı olarak raporlar.
+*   **Notification Manager**: E-posta ve Slack kanallarını yöneten asenkron bildirim katmanı.
 *   **Safety Layer**: `#![forbid(unsafe_code)]` direktifi ile bellek güvenliği en üst düzeyde tutulur.
 
 ### 2. Tauri App Layer (Bridge)
@@ -91,6 +98,8 @@ Sistem şu senaryoları otomatik olarak yakalar:
 3.  **Sensitive Path Access**: `SAM`, `ntds.dit`, `.env` veya cüzdan dosyalarına erişim girişimleri.
 4.  **Process Injection via AnyDesk**: AnyDesk'in `cmd.exe` veya `powershell.exe` gibi kritik süreçleri başlatması.
 5.  **Unattended Access Usage**: Şifre ile otomatik giriş yapıldığında (Kalıcılık belirtisidir).
+6.  **Malicious IP Connection**: Bilinen zararlı IP adreslerine (IOC) yapılan bağlantı girişimleri.
+7.  **Data Exfiltration Detection**: Normalin üzerindeki (örn: 100MB+) veri transferi aktiviteleri.
 
 ---
 
@@ -100,6 +109,7 @@ Sistem şu senaryoları otomatik olarak yakalar:
 *   **Rust**: 1.94.1+
 *   **Node.js**: 20+
 *   **AnyDesk**: İzlenecek makinede yüklü olmalıdır (veya log dosyaları mevcut olmalıdır).
+*   **Docker & Docker Compose**: SIEM (ELK Stack) entegrasyonu için gereklidir.
 
 ### Adımlar
 1.  **Depoyu Klonlayın**:
@@ -114,9 +124,15 @@ Sistem şu senaryoları otomatik olarak yakalar:
     ANYDESK_TRACE_PATH="C:\ProgramData\AnyDesk\ad.trace"
     ```
 
-3.  **Uygulamayı Başlatın**:
+3.  **SIEM (ELK Stack) Başlatın (Opsiyonel)**:
+    Görsel analiz ve merkezi log yönetimi için Elasticsearch ve Kibana'yı ayağa kaldırın:
     ```bash
-    # Arayüz ile başlatmak için
+    docker-compose up -d
+    ```
+
+4.  **Uygulamayı Başlatın**:
+    ```bash
+    # Arayüz (GUI) ile başlatmak için
     cargo tauri dev
 
     # CLI (Komut Satırı) ile izleme başlatmak için
