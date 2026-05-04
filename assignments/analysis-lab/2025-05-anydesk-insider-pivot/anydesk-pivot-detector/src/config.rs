@@ -83,6 +83,7 @@ pub struct NetworkSettings {
     pub allowed_anydesk_ids: Vec<String>,
     pub malicious_ips: Vec<String>,
     pub high_data_threshold_bytes: u64,
+    pub geoip_db_path: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

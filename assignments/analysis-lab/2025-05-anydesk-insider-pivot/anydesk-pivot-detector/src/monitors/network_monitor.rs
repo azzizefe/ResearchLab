@@ -14,11 +14,12 @@ pub struct NetworkMonitor {
     forbidden_ports: Vec<u16>,
     _high_traffic_threshold: u64, // bytes
     tx: mpsc::Sender<NetworkEvent>,
+    geoip_db_path: Option<String>,
 }
 
 impl NetworkMonitor {
     #[must_use] 
-    pub fn new(tx: mpsc::Sender<NetworkEvent>) -> Self {
+    pub fn new(tx: mpsc::Sender<NetworkEvent>, geoip_db_path: Option<String>) -> Self {
         let mut sys = System::new_with_specifics(
             RefreshKind::nothing()
                 .with_processes(ProcessRefreshKind::nothing().with_user(UpdateKind::Always)),
@@ -31,6 +32,7 @@ impl NetworkMonitor {
             forbidden_ports: vec![22, 23, 445, 3389], // SSH, Telnet, SMB, RDP
             _high_traffic_threshold: 10 * 1024 * 1024, // 10MB threshold for demo
             tx,
+            geoip_db_path,
         }
     }
 

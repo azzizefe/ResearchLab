@@ -22,6 +22,7 @@ blocked_ports = [6568, 50001, 50002, 50003]
 allowed_anydesk_ids = []
 malicious_ips = ["1.1.1.1", "8.8.8.8"] # Placeholder for actual IOCs
 high_data_threshold_bytes = 104857600 # 100MB
+geoip_db_path = "config/GeoLite2-City.mmdb"
 
 [reporting]
 format = "json"
