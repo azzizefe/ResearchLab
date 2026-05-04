@@ -395,7 +395,23 @@ impl NetworkMonitor {
             return self.geoloc_cache.get(ip).cloned();
         }
 
-        // Simulating Geolocation since we added reqwest
+        // 1. Try local MaxMind DB
+        if let Some(path) = &self.geoip_db_path {
+            if let Ok(reader) = maxminddb::Reader::open_readfile(path) {
+                let ip_addr: std::net::IpAddr = ip.parse().ok()?;
+                if let Ok(city) = reader.lookup::<maxminddb::geoip2::City>(ip_addr) {
+                    let loc = GeoLocation {
+                        country: city.country.and_then(|c| c.names).and_then(|n| n.get("en")).unwrap_or(&"Unknown").to_string(),
+                        city: city.city.and_then(|c| c.names).and_then(|n| n.get("en")).unwrap_or(&"Unknown").to_string(),
+                        isp: "MaxMind DB".to_string(),
+                    };
+                    self.geoloc_cache.insert(ip.to_string(), loc.clone());
+                    return Some(loc);
+                }
+            }
+        }
+
+        // 2. Fallback to API
         let url = format!(
             "http://ip-api.com/json/{ip}?fields=status,country,city,isp"
         );

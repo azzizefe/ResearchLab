@@ -113,7 +113,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
             let mut process_monitor = ProcessMonitor::new(config.monitor.suspicious_processes.clone(), proc_tx);
             let mut file_watcher = FileWatcher::new(file_tx)?;
-            let mut network_monitor = NetworkMonitor::new(net_tx);
+            let mut network_monitor = NetworkMonitor::new(net_tx, config.network.geoip_db_path.clone());
 
             file_watcher.watch(&config.anydesk.trace_path)?;
 
