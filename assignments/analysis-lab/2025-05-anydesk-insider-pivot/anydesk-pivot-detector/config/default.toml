@@ -40,6 +40,14 @@ slack_webhook_url = "https://hooks.slack.com/services/..."
 enable_email = false
 smtp_server = "smtp.gmail.com"
 smtp_port = 587
+smtp_username = "your-email@gmail.com"
+smtp_password = "your-app-password"
+use_tls = true
 email_to = "admin@company.com"
 enable_webhook = false
 webhook_url = "http://api.company.com/alerts"
+
+[active_response]
+enable_process_kill = false
+enable_ip_blocking = false
+auto_confirm = false

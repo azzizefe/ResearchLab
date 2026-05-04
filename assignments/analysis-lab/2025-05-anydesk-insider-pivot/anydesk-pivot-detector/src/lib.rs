@@ -16,6 +16,7 @@
     clippy::unnecessary_debug_formatting,
     clippy::assertions_on_constants
 )]
+pub mod actions;
 pub mod analyzers;
 pub mod api;
 pub mod config;

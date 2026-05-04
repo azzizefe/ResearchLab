@@ -50,9 +50,17 @@ impl NotificationManager {
     }
 
     fn send_email(&self, alert: &Alert) -> Result<(), AppError> {
+        let from_addr = "AnyDesk Pivot Detector <noreply@researchlab.com>";
+        let to_addr = &self.settings.email_to;
+
+        // Basic validation
+        if !to_addr.contains('@') {
+            return Err(AppError::InternalError(format!("Invalid recipient email address: {to_addr}")));
+        }
+
         let email = Message::builder()
-            .from("AnyDesk Pivot Detector <noreply@researchlab.com>".parse().unwrap())
-            .to(self.settings.email_to.parse().unwrap())
+            .from(from_addr.parse().map_err(|e| AppError::InternalError(format!("Invalid from address: {e}")))? )
+            .to(to_addr.parse().map_err(|e| AppError::InternalError(format!("Invalid recipient address: {e}")))? )
             .subject(format!("AnyDesk Alert: {}", alert.title))
             .body(format!(
                 "Security Alert Details:\n\nTitle: {}\nSeverity: {:?}\nSource: {}\nDescription: {}\nTimestamp: {}",
@@ -60,12 +68,20 @@ impl NotificationManager {
             ))
             .map_err(|e| AppError::InternalError(format!("Email construction failed: {e}")))?;
 
-        // Note: In a real app, you'd want to load credentials from env or config
-        // For now, we assume no auth or simple setup for demonstration
-        let mailer = SmtpTransport::relay(&self.settings.smtp_server)
-            .map_err(|e| AppError::InternalError(format!("SMTP relay setup failed: {e}")))?
-            .port(self.settings.smtp_port)
-            .build();
+        let mut mailer_builder = if self.settings.use_tls {
+            SmtpTransport::starttls_relay(&self.settings.smtp_server)
+        } else {
+            SmtpTransport::relay(&self.settings.smtp_server)
+        }.map_err(|e| AppError::InternalError(format!("SMTP relay setup failed: {e}")))?;
+
+        mailer_builder = mailer_builder.port(self.settings.smtp_port);
+
+        if let (Some(user), Some(pass)) = (&self.settings.smtp_username, &self.settings.smtp_password) {
+            let credentials = lettre::transport::smtp::authentication::Credentials::new(user.to_string(), pass.to_string());
+            mailer_builder = mailer_builder.credentials(credentials);
+        }
+
+        let mailer = mailer_builder.build();
 
         mailer.send(&email)
             .map_err(|e| AppError::InternalError(format!("Email sending failed: {e}")))?;

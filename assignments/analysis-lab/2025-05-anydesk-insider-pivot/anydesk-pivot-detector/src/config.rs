@@ -42,6 +42,14 @@ pub struct AppConfig {
     pub reporting: ReportingSettings,
     pub elasticsearch: ElasticsearchSettings,
     pub notifications: NotificationSettings,
+    pub active_response: ActiveResponseSettings,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct ActiveResponseSettings {
+    pub enable_process_kill: bool,
+    pub enable_ip_blocking: bool,
+    pub auto_confirm: bool,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -93,6 +101,9 @@ pub struct NotificationSettings {
     pub enable_email: bool,
     pub smtp_server: String,
     pub smtp_port: u16,
+    pub smtp_username: Option<String>,
+    pub smtp_password: Option<String>,
+    pub use_tls: bool,
     pub email_to: String,
     pub enable_webhook: bool,
     pub webhook_url: String,

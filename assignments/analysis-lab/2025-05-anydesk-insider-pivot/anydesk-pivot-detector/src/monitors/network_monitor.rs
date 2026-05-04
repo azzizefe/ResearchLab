@@ -120,13 +120,6 @@ impl NetworkMonitor {
                 }
 
                 if self.forbidden_ports.contains(&remote_port) {
-                    println!(
-                        "{} Traffic on forbidden port {} to {} (PID: {})",
-                        "[ALERT]".red().bold(),
-                        remote_port,
-                        remote_addr,
-                        process_id
-                    );
                     let _ = self.tx.blocking_send(NetworkEvent {
                         timestamp: chrono::Utc::now(),
                         local_address: local_addr.clone(),
@@ -156,6 +149,7 @@ impl NetworkMonitor {
                 _ => {}
             }
         }
+
         #[cfg(target_os = "linux")]
         {
             let output = tokio::process::Command::new("ss")
@@ -169,7 +163,6 @@ impl NetworkMonitor {
                     for line in stdout.lines().skip(1) {
                         let parts: Vec<&str> = line.split_whitespace().collect();
                         if parts.len() >= 6 {
-                            // Example line: tcp ESTAB 0 0 192.168.1.10:12345 93.184.216.34:443 users:(("anydesk",pid=1234,fd=5))
                             let local = parts[4];
                             let remote = parts[5];
                             let user_info = if parts.len() > 6 { parts[6] } else { "" };
@@ -182,7 +175,6 @@ impl NetworkMonitor {
                                 let local_parts: Vec<&str> = local.rsplitn(2, ':').collect();
                                 let local_addr = if local_parts.len() == 2 { local_parts[1] } else { "" }.to_string();
 
-                                // Extract PID from users:(("anydesk",pid=1234,fd=5))
                                 let process_id = if user_info.contains("pid=") {
                                     user_info.split("pid=").nth(1)
                                         .and_then(|s| s.split(',').next())
@@ -234,6 +226,13 @@ impl NetworkMonitor {
                                         event_type: NetworkEventType::ForbiddenPortTraffic,
                                     });
                                 }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         #[cfg(target_os = "macos")]
         {
             let output = tokio::process::Command::new("lsof")
@@ -247,7 +246,6 @@ impl NetworkMonitor {
                     for line in stdout.lines().skip(1) {
                         let parts: Vec<&str> = line.split_whitespace().collect();
                         if parts.len() >= 9 {
-                            // Example line: AnyDesk 1234 efe 5u IPv4 0x123 0t0 TCP 192.168.1.10:12345->93.184.216.34:443 (ESTABLISHED)
                             let process_name = parts[0];
                             let process_id = parts[1].parse::<u32>().unwrap_or(0);
                             let connection = parts[8];
@@ -307,12 +305,6 @@ impl NetworkMonitor {
                 }
             }
         }
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
         Ok(())
     }
@@ -365,9 +357,32 @@ impl NetworkMonitor {
                 _ => {}
             }
         }
-        #[cfg(not(windows))]
+        #[cfg(target_os = "linux")]
         {
-            // TODO: Implement DNS cache check for Linux (systemd-resolve or similar)
+            // Try to use resolvectl which is common on systemd systems
+            let output = tokio::process::Command::new("resolvectl")
+                .args(["query", "anydesk.com"]) // This is more of a query than a cache dump, but Linux doesn't have a unified cache dump
+                .output()
+                .await;
+            
+            if let Ok(output) = output {
+                if output.status.success() {
+                    let _ = self.tx.blocking_send(NetworkEvent {
+                        timestamp: chrono::Utc::now(),
+                        local_address: String::new(),
+                        remote_address: String::new(),
+                        remote_port: 0,
+                        protocol: "DNS".to_string(),
+                        process_id: 0,
+                        process_name: None,
+                        geolocation: None,
+                        domain_name: Some("anydesk.com (Linux Query)".to_string()),
+                        data_sent_bytes: None,
+                        data_received_bytes: None,
+                        event_type: NetworkEventType::SuspiciousDNS,
+                    });
+                }
+            }
         }
 
         Ok(())
