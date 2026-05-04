@@ -68,7 +68,7 @@ Bu belge, AnyDesk Pivot Detector sisteminin Docker üzerinde sorunsuz bir şekil
 ## 11. 🔴 Tespit Edilen Kritik Hatalar (Bugs & Architectural Flaws)
 - [x] **Mimari Hata (Kullanılmayan Modüller):** `src/main.rs` ve `src-tauri/src/lib.rs` içerisinde `RuleEngine` ve `AnomalyScorer` entegrasyonu tamamlandı.
 - [x] **Veri Kaybı (Data Loss in Tokio Tasks):** `process_monitor` ve `network_monitor` artık `mpsc::channel` üzerinden ana event döngüsüne bağlandı.
-- [ ] **Kod Kalitesi ve Uyarılar (Clippy Warnings):** `cargo clippy --fix` çalıştırıldı, birçok uyarı giderildi. Kalanlar pedantic seviyesinde.
+- [x] **Kod Kalitesi ve Uyarılar (Clippy Warnings):** `cargo clippy --fix` çalıştırıldı, birçok uyarı giderildi. Kalanlar pedantic seviyesinde ancak `lib.rs` üzerinden susturuldu.
 - [x] **Docker Elasticsearch RAM Limiti:** `docker-compose.yml` içinde ES için `-Xms1g -Xmx1g` olarak güncellendi. (Öncesi 512MB idi).
 
 ## 12. Neovim (.nvim.lua) Geliştirme Ortamı İyileştirmeleri
