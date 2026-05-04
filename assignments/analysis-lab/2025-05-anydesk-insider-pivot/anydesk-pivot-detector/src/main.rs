@@ -228,7 +228,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     }
 
                     // 15: Active Response
-                    let mut manager = response_manager.lock().await;
+                    let mut manager: tokio::sync::MutexGuard<ResponseManager> = response_manager.lock().await;
                     if let Err(e) = manager.handle_alert(alert).await {
                         tracing::error!("Failed to execute active response: {}", e);
                     }
