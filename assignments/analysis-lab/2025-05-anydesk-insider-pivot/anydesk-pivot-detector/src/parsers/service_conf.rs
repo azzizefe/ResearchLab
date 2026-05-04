@@ -12,6 +12,12 @@ pub struct ServiceConfig {
     pub raw_settings: HashMap<String, String>,
 }
 
+/// Parses AnyDesk's service configuration file.
+///
+/// # Errors
+///
+/// Returns `AppError::IoError` if the file cannot be opened.
+/// Returns `std::io::Error` via `AppError::IoError` if a line cannot be read.
 pub fn parse_service_conf<P: AsRef<Path>>(path: P) -> Result<ServiceConfig, AppError> {
     let file = File::open(path)?;
     let reader = BufReader::new(file);

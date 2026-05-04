@@ -12,6 +12,12 @@ pub struct SystemConfig {
     pub raw_settings: HashMap<String, String>,
 }
 
+/// Parses AnyDesk's system configuration file.
+///
+/// # Errors
+///
+/// Returns `AppError::IoError` if the file cannot be opened.
+/// Returns `std::io::Error` via `AppError::IoError` if a line cannot be read.
 pub fn parse_system_conf<P: AsRef<Path>>(path: P) -> Result<SystemConfig, AppError> {
     let file = File::open(path)?;
     let reader = BufReader::new(file);
