@@ -66,16 +66,13 @@ Bu belge, AnyDesk Pivot Detector sisteminin Docker üzerinde sorunsuz bir şekil
   `cargo build --release`
 
 ## 11. 🔴 Tespit Edilen Kritik Hatalar (Bugs & Architectural Flaws)
-- [ ] **Mimari Hata (Kullanılmayan Modüller):** `src/main.rs` içerisinde `RuleEngine` ve `AnomalyScorer` sınıfları başlatılmış (`_rule_engine`, `_scorer`) ancak hiçbir analize dahil edilmemiş! `scan` ve `monitor` fonksiyonları sadece basit kural motorunu (detector) kullanıyor ve bu gelişmiş güvenlik analizlerini tamamen atlıyor.
-- [ ] **Veri Kaybı (Data Loss in Tokio Tasks):** Canlı izleme (`monitor`) komutunda `process_monitor` ve `network_monitor` arka planda başlatılıyor (`tokio::spawn`) ancak buldukları sonuçlar (alarmlar) ana thread'e raporlanmak yerine yutuluyor (`let _ = process_monitor.run().await`). Bu modüllerin `mpsc::channel` ile ana event döngüsüne bağlanması gerekiyor.
-- [ ] **Kod Kalitesi ve Uyarılar (Clippy Warnings):** `cargo clippy` komutu 20'den fazla kod kalitesi uyarısı fırlatıyor. Özellikle:
-  - `map_or` kullanımlarının basitleştirilmesi (`is_none_or` kullanımı),
-  - Public fonksiyonlarda eksik hata dökümantasyonları (`# Errors`),
-  - `u32` değerinden `f32`'ye dönüşümlerde yaşanabilecek hassasiyet kayıpları.
+- [x] **Mimari Hata (Kullanılmayan Modüller):** `src/main.rs` ve `src-tauri/src/lib.rs` içerisinde `RuleEngine` ve `AnomalyScorer` entegrasyonu tamamlandı.
+- [x] **Veri Kaybı (Data Loss in Tokio Tasks):** `process_monitor` ve `network_monitor` artık `mpsc::channel` üzerinden ana event döngüsüne bağlandı.
+- [ ] **Kod Kalitesi ve Uyarılar (Clippy Warnings):** `cargo clippy --fix` çalıştırıldı, birçok uyarı giderildi. Kalanlar pedantic seviyesinde.
 - [x] **Docker Elasticsearch RAM Limiti:** `docker-compose.yml` içinde ES için `-Xms1g -Xmx1g` olarak güncellendi. (Öncesi 512MB idi).
 
 ## 12. Neovim (.nvim.lua) Geliştirme Ortamı İyileştirmeleri
-- [ ] **Güvenli Eklenti Yükleme (pcall):** Mevcut `.nvim.lua` dosyasında `require('lspconfig')` ve `require('dap')` doğrudan çağrılıyor. Eklentiler yüklü değilse Neovim hata verecektir. Bunları `pcall` (protected call) ile sarmalayarak güvenli hale getirin.
-- [ ] **Frontend (React/TS) Desteği:** Proje sadece Rust'tan ibaret değil (Tauri + React). `tsserver` (veya `vtsls`), `tailwindcss` ve `eslint` LSP'lerini de `.nvim.lua` içine ekleyerek Frontend geliştirme deneyimini iyileştirin.
-- [ ] **Otomatik Formatlama (Auto-formatting):** Dosya kaydedildiğinde Rust için `rustfmt`, Frontend için `prettier` çalıştıracak (örn: `conform.nvim` entegrasyonu) bir format-on-save kancası (hook) ekleyin.
-- [ ] **DAP Geliştirmeleri:** Frontend'de hata ayıklamak (debugging) için `chrome-debug-adapter` veya `js-debug` DAP konfigürasyonunu ekleyin. Mevcut yapı sadece Rust (`codelldb`) için yapılandırılmış.
+- [x] **Güvenli Eklenti Yükleme (pcall):** `.nvim.lua` içerisinde `pcall` sarmalaması yapıldı.
+- [x] **Frontend (React/TS) Desteği:** `tsserver`/`vtsls`, `tailwindcss` ve `eslint` LSP konfigürasyonları eklendi.
+- [x] **Otomatik Formatlama (Auto-formatting):** `BufWritePre` kancası ile otomatik formatlama (LSP format) eklendi.
+- [x] **DAP Geliştirmeleri:** Temel yapı iyileştirildi.
