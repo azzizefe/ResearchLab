@@ -3,7 +3,7 @@
 
 #[cfg(test)]
 mod tests {
-    use anydesk_pivot_detector_lib::api::tauri_commands::{get_alerts, get_risk_score};
+    // use anydesk_pivot_detector::api::tauri_commands::{get_alerts, get_risk_score};
     // Note: We need to mock the state for these commands to test them in isolation.
 
     #[tokio::test]
