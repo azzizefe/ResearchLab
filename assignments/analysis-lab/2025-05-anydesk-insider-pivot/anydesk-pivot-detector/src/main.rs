@@ -3,7 +3,7 @@
 use anydesk_pivot_detector::analyzers::{AnomalyScorer, PivotDetector, RuleEngine};
 use anydesk_pivot_detector::config::{AppConfig, Cli, Commands};
 use anydesk_pivot_detector::monitors::{FileWatcher, NetworkMonitor, ProcessMonitor};
-use anydesk_pivot_detector::parsers::{parse_system_conf, parse_trace_file};
+use anydesk_pivot_detector::parsers::parse_system_conf;
 use anydesk_pivot_detector::reporters::{ConsoleReporter, ElasticsearchReporter, JsonReporter};
 use clap::Parser;
 use colored::Colorize;
@@ -59,7 +59,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let mut all_alerts = Vec::new();
 
             // 1. Analyze logs for patterns
-            let content = std::fs::read_to_string(&scan_path).unwrap_or_default();
+            let content = std::fs::read_to_string(&scan_path).map_err(|e| {
+                anyhow::anyhow!("Failed to read log file: {e}")
+            })?;
             for line in content.lines() {
                 let alerts = detector.analyze_line(line);
                 for alert in alerts {
@@ -154,7 +156,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 _ = signal::ctrl_c() => {
                     println!("\n{}", "Shutdown signal received. Exiting...".yellow());
                 }
-                _ = async {
+                () = async {
                     let _ = tokio::join!(process_handle, network_handle, event_loop);
                 } => {}
             }

@@ -1,4 +1,5 @@
-/// 13.4.3: Hassas veri maskeleme (AnyDesk ID'lerin son 4 hanesi haric)
+/// 13.4.3: Hassas veri maskeleme (`AnyDesk` ID'lerin son 4 hanesi haric)
+#[must_use] 
 pub fn mask_anydesk_id(id: &str) -> String {
     if id.len() < 4 {
         return "****".to_string();
@@ -11,6 +12,7 @@ pub fn mask_anydesk_id(id: &str) -> String {
     // In siber security, usually you keep the end. 
 }
 
+#[must_use] 
 pub fn mask_id_safe(id: &str) -> String {
     let parts: Vec<&str> = id.split_whitespace().collect();
     if parts.len() == 3 {

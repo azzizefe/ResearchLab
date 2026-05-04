@@ -44,11 +44,11 @@ pub fn parse_service_conf<P: AsRef<Path>>(path: P) -> Result<ServiceConfig, AppE
 
     let file_transfer_enabled = settings
         .get("ad.features.file_transfer")
-        .map_or(true, |v| v != "false" && v != "0");
+        .is_none_or(|v| v != "false" && v != "0");
 
     let clipboard_enabled = settings
         .get("ad.features.clipboard")
-        .map_or(true, |v| v != "false" && v != "0");
+        .is_none_or(|v| v != "false" && v != "0");
 
     Ok(ServiceConfig {
         allowed_ids,

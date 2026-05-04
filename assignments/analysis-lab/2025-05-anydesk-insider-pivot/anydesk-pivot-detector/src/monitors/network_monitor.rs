@@ -187,8 +187,8 @@ impl NetworkMonitor {
                 // We use blocking_send here because we are inside a closure
                 let _ = self.tx.blocking_send(NetworkEvent {
                     timestamp: chrono::Utc::now(),
-                    local_address: "".to_string(),
-                    remote_address: "".to_string(),
+                    local_address: String::new(),
+                    remote_address: String::new(),
                     remote_port: 0,
                     protocol: "DNS".to_string(),
                     process_id: 0,
