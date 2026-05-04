@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import Dashboard from "./Dashboard";
 
 // Mock the store and language hooks
@@ -28,17 +29,29 @@ vi.mock("recharts", () => ({
 
 describe("Dashboard Component", () => {
   it("renders the dashboard title", () => {
-    render(<Dashboard />);
+    render(
+      <MemoryRouter>
+        <Dashboard />
+      </MemoryRouter>
+    );
     expect(screen.getByText("dashboard")).toBeDefined();
   });
 
   it("displays the risk score", () => {
-    render(<Dashboard />);
+    render(
+      <MemoryRouter>
+        <Dashboard />
+      </MemoryRouter>
+    );
     expect(screen.getByText("45")).toBeDefined();
   });
 
   it("displays the recent alerts", () => {
-    render(<Dashboard />);
+    render(
+      <MemoryRouter>
+        <Dashboard />
+      </MemoryRouter>
+    );
     expect(screen.getByText("Test Alert")).toBeDefined();
   });
 });
