@@ -1,19 +1,21 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
-import Dashboard from "./components/Dashboard";
+import SOCDashboard from "./components/SOCDashboard";
 import AlertsTable from "./components/AlertsTable";
 import LogViewer from "./components/LogViewer";
 import Settings from "./components/Settings";
 import ThreatModel from "./components/ThreatModel";
+import { useTauriEvents } from "./hooks/useTauriEvents";
 
 function App() {
+  useTauriEvents();
   return (
     <Router>
       <div className="flex h-screen bg-slate-950 text-slate-100 overflow-hidden font-sans selection:bg-cyan-500/30">
         <Sidebar />
         <main className="flex-1 overflow-y-auto bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-slate-950">
           <Routes>
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={<SOCDashboard />} />
             <Route path="/alerts" element={<AlertsTable />} />
             <Route path="/network" element={<ThreatModel />} />
             <Route path="/logs" element={<LogViewer />} />

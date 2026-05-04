@@ -1,13 +1,21 @@
+import { useEffect, useRef } from "react";
 import { Terminal, Cpu } from "lucide-react";
+import { useStore } from "../store/useStore";
 import PageHeader from "./PageHeader";
 
 export default function LogViewer() {
-  const mockLogs = [
-    "[2025-05-01 19:30:12.443] INFO  anydesk - Starting service...",
-    "[2025-05-01 19:31:05.112] INFO  anydesk - Incoming connection from 123 456 789",
-    "[2025-05-01 19:31:07.882] WARN  anydesk - Password accepted (Unattended Access)",
-    "[2025-05-01 19:32:15.001] INFO  anydesk - File transfer started: passwords.txt",
-    "[2025-05-01 19:32:45.332] ERROR detector - Suspicious process 'cmd.exe' started by AnyDesk",
+  const { logs } = useStore();
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [logs]);
+
+  const displayLogs = logs.length > 0 ? logs : [
+    "Waiting for live logs...",
+    "System monitoring active. Every AnyDesk trace entry will appear here.",
   ];
 
   return (
@@ -28,11 +36,11 @@ export default function LogViewer() {
           <Terminal size={16} className="text-slate-500" />
           <span className="text-slate-500 font-bold uppercase text-[10px]">ad.trace output</span>
         </div>
-        <div className="p-6 h-[500px] overflow-y-auto space-y-1">
-          {mockLogs.map((log, i) => (
+        <div ref={scrollRef} className="p-6 h-[500px] overflow-y-auto space-y-1">
+          {displayLogs.map((log, i) => (
             <div key={i} className="group flex gap-4">
               <span className="text-slate-700 select-none">{i + 1}</span>
-              <span className={log.includes("ERROR") ? "text-red-400" : log.includes("WARN") ? "text-yellow-400" : "text-slate-300"}>
+              <span className={log.includes("ERROR") || log.includes("Critical") ? "text-red-400" : log.includes("WARN") || log.includes("High") ? "text-yellow-400" : "text-slate-300"}>
                 {log}
               </span>
             </div>

@@ -45,9 +45,9 @@ Bu belge, AnyDesk Pivot Detector sisteminin Docker üzerinde sorunsuz bir şekil
   `npx @tauri-apps/cli dev`
 
 ## 7. Eksik Olan Modüller (SOC Dashboard & UI)
-- [ ] 6 tespit modülünün (Process, Network, Config vb.) tamamını tek bir sekme tabanlı etkileşimli Dashboard'da birleştirin.
-- [ ] Her bir güvenlik modülü için eğitici (educational) SOC içeriklerini ekleyin.
-- [ ] Canlı log akışı için FileWatcher entegrasyonunu Tauri events üzerinden UI tarafına bağlayın.
+- [x] 6 tespit modülünün (Process, Network, Config vb.) tamamını tek bir sekme tabanlı etkileşimli Dashboard'da birleştirin.
+- [x] Her bir güvenlik modülü için eğitici (educational) SOC içeriklerini ekleyin.
+- [x] Canlı log akışı için FileWatcher entegrasyonunu Tauri events üzerinden UI tarafına bağlayın.
 
 ## 8. Güvenlik Denetimi (Audit) ve Testler
 - [ ] **Hassas Veri Temizliği (PII Audit):** Proje dizininde (özellikle `test_ad.trace` veya diğer log dosyalarında) kişisel IP adresleri, AnyDesk ID'leri veya hassas bilgilerin kalmadığından emin olun.

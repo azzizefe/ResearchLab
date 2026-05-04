@@ -2,6 +2,9 @@ use anydesk_pivot_detector::models::alert::Alert;
 use anydesk_pivot_detector::config::AppConfig;
 use anydesk_pivot_detector::parsers::parse_trace_file;
 use anydesk_pivot_detector::analyzers::PivotDetector;
+use anydesk_pivot_detector::monitors::FileWatcher;
+use tauri::{AppHandle, Emitter, Manager};
+use tokio::sync::mpsc;
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -16,7 +19,30 @@ async fn get_alerts() -> Result<Vec<Alert>, String> {
 
 /// 10.2.2: Izlemeyi baslat
 #[tauri::command]
-async fn start_monitor() -> Result<(), String> {
+async fn start_monitor(app: AppHandle) -> Result<(), String> {
+    let config = AppConfig::load().map_err(|e| e.to_string())?;
+    let (tx, mut rx) = mpsc::channel(100);
+    let mut file_watcher = FileWatcher::new(tx).map_err(|e| e.to_string())?;
+    let detector = PivotDetector::new();
+    
+    file_watcher.watch(&config.anydesk.trace_path).map_err(|e| e.to_string())?;
+
+    tauri::async_runtime::spawn(async move {
+        while let Some(event) = rx.recv().await {
+            let new_lines = file_watcher.handle_event(event);
+            for line in new_lines {
+                // Emit raw log line
+                let _ = app.emit("log-entry", &line);
+                
+                // Analyze for alerts
+                let alerts = detector.analyze_line(&line);
+                for alert in alerts {
+                    let _ = app.emit("new-alert", &alert);
+                }
+            }
+        }
+    });
+
     Ok(())
 }
 
