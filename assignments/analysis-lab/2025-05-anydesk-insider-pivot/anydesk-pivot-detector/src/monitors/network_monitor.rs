@@ -156,10 +156,162 @@ impl NetworkMonitor {
                 _ => {}
             }
         }
-        #[cfg(not(windows))]
+        #[cfg(target_os = "linux")]
         {
-            // TODO: Implement Linux network monitoring (e.g. using /proc/net/tcp or similar)
-            // tracing::debug!("Network monitoring not implemented for this platform");
+            let output = tokio::process::Command::new("ss")
+                .args(["-ntup"])
+                .output()
+                .await;
+
+            if let Ok(output) = output {
+                if output.status.success() {
+                    let stdout = String::from_utf8_lossy(&output.stdout);
+                    for line in stdout.lines().skip(1) {
+                        let parts: Vec<&str> = line.split_whitespace().collect();
+                        if parts.len() >= 6 {
+                            // Example line: tcp ESTAB 0 0 192.168.1.10:12345 93.184.216.34:443 users:(("anydesk",pid=1234,fd=5))
+                            let local = parts[4];
+                            let remote = parts[5];
+                            let user_info = if parts.len() > 6 { parts[6] } else { "" };
+
+                            let remote_parts: Vec<&str> = remote.rsplitn(2, ':').collect();
+                            if remote_parts.len() == 2 {
+                                let remote_addr = remote_parts[1].to_string();
+                                let remote_port = remote_parts[0].parse::<u16>().unwrap_or(0);
+                                
+                                let local_parts: Vec<&str> = local.rsplitn(2, ':').collect();
+                                let local_addr = if local_parts.len() == 2 { local_parts[1] } else { "" }.to_string();
+
+                                // Extract PID from users:(("anydesk",pid=1234,fd=5))
+                                let process_id = if user_info.contains("pid=") {
+                                    user_info.split("pid=").nth(1)
+                                        .and_then(|s| s.split(',').next())
+                                        .and_then(|s| s.parse::<u32>().ok())
+                                        .unwrap_or(0)
+                                } else {
+                                    0
+                                };
+
+                                if remote_addr == "0.0.0.0" || remote_addr == "127.0.0.1" || remote_addr == "::" {
+                                    continue;
+                                }
+
+                                if remote_port == 6568 || remote_port == 443 {
+                                    let is_anydesk = self.sys.process(sysinfo::Pid::from(process_id as usize))
+                                        .is_some_and(|p| p.name().to_string_lossy().to_lowercase().contains("anydesk"));
+
+                                    if is_anydesk {
+                                        let _ = self.tx.blocking_send(NetworkEvent {
+                                            timestamp: chrono::Utc::now(),
+                                            local_address: local_addr.clone(),
+                                            remote_address: remote_addr.clone(),
+                                            remote_port,
+                                            protocol: "TCP".to_string(),
+                                            process_id,
+                                            process_name: Some("AnyDesk".to_string()),
+                                            geolocation: None,
+                                            domain_name: None,
+                                            data_sent_bytes: None,
+                                            data_received_bytes: None,
+                                            event_type: NetworkEventType::AnyDeskConnection,
+                                        });
+                                    }
+                                }
+
+                                if self.forbidden_ports.contains(&remote_port) {
+                                    let _ = self.tx.blocking_send(NetworkEvent {
+                                        timestamp: chrono::Utc::now(),
+                                        local_address: local_addr,
+                                        remote_address: remote_addr,
+                                        remote_port,
+                                        protocol: "TCP".to_string(),
+                                        process_id,
+                                        process_name: None,
+                                        geolocation: None,
+                                        domain_name: None,
+                                        data_sent_bytes: None,
+                                        data_received_bytes: None,
+                                        event_type: NetworkEventType::ForbiddenPortTraffic,
+                                    });
+                                }
+        #[cfg(target_os = "macos")]
+        {
+            let output = tokio::process::Command::new("lsof")
+                .args(["-nP", "-iTCP", "-sTCP:ESTABLISHED"])
+                .output()
+                .await;
+
+            if let Ok(output) = output {
+                if output.status.success() {
+                    let stdout = String::from_utf8_lossy(&output.stdout);
+                    for line in stdout.lines().skip(1) {
+                        let parts: Vec<&str> = line.split_whitespace().collect();
+                        if parts.len() >= 9 {
+                            // Example line: AnyDesk 1234 efe 5u IPv4 0x123 0t0 TCP 192.168.1.10:12345->93.184.216.34:443 (ESTABLISHED)
+                            let process_name = parts[0];
+                            let process_id = parts[1].parse::<u32>().unwrap_or(0);
+                            let connection = parts[8];
+
+                            if let Some((local, remote)) = connection.split_once("->") {
+                                let remote_parts: Vec<&str> = remote.rsplitn(2, ':').collect();
+                                if remote_parts.len() == 2 {
+                                    let remote_addr = remote_parts[1].to_string();
+                                    let remote_port = remote_parts[0].parse::<u16>().unwrap_or(0);
+                                    
+                                    let local_parts: Vec<&str> = local.rsplitn(2, ':').collect();
+                                    let local_addr = if local_parts.len() == 2 { local_parts[1] } else { "" }.to_string();
+
+                                    if remote_addr == "127.0.0.1" || remote_addr == "::1" {
+                                        continue;
+                                    }
+
+                                    if remote_port == 6568 || remote_port == 443 {
+                                        if process_name.to_lowercase().contains("anydesk") {
+                                            let _ = self.tx.blocking_send(NetworkEvent {
+                                                timestamp: chrono::Utc::now(),
+                                                local_address: local_addr.clone(),
+                                                remote_address: remote_addr.clone(),
+                                                remote_port,
+                                                protocol: "TCP".to_string(),
+                                                process_id,
+                                                process_name: Some("AnyDesk".to_string()),
+                                                geolocation: None,
+                                                domain_name: None,
+                                                data_sent_bytes: None,
+                                                data_received_bytes: None,
+                                                event_type: NetworkEventType::AnyDeskConnection,
+                                            });
+                                        }
+                                    }
+
+                                    if self.forbidden_ports.contains(&remote_port) {
+                                        let _ = self.tx.blocking_send(NetworkEvent {
+                                            timestamp: chrono::Utc::now(),
+                                            local_address: local_addr,
+                                            remote_address: remote_addr,
+                                            remote_port,
+                                            protocol: "TCP".to_string(),
+                                            process_id,
+                                            process_name: Some(process_name.to_string()),
+                                            geolocation: None,
+                                            domain_name: None,
+                                            data_sent_bytes: None,
+                                            data_received_bytes: None,
+                                            event_type: NetworkEventType::ForbiddenPortTraffic,
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         Ok(())
