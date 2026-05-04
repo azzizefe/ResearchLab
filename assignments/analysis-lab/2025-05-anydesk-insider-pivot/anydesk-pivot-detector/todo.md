@@ -50,9 +50,9 @@ Bu belge, AnyDesk Pivot Detector sisteminin Docker üzerinde sorunsuz bir şekil
 - [x] Canlı log akışı için FileWatcher entegrasyonunu Tauri events üzerinden UI tarafına bağlayın.
 
 ## 8. Güvenlik Denetimi (Audit) ve Testler
-- [ ] **Hassas Veri Temizliği (PII Audit):** Proje dizininde (özellikle `test_ad.trace` veya diğer log dosyalarında) kişisel IP adresleri, AnyDesk ID'leri veya hassas bilgilerin kalmadığından emin olun.
-- [ ] Rust tarafındaki (backend) eksik birim testlerini (Unit Tests) ve entegrasyon testlerini çalıştırın (`cargo test`).
-- [ ] Frontend tarafındaki test altyapısını (Vitest vb.) çalıştırın ve eksik testleri tamamlayın (`npm run test`).
+- [x] **Hassas Veri Temizliği (PII Audit):** Proje dizininde (özellikle `test_ad.trace` veya diğer log dosyalarında) kişisel IP adresleri, AnyDesk ID'leri veya hassas bilgilerin kalmadığından emin olun.
+- [x] Rust tarafındaki (backend) eksik birim testlerini (Unit Tests) ve entegrasyon testlerini çalıştırın (`cargo test`).
+- [x] Frontend tarafındaki test altyapısını (Vitest vb.) çalıştırın ve eksik testleri tamamlayın (`npm run test`).
 
 ## 9. SIEM Entegrasyonu ve Bildirim Mekanizmaları
 - [ ] AnomalyScorer'dan dönen yüksek riskli alarmlar için e-posta, Slack veya Webhook bildirim (Alerting) altyapısını entegre edin.
