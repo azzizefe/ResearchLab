@@ -25,7 +25,7 @@ impl NotificationManager {
         }
 
         if self.settings.enable_email {
-            self.send_email(alert).await?;
+            self.send_email(alert)?;
         }
 
         if self.settings.enable_webhook {
@@ -45,12 +45,12 @@ impl NotificationManager {
             .json(&payload)
             .send()
             .await
-            .map_err(|e| AppError::NetworkError(format!("Slack notification failed: {}", e)))?;
+            .map_err(|e| AppError::NetworkError(format!("Slack notification failed: {e}")))?;
 
         Ok(())
     }
 
-    async fn send_email(&self, alert: &Alert) -> Result<(), AppError> {
+    fn send_email(&self, alert: &Alert) -> Result<(), AppError> {
         let email = Message::builder()
             .from("AnyDesk Pivot Detector <noreply@researchlab.com>".parse().unwrap())
             .to(self.settings.email_to.parse().unwrap())
@@ -69,7 +69,7 @@ impl NotificationManager {
             .build();
 
         mailer.send(&email)
-            .map_err(|e| AppError::InternalError(format!("Email sending failed: {}", e)))?;
+            .map_err(|e| AppError::InternalError(format!("Email sending failed: {e}")))?;
 
         Ok(())
     }
@@ -79,7 +79,7 @@ impl NotificationManager {
             .json(alert)
             .send()
             .await
-            .map_err(|e| AppError::NetworkError(format!("Webhook notification failed: {}", e)))?;
+            .map_err(|e| AppError::NetworkError(format!("Webhook notification failed: {e}")))?;
 
         Ok(())
     }
