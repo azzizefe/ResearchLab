@@ -78,35 +78,35 @@ Bu belge, AnyDesk Pivot Detector sisteminin Docker üzerinde sorunsuz bir şekil
 - [x] **DAP Geliştirmeleri:** Temel yapı iyileştirildi.
 
 ## 13. 🐧 Cross-Platform Desteği (Linux/macOS Ağ İzleme)
-- [ ] **Linux Network Monitor:** `network_monitor.rs` içindeki PowerShell tabanlı bağlantı taramasını `/proc/net/tcp` veya `ss` komutuyla Linux'ta çalışacak şekilde implement edin.
-- [ ] **Linux DNS Cache:** `systemd-resolve --statistics` veya `/etc/resolv.conf` tabanlı DNS önbellek kontrolünü ekleyin.
-- [ ] **macOS Network Monitor:** `lsof -i` veya `nettop` komutlarıyla macOS ağ bağlantı izlemesini implement edin.
+- [x] **Linux Network Monitor:** `network_monitor.rs` içindeki PowerShell tabanlı bağlantı taramasını `/proc/net/tcp` veya `ss` komutuyla Linux'ta çalışacak şekilde implement edin.
+- [x] **Linux DNS Cache:** `systemd-resolve --statistics` veya `/etc/resolv.conf` tabanlı DNS önbellek kontrolünü ekleyin.
+- [x] **macOS Network Monitor:** `lsof -i` veya `nettop` komutlarıyla macOS ağ bağlantı izlemesini implement edin.
 - [ ] **Platform Testleri:** CI/CD pipeline'ına Linux ve macOS build matrislerini ekleyerek cross-platform derleme doğrulaması yapın.
 
 ## 14. 🔐 SMTP Kimlik Doğrulama ve Güvenli Bildirimler
-- [ ] **Credentials Desteği:** `NotificationManager::send_email` fonksiyonuna `STARTTLS` ve kullanıcı adı/şifre (Credentials) desteği ekleyin.
-- [ ] **Ortam Değişkenleri:** SMTP kullanıcı adı ve şifresini `config/default.toml` veya `.env` dosyasından güvenli şekilde okuyun (`smtp_username`, `smtp_password`).
-- [ ] **Email Doğrulama:** `email_to` ve `from` alanlarının geçerli adresler olduğunu `parse()` öncesinde kontrol edin, `unwrap()` yerine hata yönetimi ekleyin.
-- [ ] **TLS Desteği:** Gmail, Outlook gibi servisler için `STARTTLS` veya doğrudan TLS bağlantı seçeneği ekleyin.
+- [x] **Credentials Desteği:** `NotificationManager::send_email` fonksiyonuna `STARTTLS` ve kullanıcı adı/şifre (Credentials) desteği ekleyin.
+- [x] **Ortam Değişkenleri:** SMTP kullanıcı adı ve şifresini `config/default.toml` veya `.env` dosyasından güvenli şekilde okuyun (`smtp_username`, `smtp_password`).
+- [x] **Email Doğrulama:** `email_to` ve `from` alanlarının geçerli adresler olduğunu `parse()` öncesinde kontrol edin, `unwrap()` yerine hata yönetimi ekleyin.
+- [x] **TLS Desteği:** Gmail, Outlook gibi servisler için `STARTTLS` veya doğrudan TLS bağlantı seçeneği ekleyin.
 
 ## 15. ⚡ Aktif Müdahale (Active Response / Incident Response)
-- [ ] **Process Kill:** Kritik seviyedeki alarmlar için AnyDesk sürecini otomatik sonlandırma (`taskkill` / `kill`) mekanizması ekleyin (konfigürasyondan açılıp kapatılabilir olmalı).
+- [x] **Process Kill:** Kritik seviyedeki alarmlar için AnyDesk sürecini otomatik sonlandırma (`taskkill` / `kill`) mekanizması ekleyin (konfigürasyondan açılıp kapatılabilir olmalı).
 - [ ] **IP Engelleme:** Bilinen zararlı IP'lere bağlantı yapıldığında Windows Firewall veya `iptables` kuralı ekleyerek otomatik engelleme yapın.
 - [ ] **Oturum Kapatma:** AnyDesk'in aktif oturumunu uzaktan sonlandırmak için AnyDesk CLI (`anydesk --remove-password`) entegrasyonu ekleyin.
 - [ ] **Onay Mekanizması:** Aktif müdahale aksiyonlarının yanlışlıkla tetiklenmemesi için GUI/CLI üzerinden kullanıcı onayı (confirmation prompt) isteyin.
 
 ## 16. 🌍 GeoIP Lokalizasyon İyileştirmeleri
-- [ ] **MaxMind GeoLite2 Entegrasyonu:** Ücretsiz `ip-api.com` yerine lokal `MaxMind GeoLite2` veritabanını (`.mmdb`) kullanarak rate-limit sorunlarını ortadan kaldırın.
-- [ ] **Offline Mod:** İnternet bağlantısı olmayan ortamlarda bile çalışabilmesi için GeoIP veritabanını lokal olarak saklayın.
+- [x] **MaxMind GeoLite2 Entegrasyonu:** Ücretsiz `ip-api.com` yerine lokal `MaxMind GeoLite2` veritabanını (`.mmdb`) kullanarak rate-limit sorunlarını ortadan kaldırın.
+- [x] **Offline Mod:** İnternet bağlantısı olmayan ortamlarda bile çalışabilmesi için GeoIP veritabanını lokal olarak saklayın.
 - [ ] **Otomatik Güncelleme:** GeoIP veritabanını belirli aralıklarla (haftalık) otomatik güncelleyen bir mekanizma ekleyin.
 
 ## 17. 📜 Log Rotasyonu ve Dayanıklılık (Log Rotation & Resilience)
-- [ ] **Log Rotasyonu Algılama:** `FileWatcher`'a AnyDesk'in `ad.trace` dosyasını arşivleyip yeni dosya oluşturduğu anı yakalayan bir mekanizma ekleyin (dosya adı değişikliği veya inode takibi).
+- [x] **Log Rotasyonu Algılama:** `FileWatcher`'a AnyDesk'in `ad.trace` dosyasını arşivleyip yeni dosya oluşturduğu anı yakalayan bir mekanizma ekleyin (dosya adı değişikliği veya inode takibi).
 - [ ] **Tampon Bellek (Buffer):** Dosya rotasyonu sırasında oluşabilecek veri kaybını önlemek için bir ring buffer veya write-ahead log (WAL) mekanizması implement edin.
-- [ ] **Checkpoint Sistemi:** Son okunan satır pozisyonunu diske yazarak, servis yeniden başladığında kaldığı yerden devam etmesini sağlayın.
+- [x] **Checkpoint Sistemi:** Son okunan satır pozisyonunu diske yazarak, servis yeniden başladığında kaldığı yerden devam etmesini sağlayın.
 
 ## 18. 📈 Ölçeklenebilirlik ve Performans (Scalability)
 - [ ] **Elasticsearch Cluster:** Tek node yerine en az 3 node'lu bir ES cluster yapılandırması için `docker-compose.prod.yml` dosyası oluşturun.
 - [ ] **Index Lifecycle Management (ILM):** Eski alarmları otomatik arşivleyen veya silen bir Elasticsearch ILM politikası tanımlayın.
-- [ ] **Metrik Toplama:** Dedektörün CPU, bellek ve işlenen olay/saniye gibi performans metriklerini Prometheus formatında dışarı verin.
+- [x] **Metrik Toplama:** Dedektörün CPU, bellek ve işlenen olay/saniye gibi performans metriklerini Prometheus formatında dışarı verin.
 - [ ] **Benchmark Testleri:** Saniyede 1000+ olay yükü altında sistemin performansını ölçen benchmark testleri yazın (`criterion` crate).
