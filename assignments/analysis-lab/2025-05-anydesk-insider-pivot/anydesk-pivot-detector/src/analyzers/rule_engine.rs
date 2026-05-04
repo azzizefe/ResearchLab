@@ -28,8 +28,9 @@ impl RuleEngine {
                 severity: AlertSeverity::Medium,
                 title: "Outside Working Hours Connection".to_string(),
                 description: format!(
-                    "AnyDesk activity detected outside working hours ({}:00 - {}:00)",
-                    self.config.monitor.working_hour_start, self.config.monitor.working_hour_end
+                    "AnyDesk activity detected outside working hours ({start}:00 - {end}:00)",
+                    start = self.config.monitor.working_hour_start,
+                    end = self.config.monitor.working_hour_end
                 ),
                 source_module: "RuleEngine".to_string(),
                 evidence: json!({ "event_timestamp": timestamp, "hour": hour }),
@@ -89,8 +90,9 @@ impl RuleEngine {
                 severity,
                 title: "Suspicious Process Execution".to_string(),
                 description: format!(
-                    "Suspicious process '{}' (PID: {}) detected.",
-                    event.name, event.pid
+                    "Suspicious process '{name}' (PID: {pid}) detected.",
+                    name = event.name,
+                    pid = event.pid
                 ),
                 source_module: "RuleEngine".to_string(),
                 evidence: json!({ "process": event }),
@@ -110,7 +112,7 @@ impl RuleEngine {
                 timestamp: Utc::now(),
                 severity: AlertSeverity::High,
                 title: "Forbidden Port Traffic".to_string(),
-                description: format!("Traffic detected on forbidden port: {}", event.remote_port),
+                description: format!("Traffic detected on forbidden port: {port}", port = event.remote_port),
                 source_module: "RuleEngine".to_string(),
                 evidence: json!({ "network_event": event }),
             });
@@ -123,7 +125,7 @@ impl RuleEngine {
                 timestamp: Utc::now(),
                 severity: AlertSeverity::Critical,
                 title: "Malicious IP Connection".to_string(),
-                description: format!("Connection to known malicious IP detected: {}", event.remote_address),
+                description: format!("Connection to known malicious IP detected: {remote_address}", remote_address = event.remote_address),
                 source_module: "RuleEngine".to_string(),
                 evidence: json!({ "network_event": event }),
             });
@@ -137,7 +139,7 @@ impl RuleEngine {
                 timestamp: Utc::now(),
                 severity: AlertSeverity::High,
                 title: "High Data Volume Detected".to_string(),
-                description: format!("Suspicious data volume detected: {} bytes", total_bytes),
+                description: format!("Suspicious data volume detected: {total_bytes} bytes"),
                 source_module: "RuleEngine".to_string(),
                 evidence: json!({ "network_event": event, "total_bytes": total_bytes }),
             });

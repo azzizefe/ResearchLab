@@ -59,12 +59,12 @@ impl NotificationManager {
                 "Security Alert Details:\n\nTitle: {}\nSeverity: {:?}\nSource: {}\nDescription: {}\nTimestamp: {}",
                 alert.title, alert.severity, alert.source_module, alert.description, alert.timestamp
             ))
-            .map_err(|e| AppError::InternalError(format!("Email construction failed: {}", e)))?;
+            .map_err(|e| AppError::InternalError(format!("Email construction failed: {e}")))?;
 
         // Note: In a real app, you'd want to load credentials from env or config
         // For now, we assume no auth or simple setup for demonstration
         let mailer = SmtpTransport::relay(&self.settings.smtp_server)
-            .map_err(|e| AppError::InternalError(format!("SMTP relay setup failed: {}", e)))?
+            .map_err(|e| AppError::InternalError(format!("SMTP relay setup failed: {e}")))?
             .port(self.settings.smtp_port)
             .build();
 
