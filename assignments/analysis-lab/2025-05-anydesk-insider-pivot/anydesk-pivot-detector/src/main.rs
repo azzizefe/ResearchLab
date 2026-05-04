@@ -39,8 +39,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         config.elasticsearch.url.clone(),
         config.elasticsearch.index.clone(),
     ));
-    let _rule_engine = RuleEngine::new(config.clone());
-    let _scorer = AnomalyScorer::new(config.monitor.alert_threshold as f32 * 10.0);
     let detector = PivotDetector::new();
 
     println!(
@@ -56,14 +54,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let scan_path = path.unwrap_or_else(|| config.anydesk.trace_path.clone().into());
             println!("{} {:?}", "Scanning logs at:".yellow(), scan_path);
 
-            let _connections = parse_trace_file(&scan_path)?;
+            let rule_engine = RuleEngine::new(config.clone());
+            let mut scorer = AnomalyScorer::new(config.monitor.alert_threshold as f32);
             let mut all_alerts = Vec::new();
 
-            // Real analysis would involve more than just connections, but we'll use detector for now
+            // 1. Analyze logs for patterns
             let content = std::fs::read_to_string(&scan_path).unwrap_or_default();
             for line in content.lines() {
                 let alerts = detector.analyze_line(line);
-                all_alerts.extend(alerts);
+                for alert in alerts {
+                    let _ = scorer.score_alert(&alert, "SCAN_SESSION");
+                    all_alerts.push(alert);
+                }
+                if let Some(alert) = rule_engine.check_unattended_access(line) {
+                    let _ = scorer.score_alert(&alert, "SCAN_SESSION");
+                    all_alerts.push(alert);
+                }
             }
 
             console.report(&all_alerts);
@@ -83,14 +89,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Some(Commands::Monitor) => {
             tracing::info!(target: "monitor", "Starting real-time monitoring system...");
 
-            let (tx, mut rx) = mpsc::channel(100);
+            let (file_tx, mut file_rx) = mpsc::channel(100);
+            let (proc_tx, mut proc_rx) = mpsc::channel(100);
+            let (net_tx, mut net_rx) = mpsc::channel(100);
 
-            let mut process_monitor =
-                ProcessMonitor::new(config.monitor.suspicious_processes.clone());
-            let mut file_watcher = FileWatcher::new(tx)?;
-            let mut network_monitor = NetworkMonitor::new();
+            let mut process_monitor = ProcessMonitor::new(config.monitor.suspicious_processes.clone(), proc_tx);
+            let mut file_watcher = FileWatcher::new(file_tx)?;
+            let mut network_monitor = NetworkMonitor::new(net_tx);
 
             file_watcher.watch(&config.anydesk.trace_path)?;
+
+            let rule_engine = std::sync::Arc::new(RuleEngine::new(config.clone()));
+            let mut scorer = AnomalyScorer::new(config.monitor.alert_threshold as f32);
 
             // 10.3: Async task orchestration (tokio)
             let process_handle = tokio::spawn(async move {
@@ -101,22 +111,36 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let _ = network_monitor.run().await;
             });
 
-            let file_handle = tokio::spawn(async move {
-                while let Some(event) = rx.recv().await {
-                    let new_lines = file_watcher.handle_event(event);
-                    for line in new_lines {
-                        let alerts = detector.analyze_line(&line);
-                        if !alerts.is_empty() {
-                            console.report(&alerts);
-                            let _ = json_reporter.report(&alerts);
-                            if config.reporting.enable_elasticsearch {
-                                let es = es_reporter.clone();
-                                let alerts_to_send = alerts.clone();
-                                tokio::spawn(async move {
-                                    if let Err(e) = es.report(&alerts_to_send).await {
-                                        tracing::error!("Failed to report to Elasticsearch: {}", e);
+            let reporter_es = es_reporter.clone();
+            let rule_engine_loop = rule_engine.clone();
+
+            let event_loop = tokio::spawn(async move {
+                loop {
+                    tokio::select! {
+                        Some(event) = file_rx.recv() => {
+                            let new_lines = file_watcher.handle_event(event);
+                            for line in new_lines {
+                                let alerts = detector.analyze_line(&line);
+                                for alert in alerts {
+                                    let score = scorer.score_alert(&alert, "CLI_SESSION");
+                                    console.report(&[alert.clone()]);
+                                    if config.reporting.enable_elasticsearch {
+                                        let _ = reporter_es.report(&[alert]).await;
                                     }
-                                });
+                                    if score >= config.monitor.alert_threshold as f32 {
+                                        println!("{} Score: {}", "CRITICAL RISK DETECTED!".red().bold(), score);
+                                    }
+                                }
+                            }
+                        }
+                        Some(event) = proc_rx.recv() => {
+                            if let Some(alert) = rule_engine_loop.check_suspicious_process(&event) {
+                                console.report(&[alert]);
+                            }
+                        }
+                        Some(event) = net_rx.recv() => {
+                            if let Some(alert) = rule_engine_loop.check_network_scanning(&event) {
+                                console.report(&[alert]);
                             }
                         }
                     }
@@ -130,8 +154,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 _ = signal::ctrl_c() => {
                     println!("\n{}", "Shutdown signal received. Exiting...".yellow());
                 }
-                () = async {
-                    let _ = tokio::join!(process_handle, network_handle, file_handle);
+                _ = async {
+                    let _ = tokio::join!(process_handle, network_handle, event_loop);
                 } => {}
             }
         }

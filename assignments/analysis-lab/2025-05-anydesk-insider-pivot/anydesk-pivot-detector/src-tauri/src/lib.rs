@@ -1,8 +1,8 @@
-use anydesk_pivot_detector::models::alert::Alert;
+use anydesk_pivot_detector::models::alert::{Alert, AlertSeverity};
 use anydesk_pivot_detector::config::AppConfig;
 use anydesk_pivot_detector::parsers::parse_trace_file;
-use anydesk_pivot_detector::analyzers::PivotDetector;
-use anydesk_pivot_detector::monitors::FileWatcher;
+use anydesk_pivot_detector::analyzers::{PivotDetector, RuleEngine, AnomalyScorer};
+use anydesk_pivot_detector::monitors::{FileWatcher, ProcessMonitor, NetworkMonitor};
 use tauri::{AppHandle, Emitter, Manager};
 use tokio::sync::mpsc;
 
@@ -21,24 +21,86 @@ async fn get_alerts() -> Result<Vec<Alert>, String> {
 #[tauri::command]
 async fn start_monitor(app: AppHandle) -> Result<(), String> {
     let config = AppConfig::load().map_err(|e| e.to_string())?;
-    let (tx, mut rx) = mpsc::channel(100);
-    let mut file_watcher = FileWatcher::new(tx).map_err(|e| e.to_string())?;
+    
+    // Channels for different monitors
+    let (file_tx, mut file_rx) = mpsc::channel(100);
+    let (proc_tx, mut proc_rx) = mpsc::channel(100);
+    let (net_tx, mut net_rx) = mpsc::channel(100);
+
+    // Initialize Analyzers
     let detector = PivotDetector::new();
+    let rule_engine = std::sync::Arc::new(RuleEngine::new(config.clone()));
+    let scorer = std::sync::Arc::new(tokio::sync::Mutex::new(AnomalyScorer::new(config.monitor.alert_threshold as f32)));
+
+    // Initialize Monitors
+    let mut file_watcher = FileWatcher::new(file_tx).map_err(|e| e.to_string())?;
+    let mut process_monitor = ProcessMonitor::new(config.monitor.suspicious_processes.clone(), proc_tx);
+    let mut network_monitor = NetworkMonitor::new(net_tx);
     
     file_watcher.watch(&config.anydesk.trace_path).map_err(|e| e.to_string())?;
 
+    // Helper to process alerts
+    let process_alert = |alert: Alert, app: &AppHandle, scorer: &std::sync::Arc<tokio::sync::Mutex<AnomalyScorer>>| {
+        let app_clone = app.clone();
+        let scorer_clone = scorer.clone();
+        tauri::async_runtime::spawn(async move {
+            let mut s = scorer_clone.lock().await;
+            let score = s.score_alert(&alert, "LOCAL_SESSION"); // Simplified session ID
+            let _ = app_clone.emit("new-alert", &alert);
+            let _ = app_clone.emit("risk-update", score);
+        });
+    };
+
+    // 1. File Watcher Task
+    let app_file = app.clone();
+    let rule_engine_file = rule_engine.clone();
+    let scorer_file = scorer.clone();
     tauri::async_runtime::spawn(async move {
-        while let Some(event) = rx.recv().await {
+        while let Some(event) = file_rx.recv().await {
             let new_lines = file_watcher.handle_event(event);
             for line in new_lines {
-                // Emit raw log line
-                let _ = app.emit("log-entry", &line);
+                let _ = app_file.emit("log-entry", &line);
                 
-                // Analyze for alerts
+                // Detection Module 1: Pivot Detector (Log patterns)
                 let alerts = detector.analyze_line(&line);
                 for alert in alerts {
-                    let _ = app.emit("new-alert", &alert);
+                    process_alert(alert, &app_file, &scorer_file);
                 }
+
+                // Detection Module 2: Rule Engine (Log-based rules)
+                if let Some(alert) = rule_engine_file.check_unattended_access(&line) {
+                    process_alert(alert, &app_file, &scorer_file);
+                }
+            }
+        }
+    });
+
+    // 2. Process Monitor Task
+    let app_proc = app.clone();
+    let rule_engine_proc = rule_engine.clone();
+    let scorer_proc = scorer.clone();
+    tauri::async_runtime::spawn(async move {
+        let _ = process_monitor.run().await;
+    });
+    tauri::async_runtime::spawn(async move {
+        while let Some(event) = proc_rx.recv().await {
+            if let Some(alert) = rule_engine_proc.check_suspicious_process(&event) {
+                process_alert(alert, &app_proc, &scorer_proc);
+            }
+        }
+    });
+
+    // 3. Network Monitor Task
+    let app_net = app.clone();
+    let rule_engine_net = rule_engine.clone();
+    let scorer_net = scorer.clone();
+    tauri::async_runtime::spawn(async move {
+        let _ = network_monitor.run().await;
+    });
+    tauri::async_runtime::spawn(async move {
+        while let Some(event) = net_rx.recv().await {
+            if let Some(alert) = rule_engine_net.check_network_scanning(&event) {
+                process_alert(alert, &app_net, &scorer_net);
             }
         }
     });

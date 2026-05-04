@@ -4,11 +4,12 @@ import { invoke } from "@tauri-apps/api/core";
 import { useStore, Alert } from "../store/useStore";
 
 export function useTauriEvents() {
-  const { addAlert, addLog, setMonitoring } = useStore();
+  const { addAlert, addLog, setMonitoring, updateRiskScore } = useStore();
 
   useEffect(() => {
     let unlistenAlerts: (() => void) | undefined;
     let unlistenLogs: (() => void) | undefined;
+    let unlistenRisk: (() => void) | undefined;
 
     const setupListeners = async () => {
       // 1. Listen for new alerts
@@ -20,6 +21,11 @@ export function useTauriEvents() {
       // 2. Listen for raw log entries
       unlistenLogs = await listen<string>("log-entry", (event) => {
         addLog(event.payload);
+      });
+
+      // 3. Listen for risk score updates
+      unlistenRisk = await listen<number>("risk-update", (event) => {
+        updateRiskScore(event.payload);
       });
 
       // 3. Automatically start monitoring when the hook mounts
@@ -37,6 +43,7 @@ export function useTauriEvents() {
     return () => {
       if (unlistenAlerts) unlistenAlerts();
       if (unlistenLogs) unlistenLogs();
+      if (unlistenRisk) unlistenRisk();
     };
   }, [addAlert, setMonitoring]);
 }

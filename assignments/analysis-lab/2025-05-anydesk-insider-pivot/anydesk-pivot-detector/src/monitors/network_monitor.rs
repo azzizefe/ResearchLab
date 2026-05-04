@@ -102,7 +102,7 @@ impl NetworkMonitor {
                             remote_port,
                             process_id
                         );
-                        let _ = self.tx.send(NetworkEvent {
+                        let _ = self.tx.blocking_send(NetworkEvent {
                             timestamp: chrono::Utc::now(),
                             local_address: _local_addr.clone(),
                             remote_address: remote_addr.clone(),
@@ -115,7 +115,7 @@ impl NetworkMonitor {
                             data_sent_bytes: None,
                             data_received_bytes: None,
                             event_type: NetworkEventType::AnyDeskConnection,
-                        }).await;
+                        });
                     }
                 }
 
@@ -127,7 +127,7 @@ impl NetworkMonitor {
                         remote_addr,
                         process_id
                     );
-                    let _ = self.tx.send(NetworkEvent {
+                    let _ = self.tx.blocking_send(NetworkEvent {
                         timestamp: chrono::Utc::now(),
                         local_address: _local_addr.clone(),
                         remote_address: remote_addr.clone(),
@@ -140,7 +140,7 @@ impl NetworkMonitor {
                         data_sent_bytes: None,
                         data_received_bytes: None,
                         event_type: NetworkEventType::ForbiddenPortTraffic,
-                    }).await;
+                    });
                 }
             };
 
@@ -184,6 +184,21 @@ impl NetworkMonitor {
             let process_dns = |entry: &Value| {
                 let name = entry["Name"].as_str().unwrap_or("unknown");
                 println!("{} AnyDesk DNS query detected: {}", "[DNS]".yellow(), name);
+                // We use blocking_send here because we are inside a closure
+                let _ = self.tx.blocking_send(NetworkEvent {
+                    timestamp: chrono::Utc::now(),
+                    local_address: "".to_string(),
+                    remote_address: "".to_string(),
+                    remote_port: 0,
+                    protocol: "DNS".to_string(),
+                    process_id: 0,
+                    process_name: None,
+                    geolocation: None,
+                    domain_name: Some(name.to_string()),
+                    data_sent_bytes: None,
+                    data_received_bytes: None,
+                    event_type: NetworkEventType::SuspiciousDNS,
+                });
             };
 
             match dns_entries {
