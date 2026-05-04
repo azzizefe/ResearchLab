@@ -3,15 +3,17 @@ use crate::models::process_event::{ProcessEvent, ProcessEventType};
 use std::time::Duration;
 use sysinfo::{ProcessRefreshKind, RefreshKind, System, UpdateKind};
 use tokio::time::sleep;
+use tokio::sync::mpsc;
 
 pub struct ProcessMonitor {
     sys: System,
     suspicious_list: Vec<String>,
+    tx: mpsc::Sender<ProcessEvent>,
 }
 
 impl ProcessMonitor {
     #[must_use] 
-    pub fn new(suspicious_list: Vec<String>) -> Self {
+    pub fn new(suspicious_list: Vec<String>, tx: mpsc::Sender<ProcessEvent>) -> Self {
         let mut sys = System::new_with_specifics(
             RefreshKind::nothing()
                 .with_processes(ProcessRefreshKind::nothing().with_user(UpdateKind::Always)),
@@ -21,6 +23,7 @@ impl ProcessMonitor {
         Self {
             sys,
             suspicious_list,
+            tx,
         }
     }
 
@@ -28,6 +31,8 @@ impl ProcessMonitor {
         loop {
             self.sys.refresh_all();
             let mut events = Vec::new();
+
+            // ... (rest of identifying AnyDesk processes)
 
             // 1. Identify AnyDesk processes
             let anydesk_pids: Vec<_> = self
@@ -83,7 +88,7 @@ impl ProcessMonitor {
                     "[ALERT] Suspicious process detected: {} (PID: {}) spawned by AnyDesk",
                     event.name, event.pid
                 );
-                // In a real app, we would send this to an analyzer or reporter
+                let _ = self.tx.send(event).await;
             }
 
             sleep(Duration::from_secs(5)).await;
