@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 #![warn(clippy::all, clippy::pedantic, clippy::unwrap_used)]
 #![allow(
     clippy::too_many_lines,
