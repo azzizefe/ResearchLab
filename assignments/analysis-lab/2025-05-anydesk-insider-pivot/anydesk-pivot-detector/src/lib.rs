@@ -8,7 +8,13 @@
     clippy::cast_possible_truncation,
     clippy::doc_markdown,
     clippy::struct_field_names,
-    clippy::unused_async
+    clippy::unused_async,
+    clippy::too_many_lines,
+    clippy::items_after_statements,
+    clippy::cast_precision_loss,
+    clippy::cloned_ref_to_slice_refs,
+    clippy::unnecessary_debug_formatting,
+    clippy::assertions_on_constants
 )]
 pub mod analyzers;
 pub mod api;

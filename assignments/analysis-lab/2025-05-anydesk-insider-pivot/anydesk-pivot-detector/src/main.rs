@@ -1,5 +1,11 @@
-#![forbid(unsafe_code)]
 #![warn(clippy::all, clippy::pedantic, clippy::unwrap_used)]
+#![allow(
+    clippy::too_many_lines,
+    clippy::items_after_statements,
+    clippy::cast_precision_loss,
+    clippy::cloned_ref_to_slice_refs,
+    clippy::unnecessary_debug_formatting
+)]
 use anydesk_pivot_detector::analyzers::{AnomalyScorer, PivotDetector, RuleEngine};
 use anydesk_pivot_detector::config::{AppConfig, Cli, Commands};
 use anydesk_pivot_detector::monitors::{FileWatcher, NetworkMonitor, ProcessMonitor};

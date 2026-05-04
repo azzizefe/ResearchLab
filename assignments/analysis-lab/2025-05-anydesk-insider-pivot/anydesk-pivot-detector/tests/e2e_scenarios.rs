@@ -1,10 +1,9 @@
 use anydesk_pivot_detector::analyzers::{AnomalyScorer, PivotDetector, RuleEngine};
 use anydesk_pivot_detector::config::{
-    AnyDeskSettings, AppConfig, AppSettings, ElasticsearchSettings, MonitorSettings, NetworkSettings, ReportingSettings,
+    AnyDeskSettings, AppConfig, AppSettings, ElasticsearchSettings, MonitorSettings, NetworkSettings,
+    NotificationSettings, ReportingSettings,
 };
 use anydesk_pivot_detector::models::alert::AlertSeverity;
-use std::io::Write;
-use tempfile::NamedTempFile;
 
 #[test]
 fn test_scenario_1_insider_pivot() {
@@ -89,16 +88,29 @@ fn create_mock_config() -> AppConfig {
             blocked_domains: vec![],
             blocked_ports: vec![],
             allowed_anydesk_ids: vec!["111222333".into()], // 666 666 666 is NOT allowed
+            malicious_ips: vec![],
+            high_data_threshold_bytes: 1024,
         },
         reporting: ReportingSettings {
             format: "json".into(),
             enable_syslog: false,
             syslog_server: "".into(),
+            syslog_port: 514,
             enable_elasticsearch: false,
         },
         elasticsearch: ElasticsearchSettings {
             url: "http://localhost:9200".into(),
             index: "anydesk-alerts".into(),
+        },
+        notifications: NotificationSettings {
+            enable_slack: false,
+            slack_webhook_url: "".into(),
+            enable_email: false,
+            smtp_server: "".into(),
+            smtp_port: 587,
+            email_to: "".into(),
+            enable_webhook: false,
+            webhook_url: "".into(),
         },
     }
 }
