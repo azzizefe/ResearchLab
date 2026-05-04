@@ -10,6 +10,7 @@
 use anydesk_pivot_detector::analyzers::{AnomalyScorer, PivotDetector, RuleEngine};
 use anydesk_pivot_detector::config::{AppConfig, Cli, Commands};
 use anydesk_pivot_detector::actions::ResponseManager;
+use anydesk_pivot_detector::utils::metrics::MetricsManager;
 use anydesk_pivot_detector::monitors::{FileWatcher, NetworkMonitor, ProcessMonitor};
 use anydesk_pivot_detector::parsers::parse_system_conf;
 use anydesk_pivot_detector::reporters::{
@@ -133,6 +134,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let reporter_syslog = syslog_reporter.clone();
             let notifications = notification_manager.clone();
             let rule_engine_loop = rule_engine.clone();
+            let metrics = MetricsManager::new();
+            let metrics_loop = metrics.clone();
             let response_manager = std::sync::Arc::new(tokio::sync::Mutex::new(ResponseManager::new(config.active_response.clone())));
             let response_manager_loop = response_manager.clone();
 
@@ -147,20 +150,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                                     let score = scorer.score_alert(&alert, "CLI_SESSION");
                                     
                                     // Consolidated alert processing
-                                    handle_alert(&alert, score, &config, &console, &reporter_es, &reporter_syslog, &notifications, &response_manager_loop).await;
+                                    handle_alert(&alert, score, &config, &console, &reporter_es, &reporter_syslog, &notifications, &response_manager_loop, &metrics_loop).await;
                                 }
                             }
                         }
                         Some(event) = proc_rx.recv() => {
                             if let Some(alert) = rule_engine_loop.check_suspicious_process(&event) {
                                 let score = scorer.score_alert(&alert, "PROC_SESSION");
-                                handle_alert(&alert, score, &config, &console, &reporter_es, &reporter_syslog, &notifications, &response_manager_loop).await;
+                                handle_alert(&alert, score, &config, &console, &reporter_es, &reporter_syslog, &notifications, &response_manager_loop, &metrics_loop).await;
                             }
                         }
                         Some(event) = net_rx.recv() => {
                             if let Some(alert) = rule_engine_loop.check_network_scanning(&event) {
                                 let score = scorer.score_alert(&alert, "NET_SESSION");
-                                handle_alert(&alert, score, &config, &console, &reporter_es, &reporter_syslog, &notifications, &response_manager_loop).await;
+                                handle_alert(&alert, score, &config, &console, &reporter_es, &reporter_syslog, &notifications, &response_manager_loop, &metrics_loop).await;
                             }
                         }
                     }
@@ -176,7 +179,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 reporter_syslog: &std::sync::Arc<SyslogReporter>,
                 notifications: &std::sync::Arc<NotificationManager>,
                 response_manager: &std::sync::Arc<tokio::sync::Mutex<ResponseManager>>,
+                metrics: &MetricsManager,
             ) {
+                metrics.inc_alerts();
                 console.report(&[alert.clone()]);
                 
                 if config.reporting.enable_elasticsearch {

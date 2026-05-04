@@ -22,17 +22,26 @@ impl FileWatcher {
         )
         .map_err(|e| AppError::MonitorError(format!("Failed to create watcher: {e}")))?;
 
+        let mut last_positions = std::collections::HashMap::new();
+        if let Ok(data) = std::fs::read_to_string("reports/checkpoint.json") {
+            if let Ok(pos) = serde_json::from_str(&data) {
+                last_positions = pos;
+            }
+        }
+
         Ok(Self {
             watcher,
-            last_positions: std::collections::HashMap::new(),
+            last_positions,
         })
     }
 
     pub fn watch<P: AsRef<Path>>(&mut self, path: P) -> Result<(), AppError> {
         let p = path.as_ref().to_path_buf();
-        // Initialize position to end of file
-        if let Ok(metadata) = std::fs::metadata(&p) {
-            self.last_positions.insert(p.clone(), metadata.len());
+        // If not in checkpoint, initialize position to end of file
+        if !self.last_positions.contains_key(&p) {
+            if let Ok(metadata) = std::fs::metadata(&p) {
+                self.last_positions.insert(p.clone(), metadata.len());
+            }
         }
 
         self.watcher
@@ -57,9 +66,11 @@ impl FileWatcher {
                                     line.clear();
                                 }
                                 self.last_positions.insert(path, new_len);
+                                self.save_checkpoints();
                             } else if new_len < last_pos {
-                                // File truncated
-                                self.last_positions.insert(path, new_len);
+                                // File truncated (potential rotation)
+                                self.last_positions.insert(path, 0); // Start from beginning
+                                self.save_checkpoints();
                             }
                         }
                     }
@@ -67,5 +78,12 @@ impl FileWatcher {
             }
         }
         new_lines
+    }
+
+    fn save_checkpoints(&self) {
+        if let Ok(data) = serde_json::to_string(&self.last_positions) {
+            let _ = std::fs::create_dir_all("reports");
+            let _ = std::fs::write("reports/checkpoint.json", data);
+        }
     }
 }

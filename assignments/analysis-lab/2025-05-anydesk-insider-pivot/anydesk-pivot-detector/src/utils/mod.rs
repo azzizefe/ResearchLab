@@ -1,4 +1,5 @@
 pub mod logging;
+pub mod metrics;
 use crate::errors::app_error::AppError;
 use std::path::{Path, PathBuf};
 
